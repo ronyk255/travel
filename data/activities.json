@@ -1,0 +1,37 @@
+[
+  {
+    "destination": "Berlin",
+    "name": "Street Art Walking Tour",
+    "price": 22,
+    "description": "Discover hidden murals and local cafés in Friedrichshain.",
+    "type": "culture"
+  },
+  {
+    "destination": "Berlin",
+    "name": "Boat Ride on Spree",
+    "price": 18,
+    "description": "Relaxing river cruise with city views and audio commentary.",
+    "type": "relaxation"
+  },
+  {
+    "destination": "Gothenburg",
+    "name": "Hike in Delsjön",
+    "price": 0,
+    "description": "Scenic lakeside hike with forest trails and dog-friendly paths.",
+    "type": "outdoors"
+  },
+  {
+    "destination": "Gothenburg",
+    "name": "Fika & Market Visit",
+    "price": 16,
+    "description": "Enjoy local coffee and baked goods with a visit to Haga market.",
+    "type": "food"
+  },
+  {
+    "destination": "Krakow",
+    "name": "Old Town History Walk",
+    "price": 14,
+    "description": "Guided walking tour including market square and castle hill.",
+    "type": "culture"
+  }
+]

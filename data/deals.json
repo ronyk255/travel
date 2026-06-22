@@ -1,0 +1,35 @@
+[
+  {
+    "title": "Budget Flight to Berlin",
+    "mode": "Flight",
+    "route": "Copenhagen Airport → Berlin",
+    "origin": "Copenhagen Airport",
+    "destination": "Berlin",
+    "duration": "1h 25m",
+    "price": 49,
+    "description": "Low-cost summer flight with carry-on included. Dog-friendly cabin option on request.",
+    "expires": "2026-07-10"
+  },
+  {
+    "title": "Train Escape to Gothenburg",
+    "mode": "Train",
+    "route": "Lund → Gothenburg",
+    "origin": "Lund",
+    "destination": "Gothenburg",
+    "duration": "2h 15m",
+    "price": 35,
+    "description": "SJ regional train with flexible ticket and pet-friendly carriage. Ideal for weekend trips.",
+    "expires": "2026-07-15"
+  },
+  {
+    "title": "City Break to Krakow",
+    "mode": "Flight",
+    "route": "Copenhagen Airport → Krakow",
+    "origin": "Copenhagen Airport",
+    "destination": "Krakow",
+    "duration": "2h 10m",
+    "price": 59,
+    "description": "Summer sale on early-morning flights. Great for a budget culture trip.",
+    "expires": "2026-07-12"
+  }
+]

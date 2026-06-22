@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Skanör-Falsterbo Coast",
+    "region": "Skåne",
+    "type": "Seaside village",
+    "description": "Quiet beaches, birdwatching and charming cafes along Sweden's southern tip.",
+    "bestFor": "day trip, summer relaxation",
+    "tip": "Take the Öresundståg from Lund and explore the coastal trail."
+  },
+  {
+    "name": "Ystad Sandskog",
+    "region": "Skåne",
+    "type": "Forest and dunes",
+    "description": "Hidden dunes close to the coast with walkable forest trails and picnic spots.",
+    "bestFor": "nature, dog-friendly hikes",
+    "tip": "Bring a picnic and plan a sunset walk by the sea."
+  },
+  {
+    "name": "Cesky Krumlov",
+    "region": "Czech Republic",
+    "type": "Historic town",
+    "description": "Medieval river town with boutique hotels, castle views and quiet winding streets.",
+    "bestFor": "culture, weekend escape",
+    "tip": "Book a local guesthouse and explore the castle gardens early in the morning."
+  }
+]

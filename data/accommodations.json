@@ -1,0 +1,23 @@
+[
+  {
+    "destination": "Berlin",
+    "name": "Cozy Berlin Guesthouse",
+    "pricePerNight": 60,
+    "features": "Pet-friendly, breakfast included, city center access",
+    "link": "https://example.com/berlin-guesthouse"
+  },
+  {
+    "destination": "Gothenburg",
+    "name": "Canal-side Studio",
+    "pricePerNight": 75,
+    "features": "Dog-friendly, tram connection, kitchenette",
+    "link": "https://example.com/gothenburg-studio"
+  },
+  {
+    "destination": "Krakow",
+    "name": "Boutique Stay Krakow",
+    "pricePerNight": 55,
+    "features": "Central location, breakfast, easy airport transfer",
+    "link": "https://example.com/krakow-boutique"
+  }
+]
