@@ -1,3 +1,20 @@
+// Refresh Button: Clear cache and reload
+document.getElementById("refreshButton").addEventListener("click", () => {
+  // Clear browser cache for data files
+  localStorage.removeItem("cacheVersion");
+  
+  // Clear application data (but keep saved trips)
+  const savedTrips = localStorage.getItem("savedTrips");
+  localStorage.clear();
+  if (savedTrips) {
+    localStorage.setItem("savedTrips", savedTrips);
+  }
+  
+  // Hard refresh with cache busting
+  const timestamp = new Date().getTime();
+  window.location.href = window.location.href.split("#")[0] + `?_cache=${timestamp}`;
+});
+
 // State
 let globalDeals = [];
 let globalGems = [];
@@ -12,7 +29,9 @@ let selectedActivityIds = new Set();
 // Utility Functions
 async function loadData(filename) {
   try {
-    const response = await fetch(filename);
+    // Add cache busting parameter
+    const timestamp = new Date().getTime();
+    const response = await fetch(`${filename}?_cache=${timestamp}`);
     return await response.json();
   } catch (e) {
     console.error(`Failed to load ${filename}:`, e);
