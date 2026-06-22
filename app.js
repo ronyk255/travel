@@ -10,6 +10,8 @@ const state = {
   currentItinerary: null,
 };
 
+const LOCAL_SKANE_DESTINATIONS = new Set(["ystad", "skanor-falsterbo"]);
+
 const els = {
   refreshButton: document.getElementById("refreshButton"),
   lastUpdated: document.getElementById("lastUpdated"),
@@ -116,7 +118,7 @@ function sortedDeals() {
   const sort = els.dealSort.value;
   const dogOnly = els.dogFriendly.checked;
   const preferHidden = els.hiddenGemMode.checked;
-  let deals = [...state.deals];
+  let deals = state.deals.filter((deal) => !LOCAL_SKANE_DESTINATIONS.has(String(deal.destination)));
 
   if (dogOnly) {
     deals = deals.filter((deal) => deal.dogFriendly || /dog|pet|small dog|cabin/i.test(deal.description || ""));
@@ -128,7 +130,7 @@ function sortedDeals() {
   if (sort === "score") deals.sort((a, b) => scoreDeal(b) - scoreDeal(a));
 
   if (preferHidden) {
-    const hiddenIds = new Set(["ystad", "skanor-falsterbo", "gothenburg"]);
+    const hiddenIds = new Set(["gothenburg", "krakow"]);
     deals.sort((a, b) => Number(hiddenIds.has(String(b.destination))) - Number(hiddenIds.has(String(a.destination))));
   }
 
@@ -188,7 +190,9 @@ function renderDeals() {
 
 function renderDealBoard() {
   const query = (els.dealSearch.value || "").toLowerCase();
-  const deals = state.deals.filter((deal) => JSON.stringify(deal).toLowerCase().includes(query));
+  const deals = state.deals
+    .filter((deal) => !LOCAL_SKANE_DESTINATIONS.has(String(deal.destination)))
+    .filter((deal) => JSON.stringify(deal).toLowerCase().includes(query));
   els.dealBoard.innerHTML = deals.map((deal) => dealCard(deal, true)).join("");
 }
 
@@ -295,13 +299,20 @@ function renderActivities() {
 function renderGems() {
   els.hiddenGems.innerHTML = state.gems.map((gem) => `
     <article class="gem-card">
-      ${cardImage(gem.image, gem.name, [gem.region || "Skane", gem.type || "Hidden gem"])}
+      ${cardImage(gem.image, gem.name, [gem.region || "Skane", gem.type || "Quiet place"])}
       <div class="card-body">
         <h3>${escapeHtml(gem.name)}</h3>
         <p>${escapeHtml(gem.description)}</p>
+        <div class="meta-grid">
+          <div><span>Entrance</span><strong>${escapeHtml(gem.entranceCost || "Free")}</strong></div>
+          <div><span>From Lund</span><strong>${escapeHtml(gem.fromLund || "Check route")}</strong></div>
+        </div>
         <p class="muted"><strong>Best for:</strong> ${escapeHtml(gem.bestFor || "day trip")}</p>
         <p class="muted"><strong>Tip:</strong> ${escapeHtml(gem.tip || "Check transit before you go.")}</p>
-        <a class="link-button" href="https://www.google.com/maps/search/${encodeURIComponent(gem.name + " " + (gem.region || ""))}" target="_blank" rel="noreferrer">Open map</a>
+        <div class="card-actions">
+          <a class="link-button" href="https://www.google.com/maps/search/${encodeURIComponent(gem.name + " " + (gem.region || ""))}" target="_blank" rel="noreferrer">Open map</a>
+          ${gem.sourceUrl ? `<a class="link-button" href="${escapeHtml(gem.sourceUrl)}" target="_blank" rel="noreferrer">Official info</a>` : ""}
+        </div>
       </div>
     </article>
   `).join("");
@@ -701,8 +712,9 @@ function exportDiary() {
 }
 
 function updateStats() {
-  const best = [...state.deals].sort((a, b) => Number(a.price || 9999) - Number(b.price || 9999))[0];
-  const dogCount = state.deals.filter((deal) => deal.dogFriendly || /dog|pet/i.test(deal.description || "")).length;
+  const europeDeals = state.deals.filter((deal) => !LOCAL_SKANE_DESTINATIONS.has(String(deal.destination)));
+  const best = [...europeDeals].sort((a, b) => Number(a.price || 9999) - Number(b.price || 9999))[0];
+  const dogCount = europeDeals.filter((deal) => deal.dogFriendly || /dog|pet/i.test(deal.description || "")).length;
   els.bestValue.textContent = best ? `${best.title} from ${money(best.price)}` : "No deals loaded";
   els.dogCount.textContent = `${dogCount} current deal options`;
   els.lastUpdated.textContent = `Loaded ${new Date().toLocaleString("en-GB")}`;

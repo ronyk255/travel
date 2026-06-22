@@ -1,47 +1,122 @@
 [
   {
-    "name": "Skanor-Falsterbo Coast",
-    "region": "Skane",
-    "type": "Seaside village",
-    "image": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80",
-    "description": "Quiet beaches, colorful bath huts, birdwatching, and a calm village feeling at Sweden's southwestern edge.",
-    "bestFor": "summer day trip, beach walk, dog-friendly slow travel",
-    "tip": "Travel Lund to Malmo and continue by bus. Pack layers because the coast changes mood quickly."
-  },
-  {
-    "name": "Ystad Sandskog",
-    "region": "Skane",
-    "type": "Forest and dunes",
-    "image": "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=900&q=80",
-    "description": "Forest trails and dunes close to the sea, easy to combine with Ystad's old-town streets.",
-    "bestFor": "nature, picnic, dog-friendly walking",
-    "tip": "Start with the forest loop, then return to town for coffee instead of rushing onward."
-  },
-  {
-    "name": "Hovs Hallar",
-    "region": "Bjare Peninsula",
-    "type": "Rocky coastal landscape",
+    "name": "Backhalladalen Nature Reserve",
+    "region": "Simrishamn / Osterlen",
+    "type": "Rocky heath and quiet trails",
     "image": "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80",
-    "description": "Dramatic cliffs, sea views, and unusual geology on the northwest coast of Skane.",
-    "bestFor": "photography, hiking, picnic views",
-    "tip": "Best with a car or carefully planned bus connection; wear proper shoes."
+    "description": "A low-key reserve with open heath, unusual rock formations, grazing animals, and peaceful walking. Good when you want Osterlen without the crowded harbor stops.",
+    "entranceCost": "Free",
+    "fromLund": "About 1h 20m by car; longer by train/bus",
+    "bestFor": "quiet walk, picnic, dog-friendly nature",
+    "tip": "Wear proper shoes after rain and keep the dog leashed around grazing animals.",
+    "sourceUrl": "https://www.lansstyrelsen.se/skane/besoksmal/naturreservat/backhalladalen.html"
   },
   {
-    "name": "Krapperup and Molle",
+    "name": "Hallamolla Waterfall",
+    "region": "Christinehof / Brosarp",
+    "type": "Waterfall and forest mill setting",
+    "image": "https://images.unsplash.com/photo-1432405972618-c60b0225b8f9?auto=format&fit=crop&w=900&q=80",
+    "description": "Skane's strongest waterfall area, hidden in green woodland with old mill surroundings and a short but memorable walk.",
+    "entranceCost": "Free",
+    "fromLund": "About 1h 15m by car",
+    "bestFor": "waterfall, forest walk, photography",
+    "tip": "Combine with Christinehof or a quiet Osterlen cafe instead of rushing to the coast.",
+    "sourceUrl": "https://www.lansstyrelsen.se/skane/besoksmal/naturreservat/hallamolla.html"
+  },
+  {
+    "name": "Forsakar Nature Reserve",
+    "region": "Degeberga",
+    "type": "Ravine and waterfall trail",
+    "image": "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=900&q=80",
+    "description": "A wooded ravine with waterfalls and a slightly dramatic atmosphere. It feels much wilder than many easy Skane walks.",
+    "entranceCost": "Free",
+    "fromLund": "About 1h 10m by car",
+    "bestFor": "short hike, forest, moody photos",
+    "tip": "Paths can be slippery; go slowly and do not treat it like a flat city park.",
+    "sourceUrl": "https://www.lansstyrelsen.se/skane/besoksmal/naturreservat/forsakar.html"
+  },
+  {
+    "name": "Rovarekulan Nature Reserve",
+    "region": "Hoor / Eslov area",
+    "type": "Ravine, creek, and woodland",
+    "image": "https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=900&q=80",
+    "description": "A peaceful ravine landscape with a stream, old trees, and an easy nature feeling close enough for a half day from Lund.",
+    "entranceCost": "Free",
+    "fromLund": "About 35-45m by car",
+    "bestFor": "quick nature escape, dog walk, picnic",
+    "tip": "Best after a dry spell if you want easy walking; bring fika and make it slow.",
+    "sourceUrl": "https://www.lansstyrelsen.se/skane/besoksmal/naturreservat/rovarekulan.html"
+  },
+  {
+    "name": "Fulltofta Nature Center Back Trails",
+    "region": "Hoor",
+    "type": "Lakes, forest, and marked trails",
+    "image": "https://images.unsplash.com/photo-1473773508845-188df298d2d1?auto=format&fit=crop&w=900&q=80",
+    "description": "A practical local nature base with several trails, water views, and enough variety to build a full low-cost day outdoors.",
+    "entranceCost": "Free trails; cafe/activities cost extra",
+    "fromLund": "About 45m by car",
+    "bestFor": "easy hiking, dog-friendly day, nature center stop",
+    "tip": "Pick one marked trail and one lakeside fika stop rather than trying to cover everything.",
+    "sourceUrl": "https://en.skanskalandskap.se/fulltofta"
+  },
+  {
+    "name": "Knabackshusen Beach",
+    "region": "Near Kivik",
+    "type": "Hidden-feeling beach and relocated chapel",
+    "image": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80",
+    "description": "A beautiful sandy stretch below trees with a quiet, tucked-away feeling compared with better-known Osterlen stops.",
+    "entranceCost": "Free",
+    "fromLund": "About 1h 20m by car",
+    "bestFor": "beach walk, summer picnic, photos",
+    "tip": "Check seasonal dog beach rules before going with the small dog.",
+    "sourceUrl": "https://visitskane.com/outdoors-adventure/beaches-skane"
+  },
+  {
+    "name": "Krapperup Castle Park",
     "region": "Kullabygden",
-    "type": "Manor garden and village",
+    "type": "Castle garden and estate walk",
     "image": "https://images.unsplash.com/photo-1519331379826-f10be5486c6f?auto=format&fit=crop&w=900&q=80",
-    "description": "Gardens, coastal village atmosphere, and an easy add-on to Kullaberg without making the day too intense.",
-    "bestFor": "slow day trip, garden walk, coastal lunch",
-    "tip": "Pair with one short viewpoint rather than trying to see the whole peninsula at once."
+    "description": "A calm estate garden and park stop near Kullaberg. The garden is the reason to go; the castle itself is not normally the main visitor experience.",
+    "entranceCost": "Garden usually free; check events",
+    "fromLund": "About 1h 05m by car",
+    "bestFor": "garden walk, quiet photos, slow lunch nearby",
+    "tip": "Pair with Molle or one short Kullaberg viewpoint, not a packed full-peninsula route.",
+    "sourceUrl": "https://www.krapperup.se/"
   },
   {
     "name": "Bosjokloster Castle Park",
-    "region": "Central Skane",
-    "type": "Castle park",
+    "region": "Ringsjon / Hoor",
+    "type": "Castle, garden, and lake setting",
     "image": "https://images.unsplash.com/photo-1518005020951-eccb494ad742?auto=format&fit=crop&w=900&q=80",
-    "description": "A less obvious castle and lakeside stop with parkland, photo corners, and a quiet countryside feel.",
-    "bestFor": "short outing, calm walk, countryside photos",
-    "tip": "Check opening conditions before relying on indoor access; the grounds are the main draw."
+    "description": "A quieter castle-and-lake outing with parkland and seasonal exhibitions, better for a calm half-day than a big tourist checklist.",
+    "entranceCost": "Paid seasonally; check official price",
+    "fromLund": "About 40m by car",
+    "bestFor": "castle garden, lake, relaxed outing",
+    "tip": "Check opening dates first; this is more seasonal than a nature reserve.",
+    "sourceUrl": "https://www.bosjokloster.se/"
+  },
+  {
+    "name": "Hovdala Hiking Area",
+    "region": "Hassleholm",
+    "type": "Trails, lake views, and castle surroundings",
+    "image": "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80",
+    "description": "A wide hiking area with several loops and castle surroundings. It gives you a bigger countryside day without leaving Skane.",
+    "entranceCost": "Trails free; castle/exhibitions may cost",
+    "fromLund": "About 1h by train/car",
+    "bestFor": "longer walk, countryside, dog-friendly trails",
+    "tip": "Choose route length before leaving; it is easy to over-plan the day.",
+    "sourceUrl": "https://www.hovdala.se/"
+  },
+  {
+    "name": "Tykarpsgrottan",
+    "region": "Hassleholm",
+    "type": "Old limestone mine cave",
+    "image": "https://images.unsplash.com/photo-1503435980610-a51f3ddfee50?auto=format&fit=crop&w=900&q=80",
+    "description": "An unusual underground visit in Skane: cool, strange, and very different from beaches and towns.",
+    "entranceCost": "Paid guided entry; check official price",
+    "fromLund": "About 1h by car",
+    "bestFor": "unique local experience, rainy day, something different",
+    "tip": "Bring warmer clothing; underground visits can feel cold even in summer.",
+    "sourceUrl": "https://www.tykarpsgrottan.net/"
   }
 ]
