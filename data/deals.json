@@ -13,7 +13,33 @@
     "bookingUrl": "https://www.skanetrafiken.se/",
     "provider": "Skanetrafiken",
     "dogFriendly": true,
-    "image": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80"
+    "image": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80",
+    "lastChecked": "2026-06-22T12:54:26.581088+00:00",
+    "priceConfidence": "Indicative lead price; final fare must be confirmed with provider",
+    "sourceLinks": [
+      {
+        "label": "SJ",
+        "url": "https://www.sj.se/en"
+      },
+      {
+        "label": "Lastminute",
+        "url": "https://www.lastminute.com/search?search.destination=skanor%20falsterbo"
+      },
+      {
+        "label": "Skyscanner",
+        "url": "https://www.skyscanner.com/transport/flights/cph/skanor-falsterbo/"
+      },
+      {
+        "label": "Booking.com",
+        "url": "https://www.booking.com/searchresults.html?ss=skanor%20falsterbo&nflt=hotelfacility%3D4"
+      },
+      {
+        "label": "Google Hotels",
+        "url": "https://www.google.com/travel/hotels/skanor%20falsterbo"
+      }
+    ],
+    "petPolicyUrl": "https://www.skanetrafiken.se/",
+    "petNote": "Train is usually the easiest option with a small dog, but book animal/pet area where required."
   },
   {
     "id": "skane-summer-ystad",
@@ -29,7 +55,33 @@
     "bookingUrl": "https://www.skanetrafiken.se/",
     "provider": "Skanetrafiken",
     "dogFriendly": true,
-    "image": "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=900&q=80"
+    "image": "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=900&q=80",
+    "lastChecked": "2026-06-22T12:54:26.581076+00:00",
+    "priceConfidence": "Indicative lead price; final fare must be confirmed with provider",
+    "sourceLinks": [
+      {
+        "label": "SJ",
+        "url": "https://www.sj.se/en"
+      },
+      {
+        "label": "Lastminute",
+        "url": "https://www.lastminute.com/search?search.destination=ystad"
+      },
+      {
+        "label": "Skyscanner",
+        "url": "https://www.skyscanner.com/transport/flights/cph/ystad/"
+      },
+      {
+        "label": "Booking.com",
+        "url": "https://www.booking.com/searchresults.html?ss=ystad&nflt=hotelfacility%3D4"
+      },
+      {
+        "label": "Google Hotels",
+        "url": "https://www.google.com/travel/hotels/ystad"
+      }
+    ],
+    "petPolicyUrl": "https://www.skanetrafiken.se/",
+    "petNote": "Train is usually the easiest option with a small dog, but book animal/pet area where required."
   },
   {
     "id": "train-gothenburg",
@@ -45,7 +97,33 @@
     "bookingUrl": "https://www.sj.se/en",
     "provider": "SJ",
     "dogFriendly": true,
-    "image": "https://images.unsplash.com/photo-1535628805416-f3a0b3627d23?auto=format&fit=crop&w=900&q=80"
+    "image": "https://images.unsplash.com/photo-1535628805416-f3a0b3627d23?auto=format&fit=crop&w=900&q=80",
+    "lastChecked": "2026-06-22T12:54:26.580973+00:00",
+    "priceConfidence": "Indicative lead price; final fare must be confirmed with provider",
+    "sourceLinks": [
+      {
+        "label": "SJ",
+        "url": "https://www.sj.se/en"
+      },
+      {
+        "label": "Lastminute",
+        "url": "https://www.lastminute.com/search?search.destination=gothenburg"
+      },
+      {
+        "label": "Skyscanner",
+        "url": "https://www.skyscanner.com/transport/flights/cph/gothenburg/"
+      },
+      {
+        "label": "Booking.com",
+        "url": "https://www.booking.com/searchresults.html?ss=gothenburg&nflt=hotelfacility%3D4"
+      },
+      {
+        "label": "Google Hotels",
+        "url": "https://www.google.com/travel/hotels/gothenburg"
+      }
+    ],
+    "petPolicyUrl": "https://www.sj.se/en/about-the-journey/before-the-journey/travelling-with-animals",
+    "petNote": "Train is usually the easiest option with a small dog, but book animal/pet area where required."
   },
   {
     "id": "flight-berlin",
@@ -61,7 +139,29 @@
     "bookingUrl": "https://www.skyscanner.com/transport/flights/cph/ber/",
     "provider": "Skyscanner",
     "dogFriendly": true,
-    "image": "https://images.unsplash.com/photo-1560969184-10fe8719e047?auto=format&fit=crop&w=900&q=80"
+    "image": "https://images.unsplash.com/photo-1560969184-10fe8719e047?auto=format&fit=crop&w=900&q=80",
+    "lastChecked": "2026-06-22T12:54:26.581028+00:00",
+    "priceConfidence": "Indicative lead price; final fare must be confirmed with provider",
+    "sourceLinks": [
+      {
+        "label": "Lastminute",
+        "url": "https://www.lastminute.com/search?search.destination=berlin"
+      },
+      {
+        "label": "Skyscanner",
+        "url": "https://www.skyscanner.com/transport/flights/cph/berlin/"
+      },
+      {
+        "label": "Booking.com",
+        "url": "https://www.booking.com/searchresults.html?ss=berlin&nflt=hotelfacility%3D4"
+      },
+      {
+        "label": "Google Hotels",
+        "url": "https://www.google.com/travel/hotels/berlin"
+      }
+    ],
+    "petPolicyUrl": "https://www.skyscanner.com/news/tips/flying-with-pets",
+    "petNote": "Pet-in-cabin depends on the selected airline; verify before paying."
   },
   {
     "id": "flight-prague",
@@ -77,7 +177,29 @@
     "bookingUrl": "https://www.skyscanner.com/transport/flights/cph/prg/",
     "provider": "Skyscanner",
     "dogFriendly": true,
-    "image": "https://images.unsplash.com/photo-1519677100203-a0e668c92439?auto=format&fit=crop&w=900&q=80"
+    "image": "https://images.unsplash.com/photo-1519677100203-a0e668c92439?auto=format&fit=crop&w=900&q=80",
+    "lastChecked": "2026-06-22T12:54:26.581044+00:00",
+    "priceConfidence": "Indicative lead price; final fare must be confirmed with provider",
+    "sourceLinks": [
+      {
+        "label": "Lastminute",
+        "url": "https://www.lastminute.com/search?search.destination=prague"
+      },
+      {
+        "label": "Skyscanner",
+        "url": "https://www.skyscanner.com/transport/flights/cph/prague/"
+      },
+      {
+        "label": "Booking.com",
+        "url": "https://www.booking.com/searchresults.html?ss=prague&nflt=hotelfacility%3D4"
+      },
+      {
+        "label": "Google Hotels",
+        "url": "https://www.google.com/travel/hotels/prague"
+      }
+    ],
+    "petPolicyUrl": "https://www.skyscanner.com/news/tips/flying-with-pets",
+    "petNote": "Pet-in-cabin depends on the selected airline; verify before paying."
   },
   {
     "id": "flight-krakow",
@@ -93,7 +215,29 @@
     "bookingUrl": "https://www.skyscanner.com/transport/flights/cph/krk/",
     "provider": "Skyscanner",
     "dogFriendly": false,
-    "image": "https://images.unsplash.com/photo-1541849546-216549ae216d?auto=format&fit=crop&w=900&q=80"
+    "image": "https://images.unsplash.com/photo-1541849546-216549ae216d?auto=format&fit=crop&w=900&q=80",
+    "lastChecked": "2026-06-22T12:54:26.581055+00:00",
+    "priceConfidence": "Indicative lead price; final fare must be confirmed with provider",
+    "sourceLinks": [
+      {
+        "label": "Lastminute",
+        "url": "https://www.lastminute.com/search?search.destination=krakow"
+      },
+      {
+        "label": "Skyscanner",
+        "url": "https://www.skyscanner.com/transport/flights/cph/krakow/"
+      },
+      {
+        "label": "Booking.com",
+        "url": "https://www.booking.com/searchresults.html?ss=krakow&nflt=hotelfacility%3D4"
+      },
+      {
+        "label": "Google Hotels",
+        "url": "https://www.google.com/travel/hotels/krakow"
+      }
+    ],
+    "petPolicyUrl": "https://www.skyscanner.com/news/tips/flying-with-pets",
+    "petNote": "Pet-in-cabin depends on the selected airline; verify before paying."
   },
   {
     "id": "train-berlin-night",
@@ -109,6 +253,32 @@
     "bookingUrl": "https://www.sj.se/en",
     "provider": "SJ",
     "dogFriendly": true,
-    "image": "https://images.unsplash.com/photo-1560969184-10fe8719e047?auto=format&fit=crop&w=900&q=80"
+    "image": "https://images.unsplash.com/photo-1560969184-10fe8719e047?auto=format&fit=crop&w=900&q=80",
+    "lastChecked": "2026-06-22T12:54:26.581065+00:00",
+    "priceConfidence": "Indicative lead price; final fare must be confirmed with provider",
+    "sourceLinks": [
+      {
+        "label": "SJ",
+        "url": "https://www.sj.se/en"
+      },
+      {
+        "label": "Lastminute",
+        "url": "https://www.lastminute.com/search?search.destination=berlin"
+      },
+      {
+        "label": "Skyscanner",
+        "url": "https://www.skyscanner.com/transport/flights/cph/berlin/"
+      },
+      {
+        "label": "Booking.com",
+        "url": "https://www.booking.com/searchresults.html?ss=berlin&nflt=hotelfacility%3D4"
+      },
+      {
+        "label": "Google Hotels",
+        "url": "https://www.google.com/travel/hotels/berlin"
+      }
+    ],
+    "petPolicyUrl": "https://www.sj.se/en/about-the-journey/before-the-journey/travelling-with-animals",
+    "petNote": "Train is usually the easiest option with a small dog, but book animal/pet area where required."
   }
 ]

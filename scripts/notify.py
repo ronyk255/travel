@@ -1,5 +1,4 @@
 import os
-from twilio.rest import Client
 
 
 def send_sms_notification(message: str) -> None:
@@ -10,6 +9,12 @@ def send_sms_notification(message: str) -> None:
 
     if not all([account_sid, auth_token, from_number, notification_phone]):
         print('SMS notification environment variables are not fully configured.')
+        return
+
+    try:
+        from twilio.rest import Client
+    except ImportError:
+        print('Twilio package is not installed; skipping SMS notification.')
         return
 
     client = Client(account_sid, auth_token)

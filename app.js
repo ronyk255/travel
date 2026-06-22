@@ -64,6 +64,18 @@ function money(value) {
   return `EUR ${Number(value).toFixed(0)}`;
 }
 
+function compactDateTime(value) {
+  if (!value) return "Latest committed data";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+  return new Intl.DateTimeFormat("en-GB", {
+    day: "numeric",
+    month: "short",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(date);
+}
+
 function todayIso() {
   return new Date().toISOString().slice(0, 10);
 }
@@ -164,9 +176,13 @@ function dealCard(deal, compact = false) {
           <div><span>Score</span><strong>${score}/100</strong></div>
         </div>
         <p>${escapeHtml(deal.description || "Provider-linked deal. Confirm live fare before booking.")}</p>
+        <p class="muted"><strong>Price source:</strong> ${escapeHtml(deal.priceConfidence || "Lead price; verify before booking")} - ${escapeHtml(compactDateTime(deal.lastChecked))}</p>
+        ${deal.petNote ? `<p class="muted"><strong>Dog note:</strong> ${escapeHtml(deal.petNote)}</p>` : ""}
         ${compact ? "" : `<p class="muted">Book by: ${escapeHtml(deal.expires || "Flexible")}</p>`}
         <div class="card-actions">
           ${deal.bookingUrl ? `<a class="link-button" href="${escapeHtml(deal.bookingUrl)}" target="_blank" rel="noreferrer">Open ${escapeHtml(deal.provider || "provider")}</a>` : ""}
+          ${(deal.sourceLinks || []).slice(0, compact ? 2 : 4).map((link) => `<a class="link-button" href="${escapeHtml(link.url)}" target="_blank" rel="noreferrer">${escapeHtml(link.label)}</a>`).join("")}
+          ${deal.petPolicyUrl ? `<a class="link-button" href="${escapeHtml(deal.petPolicyUrl)}" target="_blank" rel="noreferrer">Pet policy</a>` : ""}
           <a class="link-button" href="https://www.google.com/maps/search/${encodeURIComponent(destination?.name || deal.destination || deal.title)}" target="_blank" rel="noreferrer">Map</a>
         </div>
       </div>
@@ -230,11 +246,17 @@ function renderAccommodations() {
           <h3>${escapeHtml(stay.name)}</h3>
           <p class="muted">${escapeHtml(stay.address || "Area to confirm")}</p>
           <p>${escapeHtml((stay.features || []).join(", "))}</p>
+          <p class="muted"><strong>Price source:</strong> ${escapeHtml(stay.priceConfidence || "Indicative nightly price")} ${stay.lastChecked ? `- ${escapeHtml(compactDateTime(stay.lastChecked))}` : ""}</p>
+          ${stay.petNote ? `<p class="muted"><strong>Dog note:</strong> ${escapeHtml(stay.petNote)}</p>` : ""}
           <div class="meta-grid">
             <div><span>Night</span><strong>${money(stay.price)}</strong></div>
             <div><span>Rating</span><strong>${escapeHtml(stay.rating)}</strong></div>
           </div>
-          ${stay.bookingUrl ? `<a class="link-button" href="${escapeHtml(stay.bookingUrl)}" target="_blank" rel="noreferrer">Check rooms</a>` : ""}
+          <div class="card-actions">
+            ${stay.bookingUrl ? `<a class="link-button" href="${escapeHtml(stay.bookingUrl)}" target="_blank" rel="noreferrer">Check rooms</a>` : ""}
+            ${(stay.sourceLinks || []).slice(0, 3).map((link) => `<a class="link-button" href="${escapeHtml(link.url)}" target="_blank" rel="noreferrer">${escapeHtml(link.label)}</a>`).join("")}
+            ${stay.petPolicyUrl ? `<a class="link-button" href="${escapeHtml(stay.petPolicyUrl)}" target="_blank" rel="noreferrer">Pet policy</a>` : ""}
+          </div>
         </div>
       </article>
     `).join("")
@@ -421,7 +443,11 @@ function providerLinks(planOrDeal, destination) {
   const from = encodeURIComponent(els.origin.value || deal.origin || "Lund");
   return [
     { label: "Book transport", url: deal.bookingUrl },
+    ...(deal.sourceLinks || []),
+    { label: "Lastminute package", url: `https://www.lastminute.com/search?search.destination=${encodedCity}` },
+    { label: "Google Flights", url: `https://www.google.com/travel/flights?q=Flights%20from%20Copenhagen%20to%20${encodedCity}` },
     { label: "Compare stays", url: `https://www.booking.com/searchresults.html?ss=${encodedCity}&group_adults=${encodeURIComponent(els.numTravelers.value || "2")}&nflt=hotelfacility%3D4` },
+    { label: "Google Hotels", url: `https://www.google.com/travel/hotels/${encodedCity}` },
     { label: "Map route", url: `https://www.google.com/maps/dir/${from}/${encodedCity}` },
     { label: "Weather check", url: `https://www.google.com/search?q=${encodedCity}+weather+${encodeURIComponent(formatDate(els.travelDate.value))}` },
     { label: "Dog travel rules", url: `https://www.google.com/search?q=${encodedCity}+small+dog+travel+rules+airline+hotel` },

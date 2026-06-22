@@ -9,6 +9,13 @@
     "address": "Friedrichshain, near Ostbahnhof",
     "features": ["Pet rooms", "Good transit", "Breakfast nearby", "Walkable to East Side Gallery"],
     "bookingUrl": "https://www.booking.com/searchresults.html?ss=Friedrichshain%2C+Berlin&nflt=hotelfacility%3D4",
+    "priceConfidence": "Indicative nightly budget from comparison search",
+    "petNote": "Use pet-friendly filter and confirm dog fee with property before booking.",
+    "sourceLinks": [
+      {"label": "Lastminute stays", "url": "https://www.lastminute.com/search?search.destination=Berlin"},
+      {"label": "Google Hotels", "url": "https://www.google.com/travel/hotels/Berlin"},
+      {"label": "Pet-friendly Booking", "url": "https://www.booking.com/searchresults.html?ss=Friedrichshain%2C+Berlin&nflt=hotelfacility%3D4"}
+    ],
     "image": "https://images.unsplash.com/photo-1565182999555-efcbca647f5b?auto=format&fit=crop&w=700&q=80"
   },
   {
@@ -21,6 +28,13 @@
     "address": "Mitte, central Berlin",
     "features": ["Central", "Restaurant", "Pet policy on request", "Museum access"],
     "bookingUrl": "https://www.booking.com/searchresults.html?ss=Mitte%2C+Berlin&nflt=hotelfacility%3D4",
+    "priceConfidence": "Indicative nightly budget from comparison search",
+    "petNote": "Central hotels often charge a pet supplement; confirm size limits.",
+    "sourceLinks": [
+      {"label": "Lastminute stays", "url": "https://www.lastminute.com/search?search.destination=Berlin"},
+      {"label": "Google Hotels", "url": "https://www.google.com/travel/hotels/Berlin"},
+      {"label": "Pet-friendly Booking", "url": "https://www.booking.com/searchresults.html?ss=Mitte%2C+Berlin&nflt=hotelfacility%3D4"}
+    ],
     "image": "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=700&q=80"
   },
   {
@@ -33,6 +47,13 @@
     "address": "Haga, Gothenburg",
     "features": ["Kitchen", "Tram nearby", "Dog-friendly host", "Cafe district"],
     "bookingUrl": "https://www.booking.com/searchresults.html?ss=Haga%2C+Gothenburg&nflt=hotelfacility%3D4",
+    "priceConfidence": "Indicative nightly budget from comparison search",
+    "petNote": "Apartments are often easier with a small dog; confirm cleaning fee.",
+    "sourceLinks": [
+      {"label": "Lastminute stays", "url": "https://www.lastminute.com/search?search.destination=Gothenburg"},
+      {"label": "Google Hotels", "url": "https://www.google.com/travel/hotels/Gothenburg"},
+      {"label": "Pet-friendly Booking", "url": "https://www.booking.com/searchresults.html?ss=Haga%2C+Gothenburg&nflt=hotelfacility%3D4"}
+    ],
     "image": "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=700&q=80"
   },
   {
@@ -45,6 +66,13 @@
     "address": "Near Gothenburg Central Station",
     "features": ["Station access", "Breakfast", "Late check-in", "Archipelago transit"],
     "bookingUrl": "https://www.booking.com/searchresults.html?ss=Gothenburg+Central+Station",
+    "priceConfidence": "Indicative nightly budget from comparison search",
+    "petNote": "No dog-friendly marker in this seed record; verify before selecting with dog mode.",
+    "sourceLinks": [
+      {"label": "Lastminute stays", "url": "https://www.lastminute.com/search?search.destination=Gothenburg"},
+      {"label": "Google Hotels", "url": "https://www.google.com/travel/hotels/Gothenburg"},
+      {"label": "Booking.com", "url": "https://www.booking.com/searchresults.html?ss=Gothenburg+Central+Station"}
+    ],
     "image": "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=700&q=80"
   },
   {
@@ -57,6 +85,13 @@
     "address": "Mala Strana, Prague",
     "features": ["Castle view", "Kitchen", "Pet-friendly", "Quiet streets"],
     "bookingUrl": "https://www.booking.com/searchresults.html?ss=Mala+Strana%2C+Prague&nflt=hotelfacility%3D4",
+    "priceConfidence": "Indicative nightly budget from comparison search",
+    "petNote": "Pet-friendly apartment style; confirm dog fee and stairs/lift before booking.",
+    "sourceLinks": [
+      {"label": "Lastminute stays", "url": "https://www.lastminute.com/search?search.destination=Prague"},
+      {"label": "Google Hotels", "url": "https://www.google.com/travel/hotels/Prague"},
+      {"label": "Pet-friendly Booking", "url": "https://www.booking.com/searchresults.html?ss=Mala+Strana%2C+Prague&nflt=hotelfacility%3D4"}
+    ],
     "image": "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=700&q=80"
   },
   {
@@ -69,6 +104,13 @@
     "address": "Kazimierz, Krakow",
     "features": ["Food district", "Historic building", "Breakfast", "Walkable old town"],
     "bookingUrl": "https://www.booking.com/searchresults.html?ss=Kazimierz%2C+Krakow",
+    "priceConfidence": "Indicative nightly budget from comparison search",
+    "petNote": "No dog-friendly marker in this seed record; use pet-friendly filter if dog is travelling.",
+    "sourceLinks": [
+      {"label": "Lastminute stays", "url": "https://www.lastminute.com/search?search.destination=Krakow"},
+      {"label": "Google Hotels", "url": "https://www.google.com/travel/hotels/Krakow"},
+      {"label": "Booking.com", "url": "https://www.booking.com/searchresults.html?ss=Kazimierz%2C+Krakow"}
+    ],
     "image": "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=700&q=80"
   },
   {

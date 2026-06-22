@@ -1,6 +1,6 @@
 import os
 import re
-from datetime import date
+from datetime import date, datetime, timezone
 
 import requests
 
@@ -19,11 +19,53 @@ DESTINATION_IMAGES = {
     "skanor-falsterbo": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80",
 }
 
+PET_POLICY_URLS = {
+    "SAS": "https://www.flysas.com/en/travel-info/baggage/pets/",
+    "Norwegian": "https://www.norwegian.com/en/travel-info/baggage/travelling-with-pets/",
+    "SJ": "https://www.sj.se/en/about-the-journey/before-the-journey/travelling-with-animals",
+    "Skanetrafiken": "https://www.skanetrafiken.se/",
+    "Skyscanner": "https://www.skyscanner.com/news/tips/flying-with-pets",
+}
+
 
 def slug(value):
     value = (value or "deal").lower()
     value = re.sub(r"[^a-z0-9]+", "-", value).strip("-")
     return value or "deal"
+
+
+def source_links(destination, mode):
+    destination_slug = slug(destination)
+    destination_query = destination_slug.replace("-", "%20")
+    links = [
+        {
+            "label": "Lastminute",
+            "url": f"https://www.lastminute.com/search?search.destination={destination_query}",
+        },
+        {
+            "label": "Skyscanner",
+            "url": f"https://www.skyscanner.com/transport/flights/cph/{destination_slug}/",
+        },
+        {
+            "label": "Booking.com",
+            "url": f"https://www.booking.com/searchresults.html?ss={destination_query}&nflt=hotelfacility%3D4",
+        },
+        {
+            "label": "Google Hotels",
+            "url": f"https://www.google.com/travel/hotels/{destination_query}",
+        },
+    ]
+    if "train" in str(mode).lower():
+        links.insert(0, {"label": "SJ", "url": "https://www.sj.se/en"})
+    return links
+
+
+def pet_note(provider, mode):
+    if "train" in str(mode).lower():
+        return "Train is usually the easiest option with a small dog, but book animal/pet area where required."
+    if provider in {"SAS", "Norwegian"}:
+        return "Small dog may be possible in cabin if airline carrier, weight, and route rules are met."
+    return "Pet-in-cabin depends on the selected airline; verify before paying."
 
 
 def curated_deals():
@@ -138,12 +180,18 @@ def curated_deals():
 
 def with_defaults(deal):
     destination = slug(deal.get("destination"))
+    provider = deal.get("provider", "Provider")
     deal.setdefault("id", f"{slug(deal.get('mode'))}-{destination}")
     deal["destination"] = destination
     deal.setdefault("image", DESTINATION_IMAGES.get(destination))
     deal.setdefault("expires", "Flexible")
-    deal.setdefault("provider", "Provider")
+    deal.setdefault("provider", provider)
     deal.setdefault("dogFriendly", "train" in str(deal.get("mode", "")).lower())
+    deal.setdefault("lastChecked", datetime.now(timezone.utc).isoformat())
+    deal.setdefault("priceConfidence", "Indicative lead price; final fare must be confirmed with provider")
+    deal.setdefault("sourceLinks", source_links(destination, deal.get("mode")))
+    deal.setdefault("petPolicyUrl", PET_POLICY_URLS.get(provider) or PET_POLICY_URLS.get("Skyscanner"))
+    deal.setdefault("petNote", pet_note(provider, deal.get("mode")))
     return deal
 
 
