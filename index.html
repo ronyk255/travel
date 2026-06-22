@@ -61,6 +61,16 @@
             </select>
           </label>
           <label>
+            Number of travelers
+            <select id="numTravelers">
+              <option value="1">1 person</option>
+              <option value="2" selected>2 people (you & wife)</option>
+              <option value="3">3 people</option>
+              <option value="4">4 people</option>
+              <option value="5">5+ people</option>
+            </select>
+          </label>
+          <label>
             Budget style
             <select id="travelStyle">
               <option value="budget">Budget (€ under €50/night)</option>
@@ -102,7 +112,7 @@
       <section class="section card">
         <button id="buildItinerary" class="primary-button">Generate Detailed Itinerary</button>
         <button id="printItinerary" class="secondary-button">Print Itinerary</button>
-        <button id="saveTrip" class="success-button">Save This Trip to Diary</button>
+        <button id="saveTrip" class="success-button">Add Approved Trip to Plans</button>
       </section>
 
       <!-- Itinerary Output -->

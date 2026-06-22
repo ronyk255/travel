@@ -10,7 +10,9 @@
     "price": 49,
     "image": "https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?auto=format&fit=crop&w=800&q=80",
     "description": "Low-cost summer flight with carry-on included. Dog-friendly cabin option on request.",
-    "expires": "2026-07-10"
+    "expires": "2026-07-10",
+    "bookingUrl": "https://www.skyscanner.com/transport/flights/cph/txl/?outboundDate=2026-07-03&inboundDate=2026-07-10",
+    "provider": "Skyscanner"
   },
   {
     "id": "train-gothenburg",
@@ -23,7 +25,9 @@
     "price": 35,
     "image": "https://images.unsplash.com/photo-1584391457515-4a6ddf59b99f?auto=format&fit=crop&w=800&q=80",
     "description": "SJ regional train with flexible ticket and pet-friendly carriage. Ideal for weekend trips.",
-    "expires": "2026-07-15"
+    "expires": "2026-07-15",
+    "bookingUrl": "https://www.sj.se/en/",
+    "provider": "SJ"
   },
   {
     "id": "flight-krakow",
@@ -36,7 +40,9 @@
     "price": 59,
     "image": "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=800&q=80",
     "description": "Summer sale on early-morning flights. Great for a budget culture trip.",
-    "expires": "2026-07-12"
+    "expires": "2026-07-12",
+    "bookingUrl": "https://www.skyscanner.com/transport/flights/cph/kra/",
+    "provider": "Skyscanner"
   },
   {
     "id": "flight-prague",
@@ -49,6 +55,8 @@
     "price": 52,
     "image": "https://images.unsplash.com/photo-1504681869696-d977e18ba43f?auto=format&fit=crop&w=800&q=80",
     "description": "Perfect for couples and travelers. Castle views and medieval charm await.",
-    "expires": "2026-07-14"
+    "expires": "2026-07-14",
+    "bookingUrl": "https://www.skyscanner.com/transport/flights/cph/prg/",
+    "provider": "Skyscanner"
   }
 ]

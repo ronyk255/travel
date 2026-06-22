@@ -259,6 +259,8 @@ document.getElementById("buildItinerary").addEventListener("click", async () => 
   const date = document.getElementById("travelDate").value;
   const length = Number(document.getElementById("tripLength").value);
   const style = document.getElementById("travelStyle").value;
+  const numTravelers = Number(document.getElementById("numTravelers").value);
+  const destination = globalDestinations.find((d) => d.id === deal.destination);
 
   const selectedAccs = Array.from(selectedAccommodationIds)
     .map((id) => globalAccommodations.find((a) => a.id === id))
@@ -270,44 +272,100 @@ document.getElementById("buildItinerary").addEventListener("click", async () => 
 
   const itineraryContainer = document.getElementById("itinerary");
 
-  let html = `<h2>Your Detailed Itinerary</h2>`;
+  let html = `
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+      <h2>Your Detailed Itinerary</h2>
+      <div style="display: flex; gap: 0.5rem;">
+        <button onclick="approveItinerary()" class="success-button" style="margin: 0;">✓ Approve Trip</button>
+        <button onclick="document.getElementById('itinerary').innerHTML = ''" class="secondary-button" style="margin: 0;">✕ Reject</button>
+      </div>
+    </div>
+  `;
 
   // Trip Summary
   html += `
     <div class="itinerary-card">
       <h3>📋 Trip Summary</h3>
-      <p><strong>Origin:</strong> ${origin}</p>
-      <p><strong>Destination:</strong> ${deal.destination}</p>
-      <p><strong>Date:</strong> ${formatDate(date)}</p>
-      <p><strong>Duration:</strong> ${length} days</p>
-      <p><strong>Style:</strong> ${style}</p>
+      <div class="cost-breakdown">
+        <div class="cost-breakdown-row">
+          <span><strong>Destination:</strong></span>
+          <span>${destination?.name || deal.destination}</span>
+        </div>
+        <div class="cost-breakdown-row">
+          <span><strong>Origin:</strong></span>
+          <span>${origin}</span>
+        </div>
+        <div class="cost-breakdown-row">
+          <span><strong>Date:</strong></span>
+          <span>${formatDate(date)}</span>
+        </div>
+        <div class="cost-breakdown-row">
+          <span><strong>Duration:</strong></span>
+          <span>${length} days</span>
+        </div>
+        <div class="cost-breakdown-row">
+          <span><strong>Number of Travelers:</strong></span>
+          <span>${numTravelers} ${numTravelers === 1 ? 'person' : 'people'}</span>
+        </div>
+        <div class="cost-breakdown-row">
+          <span><strong>Travel Style:</strong></span>
+          <span>${style}</span>
+        </div>
+      </div>
     </div>
   `;
 
   // Day 1: Travel + Accommodation
   const accCost = selectedAccs.length > 0 ? selectedAccs[0].price : deal.price * 0.4;
-  const totalAccCost = accCost * length;
+  const totalAccCost = accCost * length * numTravelers;
+  const totalFlightCost = deal.price * numTravelers;
 
   html += `
     <div class="itinerary-card">
       <h3>✈️ Day 1: Travel & Arrival</h3>
+      ${destination?.image ? `<img src="${destination.image}" alt="${destination.name}" class="itinerary-image" />` : ''}
       <p><strong>${deal.mode}:</strong> ${deal.route} (${deal.duration})</p>
-      <p><strong>Cost:</strong> ${formatPrice(deal.price)}</p>
+      <p>${deal.description}</p>
+      <div class="cost-breakdown">
+        <div class="cost-breakdown-row">
+          <span>Transport (${numTravelers} travelers):</span>
+          <span><strong>${formatPrice(totalFlightCost)}</strong></span>
+        </div>
+      </div>
   `;
+
+  if (deal.bookingUrl) {
+    html += `
+      <a href="${deal.bookingUrl}" target="_blank" class="booking-link">
+        Book ${deal.mode}
+        <span class="booking-provider">${deal.provider || 'Booking'}</span>
+      </a>
+    `;
+  }
 
   if (selectedAccs.length > 0) {
     const acc = selectedAccs[0];
     html += `
-      <p><strong>Accommodation:</strong> ${acc.name} (${acc.address})</p>
-      <p><strong>Rating:</strong> ⭐ ${acc.rating}/5</p>
+      <h4 style="margin-top: 1rem; margin-bottom: 0.5rem;">🏨 Accommodation</h4>
+      ${acc.image ? `<img src="${acc.image}" alt="${acc.name}" class="itinerary-image" />` : ''}
+      <p><strong>${acc.name}</strong></p>
+      <p style="font-size: 0.9rem; color: #6b7280;">${acc.address}</p>
+      <p><strong>Rating:</strong> ⭐ ${acc.rating}/5 ${acc.dogFriendly ? '🐶 Dog-friendly' : ''}</p>
       <p><strong>Features:</strong> ${acc.features.join(", ")}</p>
-      <p><strong>Price:</strong> ${formatPrice(acc.price)}/night</p>
+      <div class="cost-breakdown">
+        <div class="cost-breakdown-row">
+          <span>Accommodation (${length} nights × ${numTravelers} people):</span>
+          <span><strong>${formatPrice(totalAccCost)}</strong></span>
+        </div>
+      </div>
+      ${acc.bookingUrl ? `<a href="${acc.bookingUrl}" target="_blank" class="booking-link">Book Accommodation</a>` : ''}
     `;
   }
 
   html += `</div>`;
 
   // Days 2 to N: Activities
+  let totalActivityCost = 0;
   for (let day = 2; day <= length; day++) {
     const dayActivities = selectedActs.slice((day - 2) % selectedActs.length, (day - 1) % selectedActs.length || selectedActs.length);
 
@@ -317,38 +375,73 @@ document.getElementById("buildItinerary").addEventListener("click", async () => 
 
     if (dayActivities.length > 0) {
       dayActivities.forEach((act) => {
+        const actTotalCost = act.price * numTravelers;
+        totalActivityCost += actTotalCost;
         html += `
         <p><strong>${act.name}</strong> (${act.duration}) - ${act.category}</p>
         <p style="font-size: 0.9rem; color: #6b7280;">${act.description}</p>
-        <p><strong>Cost:</strong> ${formatPrice(act.price)} ${act.dogFriendly ? "🐶" : ""}</p>
+        <p>⭐ ${act.rating}/5 ${act.dogFriendly ? '🐶' : ''} | Cost: <strong>${formatPrice(actTotalCost)}</strong> (${numTravelers} people)</p>
       `;
       });
     } else {
-      html += `<p>Free day to explore ${deal.destination} on your own!</p>`;
+      html += `<p>Free day to explore ${destination?.name || deal.destination} on your own!</p>`;
     }
 
-    if (day < length) {
-      html += `<p><strong>Accommodation:</strong> ${selectedAccs[0]?.name || "Local stay"} - ${formatPrice(accCost)}</p>`;
+    if (day < length && selectedAccs.length > 0) {
+      html += `<p><strong>Accommodation:</strong> ${selectedAccs[0]?.name || "Local stay"} - ${formatPrice(accCost * numTravelers)}/night</p>`;
     }
 
     html += `</div>`;
   }
 
   // Cost Summary
-  const actCost = selectedActs.reduce((sum, act) => sum + act.price, 0);
-  const totalCost = deal.price + totalAccCost + actCost;
+  const totalCost = totalFlightCost + totalAccCost + totalActivityCost;
 
   html += `
     <div class="itinerary-card" style="background: #f0fdf4; border-left-color: var(--success);">
-      <h3>💰 Cost Summary</h3>
-      <p><strong>Transport:</strong> ${formatPrice(deal.price)}</p>
-      <p><strong>Accommodation (${length} nights):</strong> ${formatPrice(totalAccCost)}</p>
-      <p><strong>Activities:</strong> ${formatPrice(actCost)}</p>
-      <p style="font-size: 1.2rem; font-weight: bold; color: var(--success);"><strong>Total Estimated Cost:</strong> ${formatPrice(totalCost)}</p>
+      <h3>💰 Cost Summary (${numTravelers} ${numTravelers === 1 ? 'person' : 'people'})</h3>
+      <div class="cost-breakdown">
+        <div class="cost-breakdown-row">
+          <span><strong>Transport:</strong></span>
+          <span>${formatPrice(totalFlightCost)}</span>
+        </div>
+        <div class="cost-breakdown-row">
+          <span><strong>Accommodation (${length} nights):</strong></span>
+          <span>${formatPrice(totalAccCost)}</span>
+        </div>
+        <div class="cost-breakdown-row">
+          <span><strong>Activities:</strong></span>
+          <span>${formatPrice(totalActivityCost)}</span>
+        </div>
+        <div class="cost-breakdown-row cost-total">
+          <span><strong>Total Estimated Cost:</strong></span>
+          <span>${formatPrice(totalCost)}</span>
+        </div>
+        <div class="cost-breakdown-row" style="margin-top: 0.5rem; border-top: 1px solid rgba(0,0,0,0.1); padding-top: 0.5rem;">
+          <span><strong>Per Person:</strong></span>
+          <span style="color: var(--success);">${formatPrice(totalCost / numTravelers)}</span>
+        </div>
+      </div>
     </div>
   `;
 
   itineraryContainer.innerHTML = html;
+
+  // Store current itinerary for approval
+  window.currentItinerary = {
+    destination: destination?.name || deal.destination,
+    date: formatDate(date),
+    length: `${length} days`,
+    deal: deal.title,
+    numTravelers: numTravelers,
+    totalCost: totalCost,
+    accommodations: Array.from(selectedAccommodationIds)
+      .map((id) => globalAccommodations.find((a) => a.id === id)?.name)
+      .filter(Boolean),
+    activities: Array.from(selectedActivityIds)
+      .map((id) => globalActivities.find((a) => a.id === id)?.name)
+      .filter(Boolean),
+  };
 
   // Scroll to itinerary
   itineraryContainer.scrollIntoView({ behavior: "smooth" });
@@ -359,40 +452,73 @@ document.getElementById("printItinerary").addEventListener("click", () => {
   window.print();
 });
 
-// Save Trip to Diary
+// Save Trip to Diary (now triggers approval workflow)
 document.getElementById("saveTrip").addEventListener("click", () => {
-  const deal = globalDeals.find((d) => d.id === selectedDealId);
-  if (!deal) {
-    alert("Please create an itinerary first.");
+  window.approveItinerary();
+});
+
+// Approve Itinerary (new workflow)
+window.approveItinerary = function () {
+  if (!window.currentItinerary) {
+    alert("Please generate an itinerary first.");
     return;
   }
 
-  const date = document.getElementById("travelDate").value;
-  const length = document.getElementById("tripLength").value;
-
   const trip = {
     id: Date.now(),
-    destination: deal.destination,
-    date: formatDate(date),
-    length: `${length} days`,
-    deal: deal.title,
-    accommodations: Array.from(selectedAccommodationIds)
-      .map((id) => globalAccommodations.find((a) => a.id === id)?.name)
-      .filter(Boolean),
-    activities: Array.from(selectedActivityIds)
-      .map((id) => globalActivities.find((a) => a.id === id)?.name)
-      .filter(Boolean),
+    ...window.currentItinerary,
   };
 
-  let trips = JSON.parse(localStorage.getItem("savedTrips") || "[]");
-  trips.push(trip);
-  localStorage.setItem("savedTrips", JSON.stringify(trips));
+  let approvedTrips = JSON.parse(localStorage.getItem("approvedTrips") || "[]");
+  approvedTrips.push(trip);
+  localStorage.setItem("approvedTrips", JSON.stringify(approvedTrips));
 
-  alert(`✓ Trip saved to your Travel Diary!`);
-  renderSavedTrips();
-});
+  alert(`✓ Trip approved and added to your Travel Plans!`);
+  document.getElementById("itinerary").innerHTML = "";
+  window.currentItinerary = null;
+  renderApprovedTrips();
+};
 
-// Render Saved Trips
+// Render Approved Trips (Travel Plans)
+function renderApprovedTrips() {
+  const trips = JSON.parse(localStorage.getItem("approvedTrips") || "[]");
+  const container = document.getElementById("savedTrips");
+
+  if (trips.length === 0) {
+    container.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: #6b7280;">No approved trips yet. Generate and approve an itinerary to add your first travel plan!</p>`;
+    return;
+  }
+
+  container.innerHTML = trips
+    .map(
+      (trip) => `
+    <div class="trip-card">
+      <button class="trip-delete" onclick="deleteApprovedTrip(${trip.id})">Delete</button>
+      <h3>🌍 ${trip.destination}</h3>
+      <p class="trip-date">${trip.date} • ${trip.length}</p>
+      <p><strong>${trip.deal}</strong></p>
+      <p style="font-size: 0.9rem; color: #2563eb;"><strong>👥 ${trip.numTravelers} travelers | 💰 Total: €${trip.totalCost.toFixed(0)} (€${(trip.totalCost / trip.numTravelers).toFixed(0)}/person)</strong></p>
+      <ul class="trip-highlights">
+        ${trip.accommodations.map((acc) => `<li>🏨 ${acc}</li>`).join("")}
+        ${trip.activities.map((act) => `<li>🎯 ${act}</li>`).join("")}
+      </ul>
+    </div>
+  `
+    )
+    .join("");
+}
+
+// Delete Approved Trip
+window.deleteApprovedTrip = function (tripId) {
+  if (confirm("Delete this trip from your Travel Plans?")) {
+    let trips = JSON.parse(localStorage.getItem("approvedTrips") || "[]");
+    trips = trips.filter((t) => t.id !== tripId);
+    localStorage.setItem("approvedTrips", JSON.stringify(trips));
+    renderApprovedTrips();
+  }
+};
+
+// Render Saved Trips (Legacy)
 function renderSavedTrips() {
   const trips = JSON.parse(localStorage.getItem("savedTrips") || "[]");
   const container = document.getElementById("savedTrips");
@@ -439,5 +565,5 @@ window.deleteTrip = function (tripId) {
   globalActivities = await loadData("data/activities_full.json");
 
   renderDeals(globalDeals);
-  renderSavedTrips();
+  renderApprovedTrips();
 })();

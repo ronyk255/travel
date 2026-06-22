@@ -9,7 +9,8 @@
     "address": "Friedrichshain, Berlin",
     "features": ["Breakfast included", "WiFi", "City center access", "Pet-friendly rooms"],
     "reviews": "Amazing host, clean rooms, great location!",
-    "bookingUrl": "https://example.com/berlin-guesthouse"
+    "bookingUrl": "https://www.booking.com/searchresults.html?ss=Friedrichshain+Berlin",
+    "image": "https://images.unsplash.com/photo-1565182999555-efcbca647f5b?auto=format&fit=crop&w=600&q=80"
   },
   {
     "id": "berlin-hotel",
@@ -21,7 +22,8 @@
     "address": "Mitte, Berlin",
     "features": ["Gym", "Restaurant", "Rooftop terrace", "Pet-friendly"],
     "reviews": "Excellent service, modern design, central location.",
-    "bookingUrl": "https://example.com/berlin-hotel"
+    "bookingUrl": "https://www.booking.com/searchresults.html?ss=Mitte+Berlin",
+    "image": "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=600&q=80"
   },
   {
     "id": "gothenburg-canal",
@@ -33,7 +35,8 @@
     "address": "Canal district, Gothenburg",
     "features": ["Kitchenette", "Tram connection", "Waterfront view", "Dog-friendly patio"],
     "reviews": "Charming location, perfect for couples and dogs!",
-    "bookingUrl": "https://example.com/gothenburg-studio"
+    "bookingUrl": "https://www.booking.com/searchresults.html?ss=Gothenburg",
+    "image": "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=600&q=80"
   },
   {
     "id": "gothenburg-hostel",

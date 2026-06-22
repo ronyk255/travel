@@ -355,6 +355,7 @@ input[type="date"] {
   border-left: 4px solid var(--accent);
   cursor: default;
   transform: none;
+  padding: 1.5rem;
 }
 
 .itinerary-card:hover {
@@ -370,6 +371,66 @@ input[type="date"] {
 .itinerary-meta {
   color: var(--muted);
   font-size: 0.95rem;
+}
+
+.itinerary-image {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin: 0.75rem 0;
+}
+
+.booking-link {
+  display: inline-block;
+  padding: 0.6rem 1.2rem;
+  background: var(--accent);
+  color: white;
+  text-decoration: none;
+  border-radius: 9999px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: background 0.2s ease;
+  margin-right: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.booking-link:hover {
+  background: var(--accent-dark);
+}
+
+.booking-provider {
+  display: inline-block;
+  font-size: 0.8rem;
+  background: #e5e7eb;
+  padding: 0.3rem 0.6rem;
+  border-radius: 6px;
+  margin-left: 0.5rem;
+  color: var(--text);
+}
+
+.cost-breakdown {
+  display: grid;
+  gap: 0.5rem;
+  margin: 1rem 0;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 9px;
+  font-size: 0.95rem;
+}
+
+.cost-breakdown-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cost-total {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--success);
+  border-top: 2px solid var(--accent);
+  padding-top: 0.75rem;
 }
 
 .selected-summary {
