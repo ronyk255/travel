@@ -12,10 +12,21 @@ async function loadData(filename) {
 function renderDeals(deals) {
   dealsContainer.innerHTML = deals.map((deal) => `
     <article class="deal-card">
-      <h3>${deal.title}</h3>
-      <p class="deal-meta">${deal.mode} • ${deal.route} • ${deal.duration}</p>
-      <p>${deal.description}</p>
-      <p class="deal-meta">Price: ${deal.price} • Book by: ${deal.expires}</p>
+      ${deal.image ? `
+        <div class="card-image">
+          <img src="${deal.image}" alt="${deal.destination}" />
+          <span class="deal-tag-badge">${deal.mode}</span>
+        </div>
+      ` : ''}
+      <div class="deal-body">
+        <h3>${deal.title}</h3>
+        <p class="deal-meta">${deal.route} • ${deal.duration}</p>
+        <p>${deal.description}</p>
+        <div class="deal-footer">
+          <span class="deal-price">${formatPrice(deal.price)}</span>
+          <span class="deal-tag">${deal.expires ? `Book by ${deal.expires}` : 'Flexible dates'}</span>
+        </div>
+      </div>
     </article>
   `).join('');
 }
@@ -23,10 +34,17 @@ function renderDeals(deals) {
 function renderGems(gems) {
   gemsContainer.innerHTML = gems.map((gem) => `
     <article class="gem-card">
-      <h3>${gem.name}</h3>
-      <p class="gem-meta">${gem.region} • ${gem.type}</p>
-      <p>${gem.description}</p>
-      <p class="gem-meta">Best for: ${gem.bestFor} • Travel tip: ${gem.tip}</p>
+      ${gem.image ? `
+        <div class="card-image">
+          <img src="${gem.image}" alt="${gem.name}" />
+        </div>
+      ` : ''}
+      <div class="gem-body">
+        <h3>${gem.name}</h3>
+        <p class="gem-meta">${gem.region} • ${gem.type}</p>
+        <p>${gem.description}</p>
+        <p class="gem-meta">Best for: ${gem.bestFor} • Travel tip: ${gem.tip}</p>
+      </div>
     </article>
   `).join('');
 }
