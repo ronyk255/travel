@@ -8,13 +8,14 @@
     "destination": "skanor-falsterbo",
     "duration": "1h 20m",
     "price": 12,
+    "travelWindow": "Summer/local Skane only",
     "description": "Beach, village atmosphere, birdlife, and slower summer walking.",
-    "expires": "Seasonal",
+    "expires": "Rolling next 12 months",
     "bookingUrl": "https://www.skanetrafiken.se/",
     "provider": "Skanetrafiken",
     "dogFriendly": true,
     "image": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80",
-    "lastChecked": "2026-06-22T13:00:22.259081+00:00",
+    "lastChecked": "2026-06-22T13:07:38.313297+00:00",
     "priceConfidence": "Indicative lead price; final fare must be confirmed with provider",
     "sourceLinks": [
       {
@@ -50,13 +51,14 @@
     "destination": "ystad",
     "duration": "1h 05m",
     "price": 14,
+    "travelWindow": "Summer/local Skane only",
     "description": "Regional-ticket day trip for beaches, old town streets, and Sandskogen.",
-    "expires": "Seasonal",
+    "expires": "Rolling next 12 months",
     "bookingUrl": "https://www.skanetrafiken.se/",
     "provider": "Skanetrafiken",
     "dogFriendly": true,
     "image": "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=900&q=80",
-    "lastChecked": "2026-06-22T13:00:22.259074+00:00",
+    "lastChecked": "2026-06-22T13:07:38.313289+00:00",
     "priceConfidence": "Indicative lead price; final fare must be confirmed with provider",
     "sourceLinks": [
       {
@@ -92,13 +94,14 @@
     "destination": "gothenburg",
     "duration": "2h 15m",
     "price": 35,
+    "travelWindow": "All year, best value outside holidays",
     "description": "Direct train-friendly weekend with pet areas available on many services.",
-    "expires": "Flexible",
+    "expires": "Rolling next 12 months",
     "bookingUrl": "https://www.sj.se/en",
     "provider": "SJ",
     "dogFriendly": true,
     "image": "https://images.unsplash.com/photo-1535628805416-f3a0b3627d23?auto=format&fit=crop&w=900&q=80",
-    "lastChecked": "2026-06-22T13:00:22.259018+00:00",
+    "lastChecked": "2026-06-22T13:07:38.313123+00:00",
     "priceConfidence": "Indicative lead price; final fare must be confirmed with provider",
     "sourceLinks": [
       {
@@ -126,6 +129,84 @@
     "petNote": "Train is usually the easiest option with a small dog, but book animal/pet area where required."
   },
   {
+    "id": "flight-gdansk",
+    "title": "Gdansk Baltic Weekend",
+    "mode": "Flight",
+    "route": "Copenhagen Airport -> Gdansk",
+    "origin": "Copenhagen Airport",
+    "destination": "gdansk",
+    "duration": "1h 05m",
+    "price": 39,
+    "travelWindow": "Sep-Nov and Mar-May",
+    "description": "Short flight, colorful old town, harbor walks, and good accommodation value.",
+    "expires": "Rolling next 12 months",
+    "bookingUrl": "https://www.skyscanner.com/transport/flights/cph/gdansk/",
+    "provider": "Skyscanner",
+    "dogFriendly": false,
+    "image": "https://images.unsplash.com/photo-1519540635785-7d367d74c8f2?auto=format&fit=crop&w=900&q=80",
+    "lastChecked": "2026-06-22T13:07:38.313262+00:00",
+    "priceConfidence": "Indicative lead price; final fare must be confirmed with provider",
+    "sourceLinks": [
+      {
+        "label": "Lastminute",
+        "url": "https://www.lastminute.com/search?search.destination=gdansk"
+      },
+      {
+        "label": "Skyscanner",
+        "url": "https://www.skyscanner.com/transport/flights/cph/gdansk/"
+      },
+      {
+        "label": "Booking.com",
+        "url": "https://www.booking.com/searchresults.html?ss=gdansk&nflt=hotelfacility%3D4"
+      },
+      {
+        "label": "Google Hotels",
+        "url": "https://www.google.com/travel/hotels/gdansk"
+      }
+    ],
+    "petPolicyUrl": "https://www.skyscanner.com/news/tips/flying-with-pets",
+    "petNote": "Pet-in-cabin depends on the selected airline; verify before paying."
+  },
+  {
+    "id": "flight-warsaw",
+    "title": "Warsaw Budget Weekend",
+    "mode": "Flight",
+    "route": "Copenhagen Airport -> Warsaw",
+    "origin": "Copenhagen Airport",
+    "destination": "warsaw",
+    "duration": "1h 25m",
+    "price": 45,
+    "travelWindow": "Sep-Nov and Jan-Apr",
+    "description": "One of the best value city breaks for food, museums, and modern hotels.",
+    "expires": "Rolling next 12 months",
+    "bookingUrl": "https://www.skyscanner.com/transport/flights/cph/warsaw/",
+    "provider": "Skyscanner",
+    "dogFriendly": false,
+    "image": "https://images.unsplash.com/photo-1519197924294-4ba991a11128?auto=format&fit=crop&w=900&q=80",
+    "lastChecked": "2026-06-22T13:07:38.313256+00:00",
+    "priceConfidence": "Indicative lead price; final fare must be confirmed with provider",
+    "sourceLinks": [
+      {
+        "label": "Lastminute",
+        "url": "https://www.lastminute.com/search?search.destination=warsaw"
+      },
+      {
+        "label": "Skyscanner",
+        "url": "https://www.skyscanner.com/transport/flights/cph/warsaw/"
+      },
+      {
+        "label": "Booking.com",
+        "url": "https://www.booking.com/searchresults.html?ss=warsaw&nflt=hotelfacility%3D4"
+      },
+      {
+        "label": "Google Hotels",
+        "url": "https://www.google.com/travel/hotels/warsaw"
+      }
+    ],
+    "petPolicyUrl": "https://www.skyscanner.com/news/tips/flying-with-pets",
+    "petNote": "Pet-in-cabin depends on the selected airline; verify before paying."
+  },
+  {
     "id": "flight-berlin",
     "title": "Copenhagen to Berlin City Break",
     "mode": "Flight",
@@ -134,13 +215,14 @@
     "destination": "berlin",
     "duration": "1h 25m",
     "price": 49,
-    "description": "Short CPH flight. Confirm pet-in-cabin availability with the selected airline.",
-    "expires": "Flexible",
-    "bookingUrl": "https://www.skyscanner.com/transport/flights/cph/ber/",
+    "travelWindow": "Sep-Nov and Jan-Mar",
+    "description": "Short CPH flight; strong weekend value and also reachable by night train.",
+    "expires": "Rolling next 12 months",
+    "bookingUrl": "https://www.skyscanner.com/transport/flights/cph/berlin/",
     "provider": "Skyscanner",
     "dogFriendly": true,
     "image": "https://images.unsplash.com/photo-1560969184-10fe8719e047?auto=format&fit=crop&w=900&q=80",
-    "lastChecked": "2026-06-22T13:00:22.259043+00:00",
+    "lastChecked": "2026-06-22T13:07:38.313152+00:00",
     "priceConfidence": "Indicative lead price; final fare must be confirmed with provider",
     "sourceLinks": [
       {
@@ -172,13 +254,14 @@
     "destination": "prague",
     "duration": "2h 05m",
     "price": 52,
+    "travelWindow": "Oct-Nov, Jan-Mar, May",
     "description": "Good-value couple trip with castle views and walkable neighborhoods.",
-    "expires": "Flexible",
-    "bookingUrl": "https://www.skyscanner.com/transport/flights/cph/prg/",
+    "expires": "Rolling next 12 months",
+    "bookingUrl": "https://www.skyscanner.com/transport/flights/cph/prague/",
     "provider": "Skyscanner",
     "dogFriendly": true,
     "image": "https://images.unsplash.com/photo-1519677100203-a0e668c92439?auto=format&fit=crop&w=900&q=80",
-    "lastChecked": "2026-06-22T13:00:22.259053+00:00",
+    "lastChecked": "2026-06-22T13:07:38.313180+00:00",
     "priceConfidence": "Indicative lead price; final fare must be confirmed with provider",
     "sourceLinks": [
       {
@@ -202,6 +285,45 @@
     "petNote": "Pet-in-cabin depends on the selected airline; verify before paying."
   },
   {
+    "id": "flight-riga",
+    "title": "Riga Old Town and Art Nouveau",
+    "mode": "Flight",
+    "route": "Copenhagen Airport -> Riga",
+    "origin": "Copenhagen Airport",
+    "destination": "riga",
+    "duration": "1h 25m",
+    "price": 55,
+    "travelWindow": "Sep-Nov and Feb-May",
+    "description": "Low-cost Baltic weekend with old town, markets, and architecture.",
+    "expires": "Rolling next 12 months",
+    "bookingUrl": "https://www.skyscanner.com/transport/flights/cph/riga/",
+    "provider": "Skyscanner",
+    "dogFriendly": false,
+    "image": "https://images.unsplash.com/photo-1569505827657-3f6b4212e9c9?auto=format&fit=crop&w=900&q=80",
+    "lastChecked": "2026-06-22T13:07:38.313268+00:00",
+    "priceConfidence": "Indicative lead price; final fare must be confirmed with provider",
+    "sourceLinks": [
+      {
+        "label": "Lastminute",
+        "url": "https://www.lastminute.com/search?search.destination=riga"
+      },
+      {
+        "label": "Skyscanner",
+        "url": "https://www.skyscanner.com/transport/flights/cph/riga/"
+      },
+      {
+        "label": "Booking.com",
+        "url": "https://www.booking.com/searchresults.html?ss=riga&nflt=hotelfacility%3D4"
+      },
+      {
+        "label": "Google Hotels",
+        "url": "https://www.google.com/travel/hotels/riga"
+      }
+    ],
+    "petPolicyUrl": "https://www.skyscanner.com/news/tips/flying-with-pets",
+    "petNote": "Pet-in-cabin depends on the selected airline; verify before paying."
+  },
+  {
     "id": "flight-krakow",
     "title": "Budget Culture Trip to Krakow",
     "mode": "Flight",
@@ -210,13 +332,14 @@
     "destination": "krakow",
     "duration": "1h 35m",
     "price": 59,
+    "travelWindow": "Sep-Nov and Feb-Apr",
     "description": "Strong value for food, old-town walks, and history.",
-    "expires": "Flexible",
-    "bookingUrl": "https://www.skyscanner.com/transport/flights/cph/krk/",
+    "expires": "Rolling next 12 months",
+    "bookingUrl": "https://www.skyscanner.com/transport/flights/cph/krakow/",
     "provider": "Skyscanner",
     "dogFriendly": false,
     "image": "https://images.unsplash.com/photo-1541849546-216549ae216d?auto=format&fit=crop&w=900&q=80",
-    "lastChecked": "2026-06-22T13:00:22.259061+00:00",
+    "lastChecked": "2026-06-22T13:07:38.313187+00:00",
     "priceConfidence": "Indicative lead price; final fare must be confirmed with provider",
     "sourceLinks": [
       {
@@ -240,21 +363,377 @@
     "petNote": "Pet-in-cabin depends on the selected airline; verify before paying."
   },
   {
+    "id": "train-hamburg",
+    "title": "Train Weekend to Hamburg",
+    "mode": "Train",
+    "route": "Lund -> Copenhagen -> Hamburg",
+    "origin": "Lund",
+    "destination": "hamburg",
+    "duration": "5h 30m",
+    "price": 59,
+    "travelWindow": "All year when booked early",
+    "description": "Dog-friendly rail route with harbor walks, Speicherstadt, and food halls.",
+    "expires": "Rolling next 12 months",
+    "bookingUrl": "https://int.bahn.de/en",
+    "provider": "DB/SJ",
+    "dogFriendly": true,
+    "image": "https://images.unsplash.com/photo-1516483638261-f4dbaf036963?auto=format&fit=crop&w=900&q=80",
+    "lastChecked": "2026-06-22T13:07:38.313282+00:00",
+    "priceConfidence": "Indicative lead price; final fare must be confirmed with provider",
+    "sourceLinks": [
+      {
+        "label": "SJ",
+        "url": "https://www.sj.se/en"
+      },
+      {
+        "label": "Lastminute",
+        "url": "https://www.lastminute.com/search?search.destination=hamburg"
+      },
+      {
+        "label": "Skyscanner",
+        "url": "https://www.skyscanner.com/transport/flights/cph/hamburg/"
+      },
+      {
+        "label": "Booking.com",
+        "url": "https://www.booking.com/searchresults.html?ss=hamburg&nflt=hotelfacility%3D4"
+      },
+      {
+        "label": "Google Hotels",
+        "url": "https://www.google.com/travel/hotels/hamburg"
+      }
+    ],
+    "petPolicyUrl": "https://www.skyscanner.com/news/tips/flying-with-pets",
+    "petNote": "Train is usually the easiest option with a small dog, but book animal/pet area where required."
+  },
+  {
+    "id": "flight-budapest",
+    "title": "Thermal Bath Weekend in Budapest",
+    "mode": "Flight",
+    "route": "Copenhagen Airport -> Budapest",
+    "origin": "Copenhagen Airport",
+    "destination": "budapest",
+    "duration": "1h 50m",
+    "price": 62,
+    "travelWindow": "Oct-Mar, excluding Christmas/New Year",
+    "description": "Excellent value for thermal baths, grand cafes, and river walks.",
+    "expires": "Rolling next 12 months",
+    "bookingUrl": "https://www.skyscanner.com/transport/flights/cph/budapest/",
+    "provider": "Skyscanner",
+    "dogFriendly": false,
+    "image": "https://images.unsplash.com/photo-1549877452-9c387954fbc2?auto=format&fit=crop&w=900&q=80",
+    "lastChecked": "2026-06-22T13:07:38.313202+00:00",
+    "priceConfidence": "Indicative lead price; final fare must be confirmed with provider",
+    "sourceLinks": [
+      {
+        "label": "Lastminute",
+        "url": "https://www.lastminute.com/search?search.destination=budapest"
+      },
+      {
+        "label": "Skyscanner",
+        "url": "https://www.skyscanner.com/transport/flights/cph/budapest/"
+      },
+      {
+        "label": "Booking.com",
+        "url": "https://www.booking.com/searchresults.html?ss=budapest&nflt=hotelfacility%3D4"
+      },
+      {
+        "label": "Google Hotels",
+        "url": "https://www.google.com/travel/hotels/budapest"
+      }
+    ],
+    "petPolicyUrl": "https://www.skyscanner.com/news/tips/flying-with-pets",
+    "petNote": "Pet-in-cabin depends on the selected airline; verify before paying."
+  },
+  {
+    "id": "flight-tallinn",
+    "title": "Tallinn Medieval Weekend",
+    "mode": "Flight",
+    "route": "Copenhagen Airport -> Tallinn",
+    "origin": "Copenhagen Airport",
+    "destination": "tallinn",
+    "duration": "1h 30m",
+    "price": 64,
+    "travelWindow": "Sep-Nov and Feb-Apr",
+    "description": "Medieval old town, saunas, design shops, and good winter atmosphere.",
+    "expires": "Rolling next 12 months",
+    "bookingUrl": "https://www.skyscanner.com/transport/flights/cph/tallinn/",
+    "provider": "Skyscanner",
+    "dogFriendly": false,
+    "image": "https://images.unsplash.com/photo-1607681000065-428fb4d0d97e?auto=format&fit=crop&w=900&q=80",
+    "lastChecked": "2026-06-22T13:07:38.313275+00:00",
+    "priceConfidence": "Indicative lead price; final fare must be confirmed with provider",
+    "sourceLinks": [
+      {
+        "label": "Lastminute",
+        "url": "https://www.lastminute.com/search?search.destination=tallinn"
+      },
+      {
+        "label": "Skyscanner",
+        "url": "https://www.skyscanner.com/transport/flights/cph/tallinn/"
+      },
+      {
+        "label": "Booking.com",
+        "url": "https://www.booking.com/searchresults.html?ss=tallinn&nflt=hotelfacility%3D4"
+      },
+      {
+        "label": "Google Hotels",
+        "url": "https://www.google.com/travel/hotels/tallinn"
+      }
+    ],
+    "petPolicyUrl": "https://www.skyscanner.com/news/tips/flying-with-pets",
+    "petNote": "Pet-in-cabin depends on the selected airline; verify before paying."
+  },
+  {
+    "id": "flight-vienna",
+    "title": "Vienna Culture Weekend",
+    "mode": "Flight",
+    "route": "Copenhagen Airport -> Vienna",
+    "origin": "Copenhagen Airport",
+    "destination": "vienna",
+    "duration": "1h 45m",
+    "price": 69,
+    "travelWindow": "Nov-Mar and May weekdays",
+    "description": "Museums, palaces, coffeehouses, and easy public transport for a refined trip.",
+    "expires": "Rolling next 12 months",
+    "bookingUrl": "https://www.skyscanner.com/transport/flights/cph/vienna/",
+    "provider": "Skyscanner",
+    "dogFriendly": true,
+    "image": "https://images.unsplash.com/photo-1516550893923-42d28e5677af?auto=format&fit=crop&w=900&q=80",
+    "lastChecked": "2026-06-22T13:07:38.313208+00:00",
+    "priceConfidence": "Indicative lead price; final fare must be confirmed with provider",
+    "sourceLinks": [
+      {
+        "label": "Lastminute",
+        "url": "https://www.lastminute.com/search?search.destination=vienna"
+      },
+      {
+        "label": "Skyscanner",
+        "url": "https://www.skyscanner.com/transport/flights/cph/vienna/"
+      },
+      {
+        "label": "Booking.com",
+        "url": "https://www.booking.com/searchresults.html?ss=vienna&nflt=hotelfacility%3D4"
+      },
+      {
+        "label": "Google Hotels",
+        "url": "https://www.google.com/travel/hotels/vienna"
+      }
+    ],
+    "petPolicyUrl": "https://www.skyscanner.com/news/tips/flying-with-pets",
+    "petNote": "Pet-in-cabin depends on the selected airline; verify before paying."
+  },
+  {
+    "id": "flight-amsterdam",
+    "title": "Canals and Museums in Amsterdam",
+    "mode": "Flight",
+    "route": "Copenhagen Airport -> Amsterdam",
+    "origin": "Copenhagen Airport",
+    "destination": "amsterdam",
+    "duration": "1h 30m",
+    "price": 74,
+    "travelWindow": "Nov-Mar and shoulder-season weekdays",
+    "description": "Compact flight for museums, canals, markets, and easy long-weekend planning.",
+    "expires": "Rolling next 12 months",
+    "bookingUrl": "https://www.skyscanner.com/transport/flights/cph/amsterdam/",
+    "provider": "Skyscanner",
+    "dogFriendly": true,
+    "image": "https://images.unsplash.com/photo-1512470876302-972faa2aa9a4?auto=format&fit=crop&w=900&q=80",
+    "lastChecked": "2026-06-22T13:07:38.313195+00:00",
+    "priceConfidence": "Indicative lead price; final fare must be confirmed with provider",
+    "sourceLinks": [
+      {
+        "label": "Lastminute",
+        "url": "https://www.lastminute.com/search?search.destination=amsterdam"
+      },
+      {
+        "label": "Skyscanner",
+        "url": "https://www.skyscanner.com/transport/flights/cph/amsterdam/"
+      },
+      {
+        "label": "Booking.com",
+        "url": "https://www.booking.com/searchresults.html?ss=amsterdam&nflt=hotelfacility%3D4"
+      },
+      {
+        "label": "Google Hotels",
+        "url": "https://www.google.com/travel/hotels/amsterdam"
+      }
+    ],
+    "petPolicyUrl": "https://www.skyscanner.com/news/tips/flying-with-pets",
+    "petNote": "Pet-in-cabin depends on the selected airline; verify before paying."
+  },
+  {
+    "id": "flight-paris",
+    "title": "Paris Off-Season Deal",
+    "mode": "Flight",
+    "route": "Copenhagen Airport -> Paris",
+    "origin": "Copenhagen Airport",
+    "destination": "paris",
+    "duration": "2h 00m",
+    "price": 79,
+    "travelWindow": "Nov-Mar weekdays",
+    "description": "Museums, food, parks, and lower prices outside peak weekends.",
+    "expires": "Rolling next 12 months",
+    "bookingUrl": "https://www.skyscanner.com/transport/flights/cph/paris/",
+    "provider": "Skyscanner",
+    "dogFriendly": true,
+    "image": "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=900&q=80",
+    "lastChecked": "2026-06-22T13:07:38.313248+00:00",
+    "priceConfidence": "Indicative lead price; final fare must be confirmed with provider",
+    "sourceLinks": [
+      {
+        "label": "Lastminute",
+        "url": "https://www.lastminute.com/search?search.destination=paris"
+      },
+      {
+        "label": "Skyscanner",
+        "url": "https://www.skyscanner.com/transport/flights/cph/paris/"
+      },
+      {
+        "label": "Booking.com",
+        "url": "https://www.booking.com/searchresults.html?ss=paris&nflt=hotelfacility%3D4"
+      },
+      {
+        "label": "Google Hotels",
+        "url": "https://www.google.com/travel/hotels/paris"
+      }
+    ],
+    "petPolicyUrl": "https://www.skyscanner.com/news/tips/flying-with-pets",
+    "petNote": "Pet-in-cabin depends on the selected airline; verify before paying."
+  },
+  {
+    "id": "flight-nice",
+    "title": "Nice and Riviera Base",
+    "mode": "Flight",
+    "route": "Copenhagen Airport -> Nice",
+    "origin": "Copenhagen Airport",
+    "destination": "nice",
+    "duration": "2h 25m",
+    "price": 83,
+    "travelWindow": "Sep-Oct and Mar-May",
+    "description": "Sea views, old town, easy rail day trips along the Riviera.",
+    "expires": "Rolling next 12 months",
+    "bookingUrl": "https://www.skyscanner.com/transport/flights/cph/nice/",
+    "provider": "Skyscanner",
+    "dogFriendly": true,
+    "image": "https://images.unsplash.com/photo-1533614767277-8785f8a4ee6b?auto=format&fit=crop&w=900&q=80",
+    "lastChecked": "2026-06-22T13:07:38.313242+00:00",
+    "priceConfidence": "Indicative lead price; final fare must be confirmed with provider",
+    "sourceLinks": [
+      {
+        "label": "Lastminute",
+        "url": "https://www.lastminute.com/search?search.destination=nice"
+      },
+      {
+        "label": "Skyscanner",
+        "url": "https://www.skyscanner.com/transport/flights/cph/nice/"
+      },
+      {
+        "label": "Booking.com",
+        "url": "https://www.booking.com/searchresults.html?ss=nice&nflt=hotelfacility%3D4"
+      },
+      {
+        "label": "Google Hotels",
+        "url": "https://www.google.com/travel/hotels/nice"
+      }
+    ],
+    "petPolicyUrl": "https://www.skyscanner.com/news/tips/flying-with-pets",
+    "petNote": "Pet-in-cabin depends on the selected airline; verify before paying."
+  },
+  {
+    "id": "flight-barcelona",
+    "title": "Barcelona Shoulder-Season Trip",
+    "mode": "Flight",
+    "route": "Copenhagen Airport -> Barcelona",
+    "origin": "Copenhagen Airport",
+    "destination": "barcelona",
+    "duration": "2h 50m",
+    "price": 85,
+    "travelWindow": "Oct-Nov and Feb-Apr",
+    "description": "Architecture, beach walks, food markets, and best value outside peak summer.",
+    "expires": "Rolling next 12 months",
+    "bookingUrl": "https://www.skyscanner.com/transport/flights/cph/barcelona/",
+    "provider": "Skyscanner",
+    "dogFriendly": false,
+    "image": "https://images.unsplash.com/photo-1539037116277-4db20889f2d4?auto=format&fit=crop&w=900&q=80",
+    "lastChecked": "2026-06-22T13:07:38.313228+00:00",
+    "priceConfidence": "Indicative lead price; final fare must be confirmed with provider",
+    "sourceLinks": [
+      {
+        "label": "Lastminute",
+        "url": "https://www.lastminute.com/search?search.destination=barcelona"
+      },
+      {
+        "label": "Skyscanner",
+        "url": "https://www.skyscanner.com/transport/flights/cph/barcelona/"
+      },
+      {
+        "label": "Booking.com",
+        "url": "https://www.booking.com/searchresults.html?ss=barcelona&nflt=hotelfacility%3D4"
+      },
+      {
+        "label": "Google Hotels",
+        "url": "https://www.google.com/travel/hotels/barcelona"
+      }
+    ],
+    "petPolicyUrl": "https://www.skyscanner.com/news/tips/flying-with-pets",
+    "petNote": "Pet-in-cabin depends on the selected airline; verify before paying."
+  },
+  {
+    "id": "flight-rome",
+    "title": "Rome Ancient City Break",
+    "mode": "Flight",
+    "route": "Copenhagen Airport -> Rome",
+    "origin": "Copenhagen Airport",
+    "destination": "rome",
+    "duration": "2h 35m",
+    "price": 88,
+    "travelWindow": "Nov-Mar and late autumn",
+    "description": "Historic sites, walkable neighborhoods, and better prices outside summer heat.",
+    "expires": "Rolling next 12 months",
+    "bookingUrl": "https://www.skyscanner.com/transport/flights/cph/rome/",
+    "provider": "Skyscanner",
+    "dogFriendly": false,
+    "image": "https://images.unsplash.com/photo-1552832230-c0197dd311b5?auto=format&fit=crop&w=900&q=80",
+    "lastChecked": "2026-06-22T13:07:38.313236+00:00",
+    "priceConfidence": "Indicative lead price; final fare must be confirmed with provider",
+    "sourceLinks": [
+      {
+        "label": "Lastminute",
+        "url": "https://www.lastminute.com/search?search.destination=rome"
+      },
+      {
+        "label": "Skyscanner",
+        "url": "https://www.skyscanner.com/transport/flights/cph/rome/"
+      },
+      {
+        "label": "Booking.com",
+        "url": "https://www.booking.com/searchresults.html?ss=rome&nflt=hotelfacility%3D4"
+      },
+      {
+        "label": "Google Hotels",
+        "url": "https://www.google.com/travel/hotels/rome"
+      }
+    ],
+    "petPolicyUrl": "https://www.skyscanner.com/news/tips/flying-with-pets",
+    "petNote": "Pet-in-cabin depends on the selected airline; verify before paying."
+  },
+  {
     "id": "train-berlin-night",
-    "title": "Night Train Route Toward Berlin",
+    "title": "Night Train Toward Berlin",
     "mode": "Train",
     "route": "Lund -> Berlin",
     "origin": "Lund",
     "destination": "berlin",
     "duration": "11h 30m",
     "price": 89,
+    "travelWindow": "All year when booked early",
     "description": "No-airport route for a longer weekend. Check sleeper and pet conditions before booking.",
-    "expires": "Flexible",
+    "expires": "Rolling next 12 months",
     "bookingUrl": "https://www.sj.se/en",
     "provider": "SJ",
     "dogFriendly": true,
     "image": "https://images.unsplash.com/photo-1560969184-10fe8719e047?auto=format&fit=crop&w=900&q=80",
-    "lastChecked": "2026-06-22T13:00:22.259067+00:00",
+    "lastChecked": "2026-06-22T13:07:38.313171+00:00",
     "priceConfidence": "Indicative lead price; final fare must be confirmed with provider",
     "sourceLinks": [
       {
@@ -280,5 +759,83 @@
     ],
     "petPolicyUrl": "https://www.sj.se/en/about-the-journey/before-the-journey/travelling-with-animals",
     "petNote": "Train is usually the easiest option with a small dog, but book animal/pet area where required."
+  },
+  {
+    "id": "flight-porto",
+    "title": "Porto Riverside Escape",
+    "mode": "Flight",
+    "route": "Copenhagen Airport -> Porto",
+    "origin": "Copenhagen Airport",
+    "destination": "porto",
+    "duration": "3h 30m",
+    "price": 92,
+    "travelWindow": "Oct-Apr",
+    "description": "Often cheaper than Lisbon, with river views, wine cellars, and compact neighborhoods.",
+    "expires": "Rolling next 12 months",
+    "bookingUrl": "https://www.skyscanner.com/transport/flights/cph/porto/",
+    "provider": "Skyscanner",
+    "dogFriendly": true,
+    "image": "https://images.unsplash.com/photo-1555881400-74d7acaacd8b?auto=format&fit=crop&w=900&q=80",
+    "lastChecked": "2026-06-22T13:07:38.313222+00:00",
+    "priceConfidence": "Indicative lead price; final fare must be confirmed with provider",
+    "sourceLinks": [
+      {
+        "label": "Lastminute",
+        "url": "https://www.lastminute.com/search?search.destination=porto"
+      },
+      {
+        "label": "Skyscanner",
+        "url": "https://www.skyscanner.com/transport/flights/cph/porto/"
+      },
+      {
+        "label": "Booking.com",
+        "url": "https://www.booking.com/searchresults.html?ss=porto&nflt=hotelfacility%3D4"
+      },
+      {
+        "label": "Google Hotels",
+        "url": "https://www.google.com/travel/hotels/porto"
+      }
+    ],
+    "petPolicyUrl": "https://www.skyscanner.com/news/tips/flying-with-pets",
+    "petNote": "Pet-in-cabin depends on the selected airline; verify before paying."
+  },
+  {
+    "id": "flight-lisbon",
+    "title": "Lisbon Sun Break",
+    "mode": "Flight",
+    "route": "Copenhagen Airport -> Lisbon",
+    "origin": "Copenhagen Airport",
+    "destination": "lisbon",
+    "duration": "3h 50m",
+    "price": 98,
+    "travelWindow": "Nov-Mar and late spring",
+    "description": "Longer flight but good off-season sun, viewpoints, trams, and food.",
+    "expires": "Rolling next 12 months",
+    "bookingUrl": "https://www.skyscanner.com/transport/flights/cph/lisbon/",
+    "provider": "Skyscanner",
+    "dogFriendly": true,
+    "image": "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?auto=format&fit=crop&w=900&q=80",
+    "lastChecked": "2026-06-22T13:07:38.313214+00:00",
+    "priceConfidence": "Indicative lead price; final fare must be confirmed with provider",
+    "sourceLinks": [
+      {
+        "label": "Lastminute",
+        "url": "https://www.lastminute.com/search?search.destination=lisbon"
+      },
+      {
+        "label": "Skyscanner",
+        "url": "https://www.skyscanner.com/transport/flights/cph/lisbon/"
+      },
+      {
+        "label": "Booking.com",
+        "url": "https://www.booking.com/searchresults.html?ss=lisbon&nflt=hotelfacility%3D4"
+      },
+      {
+        "label": "Google Hotels",
+        "url": "https://www.google.com/travel/hotels/lisbon"
+      }
+    ],
+    "petPolicyUrl": "https://www.skyscanner.com/news/tips/flying-with-pets",
+    "petNote": "Pet-in-cabin depends on the selected airline; verify before paying."
   }
 ]

@@ -1,68 +1,22 @@
 [
-  {
-    "id": "berlin",
-    "name": "Berlin",
-    "country": "Germany",
-    "lat": 52.52,
-    "lng": 13.405,
-    "image": "https://images.unsplash.com/photo-1560969184-10fe8719e047?auto=format&fit=crop&w=900&q=80",
-    "description": "Street art, museums, markets, lakes, and neighborhoods that work well for a budget culture weekend.",
-    "highlights": ["East Side Gallery", "Museum Island", "Tempelhofer Feld", "Kreuzberg food stops"],
-    "dogFriendly": true
-  },
-  {
-    "id": "gothenburg",
-    "name": "Gothenburg",
-    "country": "Sweden",
-    "lat": 57.7089,
-    "lng": 11.9746,
-    "image": "https://images.unsplash.com/photo-1535628805416-f3a0b3627d23?auto=format&fit=crop&w=900&q=80",
-    "description": "A coastal city with trams, archipelago islands, Haga cafes, markets, and forest lakes close to town.",
-    "highlights": ["Haga", "Southern Archipelago", "Delsjon", "Feskekorka"],
-    "dogFriendly": true
-  },
-  {
-    "id": "krakow",
-    "name": "Krakow",
-    "country": "Poland",
-    "lat": 50.0647,
-    "lng": 19.945,
-    "image": "https://images.unsplash.com/photo-1541849546-216549ae216d?auto=format&fit=crop&w=900&q=80",
-    "description": "Low-cost food, old town streets, castle walks, Kazimierz cafes, and day trips to historic sites.",
-    "highlights": ["Main Market Square", "Wawel Castle", "Kazimierz", "Planty Park"],
-    "dogFriendly": false
-  },
-  {
-    "id": "prague",
-    "name": "Prague",
-    "country": "Czech Republic",
-    "lat": 50.0755,
-    "lng": 14.4378,
-    "image": "https://images.unsplash.com/photo-1519677100203-a0e668c92439?auto=format&fit=crop&w=900&q=80",
-    "description": "A romantic, walkable city with castle views, river islands, beer halls, gardens, and quiet early mornings.",
-    "highlights": ["Charles Bridge", "Prague Castle", "Letna Park", "Vinohrady"],
-    "dogFriendly": true
-  },
-  {
-    "id": "ystad",
-    "name": "Ystad",
-    "country": "Sweden",
-    "lat": 55.4295,
-    "lng": 13.82,
-    "image": "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=900&q=80",
-    "description": "A compact Skane day trip with timbered streets, quiet cafes, dunes, and Sandskogen forest by the coast.",
-    "highlights": ["Ystad old town", "Sandskogen", "Beach paths", "Ales Stenar extension"],
-    "dogFriendly": true
-  },
-  {
-    "id": "skanor-falsterbo",
-    "name": "Skanor-Falsterbo",
-    "country": "Sweden",
-    "lat": 55.383,
-    "lng": 12.85,
-    "image": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80",
-    "description": "Soft beaches, colorful bath huts, birdwatching, and a calmer village feel on the southwestern coast.",
-    "highlights": ["Falsterbo beach", "Skanor harbor", "Bird station", "Coastal trail"],
-    "dogFriendly": true
-  }
+  {"id":"berlin","name":"Berlin","country":"Germany","lat":52.52,"lng":13.405,"image":"https://images.unsplash.com/photo-1560969184-10fe8719e047?auto=format&fit=crop&w=900&q=80","description":"Street art, museums, markets, lakes, and neighborhoods that work well for a budget culture weekend.","highlights":["East Side Gallery","Museum Island","Tempelhofer Feld","Kreuzberg food stops"],"dogFriendly":true},
+  {"id":"gothenburg","name":"Gothenburg","country":"Sweden","lat":57.7089,"lng":11.9746,"image":"https://images.unsplash.com/photo-1535628805416-f3a0b3627d23?auto=format&fit=crop&w=900&q=80","description":"A coastal city with trams, archipelago islands, Haga cafes, markets, and forest lakes close to town.","highlights":["Haga","Southern Archipelago","Delsjon","Feskekorka"],"dogFriendly":true},
+  {"id":"krakow","name":"Krakow","country":"Poland","lat":50.0647,"lng":19.945,"image":"https://images.unsplash.com/photo-1541849546-216549ae216d?auto=format&fit=crop&w=900&q=80","description":"Low-cost food, old town streets, castle walks, Kazimierz cafes, and day trips to historic sites.","highlights":["Main Market Square","Wawel Castle","Kazimierz","Planty Park"],"dogFriendly":false},
+  {"id":"prague","name":"Prague","country":"Czech Republic","lat":50.0755,"lng":14.4378,"image":"https://images.unsplash.com/photo-1519677100203-a0e668c92439?auto=format&fit=crop&w=900&q=80","description":"A romantic, walkable city with castle views, river islands, beer halls, gardens, and quiet early mornings.","highlights":["Charles Bridge","Prague Castle","Letna Park","Vinohrady"],"dogFriendly":true},
+  {"id":"amsterdam","name":"Amsterdam","country":"Netherlands","lat":52.3676,"lng":4.9041,"image":"https://images.unsplash.com/photo-1512470876302-972faa2aa9a4?auto=format&fit=crop&w=900&q=80","description":"Canals, museums, markets, parks, and compact neighborhoods for an easy long weekend.","highlights":["Rijksmuseum","Jordaan","Vondelpark","Canal belt"],"dogFriendly":true},
+  {"id":"budapest","name":"Budapest","country":"Hungary","lat":47.4979,"lng":19.0402,"image":"https://images.unsplash.com/photo-1549877452-9c387954fbc2?auto=format&fit=crop&w=900&q=80","description":"Thermal baths, river views, grand cafes, ruin bars, and strong hotel value outside holidays.","highlights":["Buda Castle","Thermal baths","Great Market Hall","Danube promenade"],"dogFriendly":false},
+  {"id":"vienna","name":"Vienna","country":"Austria","lat":48.2082,"lng":16.3738,"image":"https://images.unsplash.com/photo-1516550893923-42d28e5677af?auto=format&fit=crop&w=900&q=80","description":"Museums, palaces, coffeehouses, parks, and polished public transport for a calm culture trip.","highlights":["Schonbrunn","Belvedere","Naschmarkt","MuseumsQuartier"],"dogFriendly":true},
+  {"id":"lisbon","name":"Lisbon","country":"Portugal","lat":38.7223,"lng":-9.1393,"image":"https://images.unsplash.com/photo-1501594907352-04cda38ebc29?auto=format&fit=crop&w=900&q=80","description":"Sun, viewpoints, tiles, trams, seafood, and good off-season energy.","highlights":["Alfama","Belem","Miradouros","LX Factory"],"dogFriendly":true},
+  {"id":"porto","name":"Porto","country":"Portugal","lat":41.1579,"lng":-8.6291,"image":"https://images.unsplash.com/photo-1555881400-74d7acaacd8b?auto=format&fit=crop&w=900&q=80","description":"Riverside walks, tiled churches, wine cellars, bridges, and good-value stays.","highlights":["Ribeira","Dom Luis I Bridge","Vila Nova de Gaia","Livraria Lello"],"dogFriendly":true},
+  {"id":"barcelona","name":"Barcelona","country":"Spain","lat":41.3874,"lng":2.1686,"image":"https://images.unsplash.com/photo-1539037116277-4db20889f2d4?auto=format&fit=crop&w=900&q=80","description":"Architecture, food markets, beach walks, neighborhoods, and shoulder-season warmth.","highlights":["Sagrada Familia","Gothic Quarter","Gracia","Barceloneta"],"dogFriendly":false},
+  {"id":"rome","name":"Rome","country":"Italy","lat":41.9028,"lng":12.4964,"image":"https://images.unsplash.com/photo-1552832230-c0197dd311b5?auto=format&fit=crop&w=900&q=80","description":"Ancient sites, piazzas, food, churches, and better walking weather outside summer.","highlights":["Colosseum","Trastevere","Pantheon","Villa Borghese"],"dogFriendly":false},
+  {"id":"nice","name":"Nice","country":"France","lat":43.7102,"lng":7.262,"image":"https://images.unsplash.com/photo-1533614767277-8785f8a4ee6b?auto=format&fit=crop&w=900&q=80","description":"Riviera sea views, old town lanes, train day trips, and spring/autumn warmth.","highlights":["Promenade des Anglais","Old Nice","Castle Hill","Monaco train day"],"dogFriendly":true},
+  {"id":"paris","name":"Paris","country":"France","lat":48.8566,"lng":2.3522,"image":"https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=900&q=80","description":"Museums, food, parks, covered passages, and lower prices on off-season weekdays.","highlights":["Louvre","Montmartre","Canal Saint-Martin","Luxembourg Gardens"],"dogFriendly":true},
+  {"id":"warsaw","name":"Warsaw","country":"Poland","lat":52.2297,"lng":21.0122,"image":"https://images.unsplash.com/photo-1519197924294-4ba991a11128?auto=format&fit=crop&w=900&q=80","description":"Modern food, museums, parks, rebuilt old town, and excellent accommodation value.","highlights":["Old Town","POLIN Museum","Lazienki Park","Praga"],"dogFriendly":false},
+  {"id":"gdansk","name":"Gdansk","country":"Poland","lat":54.352,"lng":18.6466,"image":"https://images.unsplash.com/photo-1519540635785-7d367d74c8f2?auto=format&fit=crop&w=900&q=80","description":"Baltic harbor city with colorful streets, waterfront walks, amber shops, and easy food stops.","highlights":["Long Market","Motlawa River","Westerplatte","Sopot add-on"],"dogFriendly":false},
+  {"id":"riga","name":"Riga","country":"Latvia","lat":56.9496,"lng":24.1052,"image":"https://images.unsplash.com/photo-1569505827657-3f6b4212e9c9?auto=format&fit=crop&w=900&q=80","description":"Old town, art nouveau streets, markets, river walks, and a strong-value Baltic weekend.","highlights":["Old Riga","Central Market","Art Nouveau district","Daugava river"],"dogFriendly":false},
+  {"id":"tallinn","name":"Tallinn","country":"Estonia","lat":59.437,"lng":24.7536,"image":"https://images.unsplash.com/photo-1607681000065-428fb4d0d97e?auto=format&fit=crop&w=900&q=80","description":"Medieval old town, design shops, saunas, viewpoints, and cozy winter atmosphere.","highlights":["Old Town","Telliskivi","Kadriorg","Patkuli viewpoint"],"dogFriendly":false},
+  {"id":"hamburg","name":"Hamburg","country":"Germany","lat":53.5511,"lng":9.9937,"image":"https://images.unsplash.com/photo-1516483638261-f4dbaf036963?auto=format&fit=crop&w=900&q=80","description":"Harbor, Speicherstadt, food halls, parks, and a practical dog-friendly rail route.","highlights":["Speicherstadt","Elbphilharmonie","St Pauli","Planten un Blomen"],"dogFriendly":true},
+  {"id":"ystad","name":"Ystad","country":"Sweden","lat":55.4295,"lng":13.82,"image":"https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=900&q=80","description":"A compact Skane day trip with timbered streets, quiet cafes, dunes, and Sandskogen forest by the coast.","highlights":["Ystad old town","Sandskogen","Beach paths","Ales Stenar extension"],"dogFriendly":true},
+  {"id":"skanor-falsterbo","name":"Skanor-Falsterbo","country":"Sweden","lat":55.383,"lng":12.85,"image":"https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80","description":"Soft beaches, colorful bath huts, birdwatching, and a calmer village feel on the southwestern coast.","highlights":["Falsterbo beach","Skanor harbor","Bird station","Coastal trail"],"dogFriendly":true}
 ]

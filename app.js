@@ -182,6 +182,7 @@ function dealCard(deal, compact = false) {
           <div><span>Score</span><strong>${score}/100</strong></div>
         </div>
         <p>${escapeHtml(deal.description || "Provider-linked deal. Confirm live fare before booking.")}</p>
+        ${deal.travelWindow ? `<p class="muted"><strong>Best window:</strong> ${escapeHtml(deal.travelWindow)}</p>` : ""}
         <p class="muted"><strong>Price source:</strong> ${escapeHtml(deal.priceConfidence || "Lead price; verify before booking")} - ${escapeHtml(compactDateTime(deal.lastChecked))}</p>
         ${deal.petNote ? `<p class="muted"><strong>Dog note:</strong> ${escapeHtml(deal.petNote)}</p>` : ""}
         ${compact ? "" : `<p class="muted">Book by: ${escapeHtml(deal.expires || "Flexible")}</p>`}
