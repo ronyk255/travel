@@ -1,10 +1,11 @@
 [
   {
+    "id": "flight-berlin",
     "title": "Budget Flight to Berlin",
     "mode": "Flight",
     "route": "Copenhagen Airport → Berlin",
     "origin": "Copenhagen Airport",
-    "destination": "Berlin",
+    "destination": "berlin",
     "duration": "1h 25m",
     "price": 49,
     "image": "https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?auto=format&fit=crop&w=800&q=80",
@@ -12,26 +13,42 @@
     "expires": "2026-07-10"
   },
   {
+    "id": "train-gothenburg",
     "title": "Train Escape to Gothenburg",
     "mode": "Train",
     "route": "Lund → Gothenburg",
     "origin": "Lund",
-    "destination": "Gothenburg",
+    "destination": "gothenburg",
     "duration": "2h 15m",
     "price": 35,
+    "image": "https://images.unsplash.com/photo-1584391457515-4a6ddf59b99f?auto=format&fit=crop&w=800&q=80",
     "description": "SJ regional train with flexible ticket and pet-friendly carriage. Ideal for weekend trips.",
     "expires": "2026-07-15"
   },
   {
+    "id": "flight-krakow",
     "title": "City Break to Krakow",
     "mode": "Flight",
     "route": "Copenhagen Airport → Krakow",
     "origin": "Copenhagen Airport",
-    "destination": "Krakow",
+    "destination": "krakow",
     "duration": "2h 10m",
     "price": 59,
     "image": "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=800&q=80",
     "description": "Summer sale on early-morning flights. Great for a budget culture trip.",
     "expires": "2026-07-12"
+  },
+  {
+    "id": "flight-prague",
+    "title": "Romantic Prague Escape",
+    "mode": "Flight",
+    "route": "Copenhagen Airport → Prague",
+    "origin": "Copenhagen Airport",
+    "destination": "prague",
+    "duration": "2h 5m",
+    "price": 52,
+    "image": "https://images.unsplash.com/photo-1504681869696-d977e18ba43f?auto=format&fit=crop&w=800&q=80",
+    "description": "Perfect for couples and travelers. Castle views and medieval charm await.",
+    "expires": "2026-07-14"
   }
 ]

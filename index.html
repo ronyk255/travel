@@ -3,71 +3,121 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Travel Deal Planner</title>
+  <title>Lincy & Rony Travel Diaries</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <header class="hero">
     <div class="hero-content">
-      <h1>Travel Deal Planner</h1>
-      <p>Smart, printable travel itineraries for Europe with flights, trains, stays, and hidden gems.</p>
-      <p>Starting from Lund / Copenhagen airport, with dog-friendly options and summer ticket ideas.</p>
+      <h1>✈️ Lincy & Rony Travel Diaries</h1>
+      <p>Smart, interactive travel planning for Europe with flights, trains, dog-friendly stays, and hidden gems.</p>
+      <p>Build your perfect itinerary and save your adventures.</p>
     </div>
   </header>
 
+  <nav class="nav-tabs">
+    <button class="nav-tab active" data-tab="planner">Trip Planner</button>
+    <button class="nav-tab" data-tab="diary">Travel Diary</button>
+  </nav>
+
   <main>
-    <section class="section card">
-      <h2>Deal Highlights</h2>
-      <p>Live-style deals automatically refreshed from the data store.</p>
-      <div id="deals" class="grid"></div>
+    <!-- Trip Planner Tab -->
+    <section id="planner-tab" class="tab-content active">
+      <!-- Step 1: Select Deal -->
+      <section class="section card">
+        <h2>Step 1: Choose Your Deal</h2>
+        <p>Click to select a flight, train, or accommodation deal.</p>
+        <div id="deals" class="grid deals-grid"></div>
+        <div id="selectedDeal" class="selected-summary hidden"></div>
+      </section>
+
+      <!-- Step 2: Customize Trip -->
+      <section class="section card">
+        <h2>Step 2: Customize Your Trip</h2>
+        <div class="form-grid">
+          <label>
+            Travel from
+            <select id="origin">
+              <option value="Lund">Lund</option>
+              <option value="Copenhagen Airport">Copenhagen Airport</option>
+            </select>
+          </label>
+          <label>
+            Travel date
+            <input id="travelDate" type="date" />
+          </label>
+          <label>
+            Trip length
+            <select id="tripLength">
+              <option value="2">2 days</option>
+              <option value="3">3 days</option>
+              <option value="5">5 days</option>
+              <option value="7" selected>7 days</option>
+            </select>
+          </label>
+          <label>
+            Budget style
+            <select id="travelStyle">
+              <option value="budget">Budget (€ under €50/night)</option>
+              <option value="balanced" selected>Balanced (€€ €50-100/night)</option>
+              <option value="comfort">Comfort (€€€ €100+/night)</option>
+            </select>
+          </label>
+          <label>
+            <input type="checkbox" id="dogFriendly" /> Dog-friendly only
+          </label>
+        </div>
+      </section>
+
+      <!-- Step 3: Select Accommodations -->
+      <section class="section card">
+        <h2>Step 3: Select Accommodations</h2>
+        <div class="filter-bar">
+          <label>
+            Min Rating:
+            <input type="range" id="minRating" min="0" max="5" step="0.1" value="4" />
+            <span id="ratingValue">4</span>★
+          </label>
+          <label>
+            Max Price:
+            <input type="range" id="maxPrice" min="30" max="150" step="5" value="100" />
+            €<span id="priceValue">100</span>
+          </label>
+        </div>
+        <div id="accommodations" class="grid accommodations-grid"></div>
+      </section>
+
+      <!-- Step 4: Select Activities -->
+      <section class="section card">
+        <h2>Step 4: Choose Activities & Highlights</h2>
+        <div id="activities" class="grid activities-grid"></div>
+      </section>
+
+      <!-- Generate Button -->
+      <section class="section card">
+        <button id="buildItinerary" class="primary-button">Generate Detailed Itinerary</button>
+        <button id="printItinerary" class="secondary-button">Print Itinerary</button>
+        <button id="saveTrip" class="success-button">Save This Trip to Diary</button>
+      </section>
+
+      <!-- Itinerary Output -->
+      <section class="section card">
+        <div id="itinerary" class="itinerary"></div>
+      </section>
     </section>
 
-    <section class="section card">
-      <h2>Hidden Gems & Weekend Ideas</h2>
-      <p>Discover less-known towns, villages, and day trips across Scandinavia and the rest of Europe.</p>
-      <div id="gems" class="grid"></div>
-    </section>
-
-    <section class="section card">
-      <h2>Create Your Itinerary</h2>
-      <div class="form-grid">
-        <label>
-          Travel from
-          <select id="origin">
-            <option value="Lund">Lund</option>
-            <option value="Copenhagen Airport">Copenhagen Airport</option>
-          </select>
-        </label>
-        <label>
-          Travel date
-          <input id="travelDate" type="date" />
-        </label>
-        <label>
-          Trip length
-          <select id="tripLength">
-            <option value="2">2 days</option>
-            <option value="3">3 days</option>
-            <option value="5">5 days</option>
-            <option value="7" selected>7 days</option>
-          </select>
-        </label>
-        <label>
-          Travel style
-          <select id="travelStyle">
-            <option value="budget">Budget</option>
-            <option value="balanced" selected>Balanced</option>
-            <option value="comfort">Comfort</option>
-          </select>
-        </label>
-      </div>
-      <button id="buildItinerary">Generate itinerary</button>
-      <button id="printItinerary" class="secondary">Print itinerary</button>
-      <div id="itinerary" class="itinerary"></div>
+    <!-- Travel Diary Tab -->
+    <section id="diary-tab" class="tab-content">
+      <section class="section card">
+        <h2>Your Travel Diary</h2>
+        <p>All your saved adventures in one place.</p>
+        <div id="savedTrips" class="saved-trips-grid"></div>
+      </section>
     </section>
   </main>
 
   <footer>
-    <p>Built for Lund travelers and European side-trip planners.</p>
+    <p>Built for Lincy & Rony. Your travel memories, perfectly planned.</p>
   </footer>
 
   <script src="app.js"></script>

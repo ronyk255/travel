@@ -1,0 +1,42 @@
+[
+  {
+    "id": "berlin",
+    "name": "Berlin",
+    "country": "Germany",
+    "lat": 52.52,
+    "lng": 13.405,
+    "description": "Capital city with vibrant street art, museums, nightlife, and historic sites.",
+    "highlights": ["Street Art Tours", "Museums", "Nightlife", "Brandenburg Gate", "East Side Gallery"],
+    "dogFriendly": true
+  },
+  {
+    "id": "gothenburg",
+    "name": "Gothenburg",
+    "country": "Sweden",
+    "lat": 57.7089,
+    "lng": 11.9746,
+    "description": "Sweden's coastal city with archipelago islands, food culture, and beautiful waterfront.",
+    "highlights": ["Archipelago Islands", "Haga District", "Fish Market", "Delsjön Lake", "Liseberg Park"],
+    "dogFriendly": true
+  },
+  {
+    "id": "krakow",
+    "name": "Krakow",
+    "country": "Poland",
+    "lat": 50.0647,
+    "lng": 19.945,
+    "description": "Historic medieval city with colorful market square, castles, and rich culture.",
+    "highlights": ["Main Market Square", "Wawel Castle", "Old Town", "Kazimierz District", "Salt Mines"],
+    "dogFriendly": false
+  },
+  {
+    "id": "prague",
+    "name": "Prague",
+    "country": "Czech Republic",
+    "lat": 50.0755,
+    "lng": 14.4378,
+    "description": "Fairy-tale city with Charles Bridge, Prague Castle, and bohemian charm.",
+    "highlights": ["Charles Bridge", "Prague Castle", "Old Town Square", "Jewish Quarter", "Beer Halls"],
+    "dogFriendly": true
+  }
+]

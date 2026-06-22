@@ -1,0 +1,74 @@
+[
+  {
+    "id": "berlin-guesthouse",
+    "destination": "berlin",
+    "name": "Cozy Berlin Guesthouse",
+    "price": 60,
+    "rating": 4.7,
+    "dogFriendly": true,
+    "address": "Friedrichshain, Berlin",
+    "features": ["Breakfast included", "WiFi", "City center access", "Pet-friendly rooms"],
+    "reviews": "Amazing host, clean rooms, great location!",
+    "bookingUrl": "https://example.com/berlin-guesthouse"
+  },
+  {
+    "id": "berlin-hotel",
+    "destination": "berlin",
+    "name": "Modern Berlin Hotel",
+    "price": 95,
+    "rating": 4.5,
+    "dogFriendly": true,
+    "address": "Mitte, Berlin",
+    "features": ["Gym", "Restaurant", "Rooftop terrace", "Pet-friendly"],
+    "reviews": "Excellent service, modern design, central location.",
+    "bookingUrl": "https://example.com/berlin-hotel"
+  },
+  {
+    "id": "gothenburg-canal",
+    "destination": "gothenburg",
+    "name": "Canal-side Studio",
+    "price": 75,
+    "rating": 4.8,
+    "dogFriendly": true,
+    "address": "Canal district, Gothenburg",
+    "features": ["Kitchenette", "Tram connection", "Waterfront view", "Dog-friendly patio"],
+    "reviews": "Charming location, perfect for couples and dogs!",
+    "bookingUrl": "https://example.com/gothenburg-studio"
+  },
+  {
+    "id": "gothenburg-hostel",
+    "destination": "gothenburg",
+    "name": "Social Gothenburg Hostel",
+    "price": 35,
+    "rating": 4.3,
+    "dogFriendly": false,
+    "address": "Haga, Gothenburg",
+    "features": ["Shared kitchen", "Social atmosphere", "Budget-friendly", "Common areas"],
+    "reviews": "Great for meeting people, very clean.",
+    "bookingUrl": "https://example.com/gothenburg-hostel"
+  },
+  {
+    "id": "krakow-boutique",
+    "destination": "krakow",
+    "name": "Boutique Stay Krakow",
+    "price": 55,
+    "rating": 4.6,
+    "dogFriendly": false,
+    "address": "Old Town, Krakow",
+    "features": ["Historic building", "Breakfast", "Airport shuttle", "City center"],
+    "reviews": "Authentic experience, helpful staff.",
+    "bookingUrl": "https://example.com/krakow-boutique"
+  },
+  {
+    "id": "prague-castle-view",
+    "destination": "prague",
+    "name": "Prague Castle View Apartment",
+    "price": 80,
+    "rating": 4.9,
+    "dogFriendly": true,
+    "address": "Mala Strana, Prague",
+    "features": ["Castle views", "Kitchen", "Terrace", "Pet-friendly"],
+    "reviews": "Stunning views, perfect location, very clean!",
+    "bookingUrl": "https://example.com/prague-apartment"
+  }
+]
