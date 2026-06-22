@@ -22,6 +22,7 @@ const els = {
   accommodations: document.getElementById("accommodations"),
   activities: document.getElementById("activities"),
   hiddenGems: document.getElementById("hiddenGems"),
+  skaneItinerary: document.getElementById("skaneItinerary"),
   savedTrips: document.getElementById("savedTrips"),
   itinerary: document.getElementById("itinerary"),
   dealSort: document.getElementById("dealSort"),
@@ -62,6 +63,11 @@ function escapeHtml(value = "") {
 function money(value) {
   if (Number.isNaN(Number(value))) return "Check provider";
   return `EUR ${Number(value).toFixed(0)}`;
+}
+
+function moneySek(value) {
+  if (Number.isNaN(Number(value))) return "Check provider";
+  return `SEK ${Number(value).toFixed(0)}`;
 }
 
 function compactDateTime(value) {
@@ -320,24 +326,140 @@ function renderActivities() {
 
 function renderGems() {
   els.hiddenGems.innerHTML = state.gems.map((gem) => `
-    <article class="gem-card">
+    <article class="gem-card" data-gem-id="${escapeHtml(gem.id || gem.name)}">
       ${cardImage(gem.image, gem.name, [gem.region || "Skane", gem.type || "Quiet place"])}
       <div class="card-body">
         <h3>${escapeHtml(gem.name)}</h3>
         <p>${escapeHtml(gem.description)}</p>
         <div class="meta-grid">
           <div><span>Entrance</span><strong>${escapeHtml(gem.entranceCost || "Free")}</strong></div>
-          <div><span>From Lund</span><strong>${escapeHtml(gem.fromLund || "Check route")}</strong></div>
+          <div><span>Public transport</span><strong>${escapeHtml(gem.publicTransportTime || gem.fromLund || "Check route")}</strong></div>
+          <div><span>Summer ticket</span><strong>${escapeHtml(gem.summerTicketEligible ? "Best value" : "Check coverage")}</strong></div>
+          <div><span>Stay pick</span><strong>${escapeHtml(gem.bestAccommodation?.name || "Optional")}</strong></div>
         </div>
+        <p class="muted"><strong>Best route:</strong> ${escapeHtml((gem.bestRoute || []).map((leg) => `${leg.mode}: ${leg.detail}`).join(" | ") || "Open Skånetrafiken planner for exact departure.")}</p>
+        <p class="muted"><strong>Travel cost:</strong> ${escapeHtml(gem.summerTicketNote || "With active summer ticket: SEK 0 extra. Without it, check single fares.")}</p>
         <p class="muted"><strong>Best for:</strong> ${escapeHtml(gem.bestFor || "day trip")}</p>
         <p class="muted"><strong>Tip:</strong> ${escapeHtml(gem.tip || "Check transit before you go.")}</p>
         <div class="card-actions">
+          <button type="button" class="primary-button" data-action="build-skane">Generate Skane plan</button>
+          ${gem.travelPlannerUrl ? `<a class="link-button" href="${escapeHtml(gem.travelPlannerUrl)}" target="_blank" rel="noreferrer">Skånetrafiken route</a>` : ""}
           <a class="link-button" href="https://www.google.com/maps/search/${encodeURIComponent(gem.name + " " + (gem.region || ""))}" target="_blank" rel="noreferrer">Open map</a>
           ${gem.sourceUrl ? `<a class="link-button" href="${escapeHtml(gem.sourceUrl)}" target="_blank" rel="noreferrer">Official info</a>` : ""}
         </div>
       </div>
     </article>
   `).join("");
+
+  els.hiddenGems.querySelectorAll("[data-action='build-skane']").forEach((button) => {
+    button.addEventListener("click", (event) => {
+      const card = event.target.closest(".gem-card");
+      const gem = state.gems.find((item) => String(item.id || item.name) === card.dataset.gemId);
+      if (gem) buildSkaneItinerary(gem);
+    });
+  });
+}
+
+function buildSkaneItinerary(gem) {
+  const travelers = Number(els.numTravelers.value || 2);
+  const date = els.travelDate.value || todayIso();
+  const stay = gem.bestAccommodation || {};
+  const useSummerTicket = Boolean(gem.summerTicketEligible);
+  const summerTravelCost = useSummerTicket ? 0 : Number(gem.roundTripSek || 0) * travelers;
+  const normalTravelCost = Number(gem.roundTripSek || 0) * travelers;
+  const entranceCost = Number(gem.entranceCostSek || 0) * travelers;
+  const accommodationCost = Number(stay.pricePerNightSek || 0);
+  const totalDayTrip = summerTravelCost + entranceCost;
+  const totalWithStay = totalDayTrip + accommodationCost;
+  const plan = {
+    id: Date.now(),
+    type: "skane",
+    title: `${gem.name} Skane plan`,
+    destination: gem.name,
+    date,
+    travelers,
+    gem,
+    stay,
+    costs: { summerTravelCost, normalTravelCost, entranceCost, accommodationCost, totalDayTrip, totalWithStay },
+  };
+  renderSkaneItinerary(plan);
+}
+
+function renderSkaneItinerary(plan) {
+  const { gem, stay, costs } = plan;
+  els.skaneItinerary.classList.add("has-content");
+  els.skaneItinerary.innerHTML = `
+    <div class="itinerary-hero">
+      <div>
+        <p class="eyebrow">Skane local itinerary</p>
+        <h2>${escapeHtml(plan.title)}</h2>
+        <p class="muted">${escapeHtml(formatDate(plan.date))} - ${plan.travelers} people - from Lund</p>
+        <p>${escapeHtml(gem.description)}</p>
+        <p class="muted"><strong>Dog:</strong> ${escapeHtml(gem.dogNote || "Use leash in nature reserves and check indoor access before entering with a dog.")}</p>
+        <div class="source-grid">
+          ${gem.travelPlannerUrl ? `<a class="decision-link" href="${escapeHtml(gem.travelPlannerUrl)}" target="_blank" rel="noreferrer">Book/check Skånetrafiken</a>` : ""}
+          ${stay.bookingUrl ? `<a class="decision-link" href="${escapeHtml(stay.bookingUrl)}" target="_blank" rel="noreferrer">Check accommodation</a>` : ""}
+          <a class="decision-link" href="https://www.google.com/maps/search/${encodeURIComponent(gem.name + " " + (gem.region || ""))}" target="_blank" rel="noreferrer">Map destination</a>
+          ${gem.sourceUrl ? `<a class="decision-link" href="${escapeHtml(gem.sourceUrl)}" target="_blank" rel="noreferrer">Official place info</a>` : ""}
+        </div>
+      </div>
+      <div>
+        <img class="itinerary-photo" src="${escapeHtml(gem.image || "")}" alt="${escapeHtml(gem.name)}" />
+        <div class="cost-grid">
+          <div><span>Travel with summer ticket</span><strong>${moneySek(costs.summerTravelCost)}</strong></div>
+          <div><span>Normal round trip estimate</span><strong>${moneySek(costs.normalTravelCost)}</strong></div>
+          <div><span>Entrance</span><strong>${moneySek(costs.entranceCost)}</strong></div>
+          <div><span>Best stay option</span><strong>${moneySek(costs.accommodationCost)}</strong></div>
+          <div class="total-line"><span>Day trip total</span>${moneySek(costs.totalDayTrip)}</div>
+          <div class="total-line"><span>With 1-night stay</span>${moneySek(costs.totalWithStay)}</div>
+        </div>
+      </div>
+    </div>
+    <section class="booking-brief">
+      <div>
+        <span>Best public route</span>
+        <strong>${escapeHtml(gem.publicTransportTime || "Check current timetable")}</strong>
+        <p>${escapeHtml(gem.summerTicketNote || "Summer ticket gives lowest incremental travel cost if already active.")}</p>
+      </div>
+      <div>
+        <span>Accommodation pick</span>
+        <strong>${escapeHtml(stay.name || "Optional day trip")}</strong>
+        <p>${escapeHtml(stay.name ? `${stay.area || "Nearby"}, ${moneySek(stay.pricePerNightSek)} / night. ${stay.dogFriendly ? "Dog-friendly filter/link included." : "Confirm dog policy."}` : "No overnight stay needed for this one.")}</p>
+      </div>
+      <div>
+        <span>Dog travel</span>
+        <strong>${escapeHtml(gem.dogFriendly ? "Good candidate" : "Check first")}</strong>
+        <p>${escapeHtml(gem.dogNote || "Use Skånetrafiken pet rules and destination rules before leaving.")}</p>
+      </div>
+    </section>
+    <div class="day-list">
+      <article class="day-card">
+        <p class="eyebrow">${escapeHtml(formatDate(plan.date))}</p>
+        <h3>Outbound route from Lund</h3>
+        <ul class="checklist">
+          ${(gem.bestRoute || []).map((leg) => `<li>${escapeHtml(`${leg.mode}: ${leg.detail}`)}</li>`).join("")}
+        </ul>
+        <p class="muted">Always press the Skånetrafiken route button before leaving because bus numbers and seasonal timetables can change.</p>
+      </article>
+      <article class="day-card">
+        <p class="eyebrow">At destination</p>
+        <h3>${escapeHtml(gem.name)}</h3>
+        <p>${escapeHtml(gem.onSitePlan || gem.tip || "Walk slowly, keep room for fika, and check opening hours for paid indoor stops.")}</p>
+        <ul class="checklist">
+          <li>Entrance: ${escapeHtml(gem.entranceCost || "Free")}</li>
+          <li>Best for: ${escapeHtml(gem.bestFor || "day trip")}</li>
+          <li>Food/fika: ${escapeHtml(gem.foodTip || "Bring picnic or check nearby cafe on map.")}</li>
+          <li>Dog: ${escapeHtml(gem.dogNote || "Leash recommended.")}</li>
+        </ul>
+      </article>
+      <article class="day-card">
+        <p class="eyebrow">Return or stay</p>
+        <h3>Return to Lund or sleep nearby</h3>
+        <p>${escapeHtml(stay.name ? `Best overnight pick: ${stay.name} in ${stay.area || gem.region}, estimated ${moneySek(stay.pricePerNightSek)} per night. Book/check with the accommodation link before deciding.` : "Return to Lund the same day; accommodation is optional.")}</p>
+      </article>
+    </div>
+  `;
+  els.skaneItinerary.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 function buildDays({ deal, destination, stay, activities, length, travelers, travelDate, mood }) {
