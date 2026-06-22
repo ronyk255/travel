@@ -58,6 +58,11 @@
             Earliest date
             <input id="travelDate" type="date" />
           </label>
+          <div class="date-chip-row" aria-label="Quick date choices">
+            <button type="button" class="date-chip" data-date-preset="weekend">Next weekend</button>
+            <button type="button" class="date-chip" data-date-preset="next-week">Next week</button>
+            <button type="button" class="date-chip" data-date-preset="month">Next month</button>
+          </div>
           <label>
             Trip length
             <select id="tripLength">
@@ -66,6 +71,16 @@
               <option value="3" selected>3 days</option>
               <option value="5">5 days</option>
               <option value="7">7 days</option>
+            </select>
+          </label>
+          <label>
+            Trip mood
+            <select id="tripMood">
+              <option value="balanced" selected>Balanced discovery</option>
+              <option value="romantic">Romantic and slow</option>
+              <option value="budget">Cheapest sensible plan</option>
+              <option value="nature">Nature and quiet villages</option>
+              <option value="culture">Culture and food</option>
             </select>
           </label>
           <label>
@@ -91,9 +106,23 @@
             Prefer quieter/hidden places
           </label>
           <button id="buildItinerary" class="primary-button">Build Smart Itinerary</button>
+          <div id="plannerSnapshot" class="planner-snapshot"></div>
         </aside>
 
         <section class="planner-main">
+          <section class="decision-board">
+            <div>
+              <p class="eyebrow">Current recommendation</p>
+              <h2 id="recommendationTitle">Loading best trip...</h2>
+              <p id="recommendationCopy" class="muted">Deals and stays are being prepared.</p>
+            </div>
+            <div class="decision-metrics">
+              <div><span>Trip window</span><strong id="tripWindow">Flexible</strong></div>
+              <div><span>Estimated total</span><strong id="instantTotal">Calculating</strong></div>
+              <div><span>Next action</span><strong id="nextAction">Select deal</strong></div>
+            </div>
+          </section>
+
           <div class="section-heading">
             <div>
               <p class="eyebrow">Step 1</p>
@@ -123,6 +152,11 @@
             </div>
           </div>
           <div id="activities" class="option-grid"></div>
+
+          <section class="source-note compact-source">
+            <h3>Everything to decide in one place</h3>
+            <div id="decisionPack" class="decision-pack"></div>
+          </section>
         </section>
       </section>
 

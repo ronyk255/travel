@@ -27,6 +27,7 @@ const els = {
   origin: document.getElementById("origin"),
   travelDate: document.getElementById("travelDate"),
   tripLength: document.getElementById("tripLength"),
+  tripMood: document.getElementById("tripMood"),
   numTravelers: document.getElementById("numTravelers"),
   maxPrice: document.getElementById("maxPrice"),
   priceValue: document.getElementById("priceValue"),
@@ -35,6 +36,13 @@ const els = {
   dogFriendly: document.getElementById("dogFriendly"),
   hiddenGemMode: document.getElementById("hiddenGemMode"),
   buildItinerary: document.getElementById("buildItinerary"),
+  plannerSnapshot: document.getElementById("plannerSnapshot"),
+  recommendationTitle: document.getElementById("recommendationTitle"),
+  recommendationCopy: document.getElementById("recommendationCopy"),
+  tripWindow: document.getElementById("tripWindow"),
+  instantTotal: document.getElementById("instantTotal"),
+  nextAction: document.getElementById("nextAction"),
+  decisionPack: document.getElementById("decisionPack"),
   exportDiary: document.getElementById("exportDiary"),
   modal: document.getElementById("tripModal"),
   modalBody: document.getElementById("tripModalBody"),
@@ -206,7 +214,9 @@ function renderAccommodations() {
     .filter((stay) => !dogOnly || stay.dogFriendly)
     .sort((a, b) => Number(b.rating) - Number(a.rating) || Number(a.price) - Number(b.price));
 
-  if (!state.selectedAccommodationId && stays[0]) state.selectedAccommodationId = stays[0].id;
+  if (!stays.some((stay) => stay.id === state.selectedAccommodationId)) {
+    state.selectedAccommodationId = stays[0]?.id || null;
+  }
 
   els.accommodations.innerHTML = stays.length
     ? stays.map((stay) => `
@@ -231,6 +241,7 @@ function renderAccommodations() {
       if (event.target.closest("a")) return;
       state.selectedAccommodationId = card.dataset.stayId;
       renderAccommodations();
+      refreshPlannerInsights();
     });
   });
 }
@@ -276,6 +287,7 @@ function renderActivities() {
       if (state.selectedActivityIds.has(id)) state.selectedActivityIds.delete(id);
       else state.selectedActivityIds.add(id);
       renderActivities();
+      refreshPlannerInsights();
     });
   });
 }
@@ -295,12 +307,21 @@ function renderGems() {
   `).join("");
 }
 
-function buildDays({ deal, destination, stay, activities, length, travelers, travelDate }) {
+function buildDays({ deal, destination, stay, activities, length, travelers, travelDate, mood }) {
   const days = [];
+  const moodPrompt = {
+    balanced: "Keep the day varied but realistic.",
+    romantic: "Prioritize slower walks, viewpoints, dinner, and less rushing.",
+    budget: "Favor free walks, public transport, and one paid highlight only if it is worth it.",
+    nature: "Bias toward parks, coast, islands, lakes, and quiet neighborhoods.",
+    culture: "Bias toward museums, food streets, old-town walks, and local history.",
+  }[mood] || "Keep the day varied but realistic.";
+
   days.push({
     title: "Travel and arrival",
-    body: `${deal.mode || "Travel"} from ${deal.route || els.origin.value} taking ${deal.duration || "time to confirm"}. Check in near ${stay?.address || destination?.name || deal.destination}.`,
+    body: `${deal.mode || "Travel"} from ${deal.route || els.origin.value} taking ${deal.duration || "time to confirm"}. Check in near ${stay?.address || destination?.name || deal.destination}. Keep the first evening simple: local dinner, short walk, and confirm tomorrow's first stop.`,
     cost: Number(deal.price || 0) * travelers,
+    checklist: ["Confirm final fare and baggage", "Save tickets offline", "Message stay about arrival time", "Confirm pet/carrier rules if dog is travelling"],
     links: [{ label: `Book ${deal.mode || "travel"}`, url: deal.bookingUrl }],
   });
 
@@ -318,9 +339,13 @@ function buildDays({ deal, destination, stay, activities, length, travelers, tra
     const isLast = index === length;
     days.push({
       title: isLast ? "Last look and return" : `Explore ${destination?.name || deal.destination}`,
-      body: `${morning.name} in the morning (${morning.duration}). ${afternoon && afternoon.id !== morning.id ? `${afternoon.name} later in the day.` : "Leave space for a slow lunch and neighborhood wandering."}`,
+      body: `${morning.name} in the morning (${morning.duration}). ${afternoon && afternoon.id !== morning.id ? `${afternoon.name} later in the day.` : "Leave space for a slow lunch and neighborhood wandering."} ${moodPrompt}`,
       cost: (Number(morning.price || 0) + (afternoon && afternoon.id !== morning.id ? Number(afternoon.price || 0) : 0)) * travelers,
-      links: [{ label: "Map day area", url: `https://www.google.com/maps/search/${encodeURIComponent(destination?.name || deal.destination)}` }],
+      checklist: ["Check opening hours", "Save map pins", "Book timed entry if needed", "Check weather before leaving"],
+      links: [
+        { label: "Map day area", url: `https://www.google.com/maps/search/${encodeURIComponent(destination?.name || deal.destination)}` },
+        { label: "Search tickets", url: `https://www.google.com/search?q=${encodeURIComponent(`${morning.name} tickets ${destination?.name || deal.destination}`)}` },
+      ],
     });
   }
 
@@ -331,6 +356,105 @@ function addDays(dateString, days) {
   const date = new Date(`${dateString}T12:00:00`);
   date.setDate(date.getDate() + days);
   return date.toISOString().slice(0, 10);
+}
+
+function nextSaturday(from = new Date()) {
+  const date = new Date(from);
+  const daysUntilSaturday = (6 - date.getDay() + 7) % 7 || 7;
+  date.setDate(date.getDate() + daysUntilSaturday);
+  return date.toISOString().slice(0, 10);
+}
+
+function applyDatePreset(preset) {
+  if (preset === "weekend") {
+    els.travelDate.value = nextSaturday();
+    els.tripLength.value = "2";
+  }
+  if (preset === "next-week") {
+    els.travelDate.value = addDays(todayIso(), 7);
+    els.tripLength.value = "3";
+  }
+  if (preset === "month") {
+    els.travelDate.value = addDays(todayIso(), 30);
+    els.tripLength.value = "5";
+  }
+  renderAll();
+}
+
+function currentStay() {
+  return state.accommodations.find((item) => item.id === state.selectedAccommodationId);
+}
+
+function selectedActivities() {
+  return [...state.selectedActivityIds]
+    .map((id) => state.activities.find((activity) => activity.id === id))
+    .filter(Boolean);
+}
+
+function estimateCurrentTotal() {
+  const deal = selectedDeal();
+  if (!deal) return { total: 0, perPerson: 0 };
+  const travelers = Number(els.numTravelers.value || 2);
+  const nights = Math.max(0, Number(els.tripLength.value || 3) - 1);
+  const stay = currentStay();
+  const activities = selectedActivities();
+  const activityTotal = activities.reduce((sum, activity) => sum + Number(activity.price || 0) * travelers, 0);
+  const total = Number(deal.price || 0) * travelers + (stay ? Number(stay.price || 0) * nights : 0) + activityTotal;
+  return { total, perPerson: total / travelers };
+}
+
+function providerLinks(planOrDeal, destination) {
+  const deal = planOrDeal.deal || planOrDeal;
+  const city = destination?.name || deal.destination || "";
+  const encodedCity = encodeURIComponent(city);
+  const from = encodeURIComponent(els.origin.value || deal.origin || "Lund");
+  return [
+    { label: "Book transport", url: deal.bookingUrl },
+    { label: "Compare stays", url: `https://www.booking.com/searchresults.html?ss=${encodedCity}&group_adults=${encodeURIComponent(els.numTravelers.value || "2")}&nflt=hotelfacility%3D4` },
+    { label: "Map route", url: `https://www.google.com/maps/dir/${from}/${encodedCity}` },
+    { label: "Weather check", url: `https://www.google.com/search?q=${encodedCity}+weather+${encodeURIComponent(formatDate(els.travelDate.value))}` },
+    { label: "Dog travel rules", url: `https://www.google.com/search?q=${encodedCity}+small+dog+travel+rules+airline+hotel` },
+    { label: "Restaurants nearby", url: `https://www.google.com/maps/search/restaurants+near+${encodedCity}` },
+  ].filter((link) => link.url);
+}
+
+function refreshPlannerInsights() {
+  const deal = selectedDeal();
+  if (!deal) return;
+  const destination = destinationFor(deal) || {};
+  const stay = currentStay();
+  const activities = selectedActivities();
+  const estimate = estimateCurrentTotal();
+  const length = Number(els.tripLength.value || 3);
+  const travelers = Number(els.numTravelers.value || 2);
+  const mood = els.tripMood.value;
+  const windowEnd = els.travelDate.value ? addDays(els.travelDate.value, Math.max(0, length - 1)) : "";
+
+  els.recommendationTitle.textContent = `${destination.name || deal.destination}: ${deal.title}`;
+  els.recommendationCopy.textContent = `${moodLabel(mood)} plan from ${money(deal.price)} transport, ${stay ? `${stay.name} at ${money(stay.price)}/night` : "stay not selected yet"}, and ${activities.length} selected activities.`;
+  els.tripWindow.textContent = els.travelDate.value ? `${formatDate(els.travelDate.value)} to ${formatDate(windowEnd)}` : "Flexible";
+  els.instantTotal.textContent = `${money(estimate.total)} total / ${money(estimate.perPerson)} pp`;
+  els.nextAction.textContent = stay ? "Generate plan" : "Pick stay";
+  els.plannerSnapshot.innerHTML = `
+    <strong>${escapeHtml(destination.name || deal.destination)}</strong>
+    <span>${length} days, ${travelers} people</span>
+    <span>${escapeHtml(stay?.name || "No stay selected")}</span>
+    <span>${money(estimate.total)} estimate</span>
+  `;
+  els.decisionPack.innerHTML = providerLinks(deal, destination)
+    .map((link) => `<a class="decision-link" href="${escapeHtml(link.url)}" target="_blank" rel="noreferrer">${escapeHtml(link.label)}</a>`)
+    .join("");
+}
+
+function moodLabel(mood) {
+  const labels = {
+    balanced: "Balanced discovery",
+    romantic: "Romantic slow-travel",
+    budget: "Cheapest sensible",
+    nature: "Nature and quiet places",
+    culture: "Culture and food",
+  };
+  return labels[mood] || "Balanced discovery";
 }
 
 function buildItinerary() {
@@ -348,11 +472,12 @@ function buildItinerary() {
     .filter(Boolean);
   const travelers = Number(els.numTravelers.value || 2);
   const length = Number(els.tripLength.value || 3);
+  const mood = els.tripMood.value;
   const nights = Math.max(0, length - 1);
   const travelDate = els.travelDate.value;
   const travelCost = Number(deal.price || 0) * travelers;
   const stayCost = stay ? Number(stay.price || 0) * nights : 0;
-  const days = buildDays({ deal, destination, stay, activities, length, travelers, travelDate });
+  const days = buildDays({ deal, destination, stay, activities, length, travelers, travelDate, mood });
   const activityCost = days.reduce((sum, day, index) => sum + (index === 0 ? 0 : day.cost), 0);
   const total = travelCost + stayCost + activityCost;
   const perPerson = total / travelers;
@@ -366,6 +491,7 @@ function buildItinerary() {
     createdAt: new Date().toISOString(),
     travelDate,
     length,
+    mood,
     nights,
     travelers,
     deal,
@@ -385,15 +511,20 @@ function buildItinerary() {
 
 function renderItinerary(plan) {
   const destination = destinationFor(plan.deal) || {};
+  const sourceLinks = providerLinks(plan, destination);
+  const stay = plan.stay;
   els.itinerary.classList.add("has-content");
   els.itinerary.innerHTML = `
     <div class="itinerary-hero">
       <div>
         <p class="eyebrow">Generated plan</p>
         <h2>${escapeHtml(plan.title)}</h2>
-        <p class="muted">${escapeHtml(formatDate(plan.travelDate))} - ${plan.length} days - ${plan.travelers} people</p>
+        <p class="muted">${escapeHtml(formatDate(plan.travelDate))} - ${plan.length} days - ${plan.travelers} people - ${escapeHtml(moodLabel(plan.mood))}</p>
         <p>${escapeHtml(destination.description || "A provider-linked itinerary built from selected deals, stays, and activities.")}</p>
         <p class="muted">${escapeHtml(plan.dogNote)}</p>
+        <div class="source-grid">
+          ${sourceLinks.map((link) => `<a class="decision-link" href="${escapeHtml(link.url)}" target="_blank" rel="noreferrer">${escapeHtml(link.label)}</a>`).join("")}
+        </div>
         <div class="trip-actions">
           <button class="secondary-button" type="button" data-action="print">Print</button>
           <button class="primary-button" type="button" data-action="save">Approve and save</button>
@@ -410,6 +541,23 @@ function renderItinerary(plan) {
         </div>
       </div>
     </div>
+    <section class="booking-brief">
+      <div>
+        <span>Transport</span>
+        <strong>${escapeHtml(plan.deal.route || "Route to confirm")}</strong>
+        <p>${escapeHtml(plan.deal.provider || "Provider")} - ${escapeHtml(plan.deal.duration || "Duration to confirm")}</p>
+      </div>
+      <div>
+        <span>Stay</span>
+        <strong>${escapeHtml(stay?.name || "No stay selected")}</strong>
+        <p>${escapeHtml(stay ? `${stay.address}, ${money(stay.price)}/night, ${stay.rating}/5` : "Pick a stay before booking.")}</p>
+      </div>
+      <div>
+        <span>Decision</span>
+        <strong>${money(plan.costs.total)} estimated</strong>
+        <p>Book transport first when fare is good, then refundable stay, then paid activities.</p>
+      </div>
+    </section>
     <div class="day-list">
       ${plan.days.map((day, index) => `
         <article class="day-card">
@@ -417,6 +565,9 @@ function renderItinerary(plan) {
           <h3>Day ${index + 1}: ${escapeHtml(day.title)}</h3>
           <p>${escapeHtml(day.body)}</p>
           <p class="muted">Estimated day cost for ${plan.travelers}: ${money(day.cost)}</p>
+          <ul class="checklist">
+            ${(day.checklist || []).map((item) => `<li>${escapeHtml(item)}</li>`).join("")}
+          </ul>
           <div class="card-actions">
             ${(day.links || []).filter((link) => link.url).map((link) => `<a class="link-button" href="${escapeHtml(link.url)}" target="_blank" rel="noreferrer">${escapeHtml(link.label)}</a>`).join("")}
           </div>
@@ -490,16 +641,22 @@ function renderDiary() {
 function openTrip(id) {
   const trip = savedTrips().find((item) => item.id === id);
   if (!trip) return;
+  const destination = state.destinations.find((item) => item.name === trip.destination || item.id === String(trip.destination || "").toLowerCase());
+  const sourceLinks = providerLinks(trip, destination || {});
   els.modalBody.innerHTML = `<div id="modalItinerary"></div>`;
   els.modal.classList.remove("hidden");
-  const previous = els.itinerary;
   const modalTarget = document.getElementById("modalItinerary");
   modalTarget.innerHTML = `
     <h2>${escapeHtml(trip.title || trip.destination)}</h2>
-    <p class="muted">${escapeHtml(trip.status === "done" ? `Completed ${formatDate(trip.completedAt)}` : "Planned trip")}</p>
+    <p class="muted">${escapeHtml(trip.status === "done" ? `Completed ${formatDate(trip.completedAt)}` : "Planned trip")} - ${escapeHtml(moodLabel(trip.mood))}</p>
+    <div class="source-grid">
+      ${sourceLinks.map((link) => `<a class="decision-link" href="${escapeHtml(link.url)}" target="_blank" rel="noreferrer">${escapeHtml(link.label)}</a>`).join("")}
+    </div>
     <div class="cost-grid">
       <div><span>Total</span><strong>${money(trip.costs?.total || 0)}</strong></div>
       <div><span>Per person</span><strong>${money(trip.costs?.perPerson || 0)}</strong></div>
+      <div><span>Stay</span><strong>${escapeHtml(trip.stay?.name || "Not selected")}</strong></div>
+      <div><span>Transport</span><strong>${escapeHtml(trip.deal?.route || "Check route")}</strong></div>
     </div>
     <div class="day-list">
       ${(trip.days || []).map((day, index) => `
@@ -507,6 +664,9 @@ function openTrip(id) {
           <p class="eyebrow">${escapeHtml(day.date)}</p>
           <h3>Day ${index + 1}: ${escapeHtml(day.title)}</h3>
           <p>${escapeHtml(day.body)}</p>
+          <ul class="checklist">
+            ${(day.checklist || []).map((item) => `<li>${escapeHtml(item)}</li>`).join("")}
+          </ul>
         </article>
       `).join("")}
     </div>
@@ -556,6 +716,7 @@ function renderAll() {
   renderGems();
   renderDiary();
   updateStats();
+  refreshPlannerInsights();
 }
 
 function bindEvents() {
@@ -574,15 +735,21 @@ function bindEvents() {
     window.location.href = url.toString();
   });
 
-  [els.dealSort, els.dogFriendly, els.hiddenGemMode].forEach((el) => el.addEventListener("change", renderAll));
+  [els.dealSort, els.dogFriendly, els.hiddenGemMode, els.tripMood, els.tripLength, els.origin].forEach((el) => el.addEventListener("change", renderAll));
+  [els.travelDate, els.numTravelers].forEach((el) => el.addEventListener("input", renderAll));
+  document.querySelectorAll("[data-date-preset]").forEach((button) => {
+    button.addEventListener("click", () => applyDatePreset(button.dataset.datePreset));
+  });
   els.dealSearch.addEventListener("input", renderDealBoard);
   els.maxPrice.addEventListener("input", () => {
     els.priceValue.textContent = money(els.maxPrice.value);
     renderAccommodations();
+    refreshPlannerInsights();
   });
   els.minRating.addEventListener("input", () => {
     els.ratingValue.textContent = els.minRating.value;
     renderAccommodations();
+    refreshPlannerInsights();
   });
   els.buildItinerary.addEventListener("click", buildItinerary);
   els.exportDiary.addEventListener("click", exportDiary);
