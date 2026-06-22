@@ -11,6 +11,26 @@ const state = {
 };
 
 const LOCAL_SKANE_DESTINATIONS = new Set(["ystad", "skanor-falsterbo"]);
+const AIRPORT_CODES = {
+  amsterdam: "ams",
+  barcelona: "bcn",
+  berlin: "ber",
+  budapest: "bud",
+  gdansk: "gdn",
+  gothenburg: "got",
+  hamburg: "ham",
+  krakow: "krk",
+  lisbon: "lis",
+  nice: "nce",
+  paris: "par",
+  porto: "opo",
+  prague: "prg",
+  riga: "rix",
+  rome: "rom",
+  tallinn: "tll",
+  vienna: "vie",
+  warsaw: "waw",
+};
 
 const els = {
   refreshButton: document.getElementById("refreshButton"),
@@ -126,6 +146,92 @@ function accommodationBookingLinks(stay) {
   ];
 }
 
+function compactFlightDate(value) {
+  return String(value || "").replaceAll("-", "").slice(2);
+}
+
+function routeParts(deal, destination) {
+  const route = String(deal.route || "");
+  const pieces = route.split("->").map((item) => item.trim()).filter(Boolean);
+  return {
+    from: pieces[0] || deal.origin || els.origin.value || "Lund",
+    to: pieces[pieces.length - 1] || destination?.name || deal.destination || "",
+  };
+}
+
+function transportBookingLinks(deal, destination = {}) {
+  const destinationId = String(deal.destination || "").toLowerCase();
+  const destinationName = destination.name || deal.destination || "";
+  const travelDate = els.travelDate.value || todayIso();
+  const returnDate = addDays(travelDate, Math.max(1, Number(els.tripLength.value || 3) - 1));
+  const travelers = String(Math.max(1, Number(els.numTravelers.value || 2)));
+  const { from, to } = routeParts(deal, destination);
+  const isTrain = /train|bus/i.test(`${deal.mode || ""} ${deal.provider || ""}`);
+  const destCode = AIRPORT_CODES[destinationId] || destinationId.slice(0, 3);
+  const priceText = Number.isNaN(Number(deal.price)) ? "shown price" : money(deal.price);
+
+  if (isTrain) {
+    return [
+      {
+        label: `Check ${priceText}`,
+        url: deal.bookingUrl || "https://www.sj.se/en",
+      },
+      {
+        label: "SJ",
+        url: urlWithParams("https://www.sj.se/en/search-journey", {
+          from,
+          to,
+          departureDate: travelDate,
+        }),
+      },
+      {
+        label: "DB",
+        url: urlWithParams("https://int.bahn.de/en/buchung/fahrplan/suche", {
+          so: from,
+          zo: to,
+          hd: `${travelDate}T08:00:00`,
+          r: travelers,
+        }),
+      },
+      {
+        label: "Trainline",
+        url: urlWithParams("https://www.thetrainline.com/search", {
+          origin: from,
+          destination: to,
+          outwardDate: `${travelDate}T08:00:00`,
+          returnDate: `${returnDate}T16:00:00`,
+          journeySearchType: "return",
+        }),
+      },
+    ];
+  }
+
+  return [
+    {
+      label: `Check ${priceText}`,
+      url: `https://www.skyscanner.com/transport/flights/cph/${destCode}/${compactFlightDate(travelDate)}/${compactFlightDate(returnDate)}/?adultsv2=${encodeURIComponent(travelers)}&adults=${encodeURIComponent(travelers)}&currency=EUR&locale=en-GB&market=SE`,
+    },
+    {
+      label: "Google Flights",
+      url: `https://www.google.com/travel/flights?q=${encodeURIComponent(`Flights from Copenhagen to ${destinationName} on ${travelDate} returning ${returnDate} for ${travelers} adults`)}`,
+    },
+    {
+      label: "Lastminute flights",
+      url: urlWithParams("https://www.lastminute.com/search", {
+        "search.departureAirport": "CPH",
+        "search.destination": destinationName,
+        "search.departureDate": travelDate,
+        "search.returnDate": returnDate,
+        "search.rooms[0].adults": travelers,
+      }),
+    },
+    {
+      label: "Airline rules",
+      url: deal.petPolicyUrl || `https://www.google.com/search?q=${encodeURIComponent(`${destinationName} flight small dog cabin rules Copenhagen`)}`,
+    },
+  ];
+}
+
 function compactDateTime(value) {
   if (!value) return "Latest committed data";
   const date = new Date(value);
@@ -225,6 +331,7 @@ function dealCard(deal, compact = false) {
   const selected = state.selectedDealId === deal.id ? " selected" : "";
   const score = scoreDeal(deal);
   const dogText = deal.dogFriendly ? "Small dog possible" : "Check pet rules";
+  const bookingLinks = transportBookingLinks(deal, destination);
   return `
     <article class="deal-card${selected}" data-deal-id="${escapeHtml(deal.id)}">
       ${cardImage(deal.image || destination?.image, deal.title, [deal.mode || "Deal", dogText])}
@@ -245,9 +352,7 @@ function dealCard(deal, compact = false) {
         <div class="card-actions">
           <button class="secondary-button compact-action" type="button" data-action="details">Details</button>
           <button class="primary-button compact-action" type="button" data-action="select-deal">Select</button>
-          ${deal.bookingUrl ? `<a class="link-button" href="${escapeHtml(deal.bookingUrl)}" target="_blank" rel="noreferrer">Open ${escapeHtml(deal.provider || "provider")}</a>` : ""}
-          ${(deal.sourceLinks || []).slice(0, compact ? 2 : 4).map((link) => `<a class="link-button" href="${escapeHtml(link.url)}" target="_blank" rel="noreferrer">${escapeHtml(link.label)}</a>`).join("")}
-          ${deal.petPolicyUrl ? `<a class="link-button" href="${escapeHtml(deal.petPolicyUrl)}" target="_blank" rel="noreferrer">Pet policy</a>` : ""}
+          ${bookingLinks.slice(0, compact ? 3 : 4).map((link) => `<a class="link-button" href="${escapeHtml(link.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(link.label)}</a>`).join("")}
           <a class="link-button" href="https://www.google.com/maps/search/${encodeURIComponent(destination?.name || deal.destination || deal.title)}" target="_blank" rel="noreferrer">Map</a>
         </div>
       </div>
@@ -543,6 +648,7 @@ function renderSkaneItinerary(plan) {
 
 function buildDays({ deal, destination, stay, activities, length, travelers, travelDate, mood }) {
   const days = [];
+  const transportLinks = transportBookingLinks(deal, destination);
   const moodPrompt = {
     balanced: "Keep the day varied but realistic.",
     romantic: "Prioritize slower walks, viewpoints, dinner, and less rushing.",
@@ -556,7 +662,7 @@ function buildDays({ deal, destination, stay, activities, length, travelers, tra
     body: `${deal.mode || "Travel"} from ${deal.route || els.origin.value} taking ${deal.duration || "time to confirm"}. Check in near ${stay?.address || destination?.name || deal.destination}. Keep the first evening simple: local dinner, short walk, and confirm tomorrow's first stop.`,
     cost: Number(deal.price || 0) * travelers,
     checklist: ["Confirm final fare and baggage", "Save tickets offline", "Message stay about arrival time", "Confirm pet/carrier rules if dog is travelling"],
-    links: [{ label: `Book ${deal.mode || "travel"}`, url: deal.bookingUrl }],
+    links: transportLinks.slice(0, 3),
   });
 
   const pool = activities.length ? activities : [{
@@ -643,10 +749,8 @@ function providerLinks(planOrDeal, destination) {
   const encodedCity = encodeURIComponent(city);
   const from = encodeURIComponent(els.origin.value || deal.origin || "Lund");
   return [
-    { label: "Book transport", url: deal.bookingUrl },
-    ...(deal.sourceLinks || []),
+    ...transportBookingLinks(deal, destination),
     { label: "Lastminute package", url: `https://www.lastminute.com/search?search.destination=${encodedCity}` },
-    { label: "Google Flights", url: `https://www.google.com/travel/flights?q=Flights%20from%20Copenhagen%20to%20${encodedCity}` },
     { label: "Compare stays", url: `https://www.booking.com/searchresults.html?ss=${encodedCity}&group_adults=${encodeURIComponent(els.numTravelers.value || "2")}&nflt=hotelfacility%3D4` },
     { label: "Google Hotels", url: `https://www.google.com/travel/hotels/${encodedCity}` },
     { label: "Map route", url: `https://www.google.com/maps/dir/${from}/${encodedCity}` },
@@ -922,7 +1026,9 @@ function openDestinationDetail(dealId) {
           <h3>Compare deal options</h3>
         </div>
         <div class="detail-list">
-          ${destinationDeals.map((item) => `
+          ${destinationDeals.map((item) => {
+            const itemLinks = transportBookingLinks(item, destination);
+            return `
             <article class="detail-row${item.id === deal.id ? " selected-row" : ""}">
               <div>
                 <strong>${escapeHtml(item.title)}</strong>
@@ -932,9 +1038,11 @@ function openDestinationDetail(dealId) {
               <div>
                 <strong>${money(item.price)}</strong>
                 <button class="secondary-button" type="button" data-action="select-other-deal" data-deal-id="${escapeHtml(item.id)}">Use</button>
+                <a class="link-button" href="${escapeHtml(itemLinks[0]?.url || item.bookingUrl || "#")}" target="_blank" rel="noopener noreferrer">Check fare</a>
               </div>
             </article>
-          `).join("")}
+          `;
+          }).join("")}
         </div>
       </section>
 
