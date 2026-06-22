@@ -556,6 +556,17 @@ input[type="range"] {
   text-align: center;
 }
 
+.card-actions .primary-button,
+.card-actions .secondary-button,
+.card-actions .link-button {
+  min-height: 38px;
+  padding: 0.58rem 0.78rem;
+}
+
+.compact-action {
+  flex: 0 0 auto;
+}
+
 .compact-source {
   box-shadow: var(--soft-shadow);
 }
@@ -729,6 +740,154 @@ input[type="range"] {
   font-weight: 850;
 }
 
+.destination-detail {
+  display: grid;
+  gap: 18px;
+}
+
+.detail-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(280px, 0.95fr);
+  gap: 18px;
+  align-items: stretch;
+}
+
+.detail-hero p {
+  line-height: 1.6;
+}
+
+.detail-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.detail-main-photo {
+  width: 100%;
+  min-height: 320px;
+  height: 100%;
+  border-radius: 8px;
+  object-fit: cover;
+  background: var(--surface-soft);
+}
+
+.detail-gallery {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.detail-gallery img {
+  width: 100%;
+  aspect-ratio: 1.35;
+  border-radius: 8px;
+  object-fit: cover;
+  background: var(--surface-soft);
+}
+
+.detail-section {
+  display: grid;
+  grid-template-columns: 210px minmax(0, 1fr);
+  gap: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+
+.highlight-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.highlight-grid span {
+  border-radius: 999px;
+  padding: 0.52rem 0.78rem;
+  color: var(--ink);
+  background: var(--surface-soft);
+  font-weight: 800;
+}
+
+.dog-decision-grid,
+.detail-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 12px;
+}
+
+.dog-decision-grid article,
+.mini-detail-card,
+.detail-row {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.dog-decision-grid article {
+  display: grid;
+  gap: 9px;
+  padding: 14px;
+}
+
+.dog-decision-grid p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.detail-list {
+  display: grid;
+  gap: 10px;
+}
+
+.detail-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 14px;
+  align-items: center;
+  padding: 14px;
+}
+
+.selected-row {
+  border-color: var(--brand);
+  background: #f0fdfa;
+}
+
+.detail-row p {
+  margin: 6px 0 0;
+}
+
+.detail-row > div:last-child {
+  display: grid;
+  gap: 8px;
+  justify-items: end;
+}
+
+.mini-detail-card {
+  overflow: hidden;
+}
+
+.mini-detail-card img {
+  width: 100%;
+  height: 150px;
+  display: block;
+  object-fit: cover;
+}
+
+.mini-detail-card > div {
+  display: grid;
+  gap: 9px;
+  padding: 13px;
+}
+
+.mini-detail-card h4 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.activity-mini {
+  overflow: visible;
+}
+
 footer {
   padding: 28px 16px 44px;
   color: var(--muted);
@@ -749,8 +908,22 @@ footer {
   .planner-shell,
   .itinerary-hero,
   .decision-board,
-  .booking-brief {
+  .booking-brief,
+  .detail-hero,
+  .detail-section {
     grid-template-columns: 1fr;
+  }
+
+  .detail-gallery {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .detail-row {
+    grid-template-columns: 1fr;
+  }
+
+  .detail-row > div:last-child {
+    justify-items: start;
   }
 
   .decision-metrics {

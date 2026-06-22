@@ -187,6 +187,8 @@ function dealCard(deal, compact = false) {
         ${deal.petNote ? `<p class="muted"><strong>Dog note:</strong> ${escapeHtml(deal.petNote)}</p>` : ""}
         ${compact ? "" : `<p class="muted">Book by: ${escapeHtml(deal.expires || "Flexible")}</p>`}
         <div class="card-actions">
+          <button class="secondary-button compact-action" type="button" data-action="details">Details</button>
+          <button class="primary-button compact-action" type="button" data-action="select-deal">Select</button>
           ${deal.bookingUrl ? `<a class="link-button" href="${escapeHtml(deal.bookingUrl)}" target="_blank" rel="noreferrer">Open ${escapeHtml(deal.provider || "provider")}</a>` : ""}
           ${(deal.sourceLinks || []).slice(0, compact ? 2 : 4).map((link) => `<a class="link-button" href="${escapeHtml(link.url)}" target="_blank" rel="noreferrer">${escapeHtml(link.label)}</a>`).join("")}
           ${deal.petPolicyUrl ? `<a class="link-button" href="${escapeHtml(deal.petPolicyUrl)}" target="_blank" rel="noreferrer">Pet policy</a>` : ""}
@@ -197,18 +199,35 @@ function dealCard(deal, compact = false) {
   `;
 }
 
+function chooseDeal(dealId, options = {}) {
+  state.selectedDealId = dealId;
+  state.selectedAccommodationId = null;
+  state.selectedActivityIds.clear();
+  if (options.closeModal) els.modal.classList.add("hidden");
+  renderAll();
+  if (options.scroll) {
+    document.getElementById("planner-tab").scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+}
+
+function hydrateDealCards(container) {
+  container.querySelectorAll(".deal-card").forEach((card) => {
+    card.addEventListener("click", (event) => {
+      if (event.target.closest("a")) return;
+      const actionButton = event.target.closest("[data-action]");
+      if (actionButton?.dataset.action === "details") {
+        openDestinationDetail(card.dataset.dealId);
+        return;
+      }
+      chooseDeal(card.dataset.dealId);
+    });
+  });
+}
+
 function renderDeals() {
   const deals = sortedDeals();
   els.deals.innerHTML = deals.map((deal) => dealCard(deal)).join("");
-  els.deals.querySelectorAll(".deal-card").forEach((card) => {
-    card.addEventListener("click", (event) => {
-      if (event.target.closest("a")) return;
-      state.selectedDealId = card.dataset.dealId;
-      state.selectedAccommodationId = null;
-      state.selectedActivityIds.clear();
-      renderAll();
-    });
-  });
+  hydrateDealCards(els.deals);
 }
 
 function renderDealBoard() {
@@ -217,6 +236,7 @@ function renderDealBoard() {
     .filter((deal) => !LOCAL_SKANE_DESTINATIONS.has(String(deal.destination)))
     .filter((deal) => JSON.stringify(deal).toLowerCase().includes(query));
   els.dealBoard.innerHTML = deals.map((deal) => dealCard(deal, true)).join("");
+  hydrateDealCards(els.dealBoard);
 }
 
 function selectedDeal() {
@@ -742,6 +762,214 @@ function renderItinerary(plan) {
     state.currentItinerary = null;
     els.itinerary.classList.remove("has-content");
     els.itinerary.innerHTML = "";
+  });
+}
+
+function itemsForDestination(collection, destinationId) {
+  return collection.filter((item) => String(item.destination || "").toLowerCase() === String(destinationId || "").toLowerCase());
+}
+
+function bestStaysForDestination(destinationId) {
+  return itemsForDestination(state.accommodations, destinationId)
+    .sort((a, b) => Number(b.dogFriendly) - Number(a.dogFriendly) || Number(b.rating) - Number(a.rating) || Number(a.price) - Number(b.price));
+}
+
+function bestActivitiesForDestination(destinationId) {
+  return itemsForDestination(state.activities, destinationId)
+    .sort((a, b) => Number(b.dogFriendly) - Number(a.dogFriendly) || Number(b.rating) - Number(a.rating) || Number(a.price) - Number(b.price));
+}
+
+function openDestinationDetail(dealId) {
+  const deal = state.deals.find((item) => item.id === dealId) || selectedDeal();
+  if (!deal) return;
+
+  const destination = destinationFor(deal) || {};
+  const destinationId = String(deal.destination || "").toLowerCase();
+  const destinationDeals = state.deals
+    .filter((item) => String(item.destination || "").toLowerCase() === destinationId)
+    .sort((a, b) => scoreDeal(b) - scoreDeal(a));
+  const stays = bestStaysForDestination(destinationId).slice(0, 4);
+  const activities = bestActivitiesForDestination(destinationId).slice(0, 6);
+  const gallery = [
+    destination.image,
+    deal.image,
+    ...destinationDeals.map((item) => item.image),
+    ...stays.map((stay) => stay.image),
+  ].filter(Boolean).filter((value, index, list) => list.indexOf(value) === index).slice(0, 5);
+  const dogIsLikely = Boolean(destination.dogFriendly || deal.dogFriendly || /dog|pet|small dog/i.test(`${deal.description || ""} ${deal.petNote || ""}`));
+  const sourceLinks = providerLinks(deal, destination);
+
+  els.modalBody.innerHTML = `
+    <article class="destination-detail" data-detail-deal-id="${escapeHtml(deal.id)}">
+      <section class="detail-hero">
+        <div>
+          <p class="eyebrow">Destination details</p>
+          <h2>${escapeHtml(destination.name || deal.destination)}${destination.country ? `, ${escapeHtml(destination.country)}` : ""}</h2>
+          <p>${escapeHtml(destination.description || deal.description || "Review the destination, booking options, stays, activities, and dog decision before selecting this trip.")}</p>
+          <div class="detail-actions">
+            <button class="secondary-button" type="button" data-action="back">Back</button>
+            <button class="primary-button" type="button" data-action="select-detail">Select this trip</button>
+            <button class="primary-button" type="button" data-action="generate-detail">Select and build itinerary</button>
+          </div>
+        </div>
+        <img class="detail-main-photo" src="${escapeHtml(gallery[0] || destination.image || deal.image || "")}" alt="${escapeHtml(destination.name || deal.title)}" />
+      </section>
+
+      <section class="detail-gallery" aria-label="Destination pictures">
+        ${gallery.map((src, index) => `<img src="${escapeHtml(src)}" alt="${escapeHtml(`${destination.name || deal.destination} picture ${index + 1}`)}" loading="lazy" />`).join("")}
+      </section>
+
+      <section class="detail-section">
+        <div>
+          <p class="eyebrow">Why go</p>
+          <h3>What is good there</h3>
+        </div>
+        <div class="highlight-grid">
+          ${(destination.highlights || []).map((item) => `<span>${escapeHtml(item)}</span>`).join("") || `<span>${escapeHtml(deal.description || "Good value route to inspect")}</span>`}
+        </div>
+      </section>
+
+      <section class="detail-section">
+        <div>
+          <p class="eyebrow">Dog decision</p>
+          <h3>${dogIsLikely ? "Dog can probably travel with checks" : "Dog may be difficult on this trip"}</h3>
+        </div>
+        <div class="dog-decision-grid">
+          <article>
+            <strong>Take dog</strong>
+            <p>${escapeHtml(dogIsLikely ? (deal.petNote || "Small dog mode is possible, but confirm carrier size, cabin limits, pet fees, and hotel policy before booking.") : "Still possible if a specific airline/hotel allows it, but expect more checks and fewer indoor activity choices.")}</p>
+            <button class="secondary-button" type="button" data-action="dog-on">Plan with dog</button>
+          </article>
+          <article>
+            <strong>Leave dog with friend</strong>
+            <p>Use this when the best fare, museum-heavy itinerary, or accommodation value is better without pet restrictions. The planner will show more options.</p>
+            <button class="secondary-button" type="button" data-action="dog-off">Plan without dog</button>
+          </article>
+        </div>
+      </section>
+
+      <section class="detail-section">
+        <div>
+          <p class="eyebrow">Booking options</p>
+          <h3>Ways to book or compare</h3>
+        </div>
+        <div class="source-grid">
+          ${sourceLinks.map((link) => `<a class="decision-link" href="${escapeHtml(link.url)}" target="_blank" rel="noreferrer">${escapeHtml(link.label)}</a>`).join("")}
+        </div>
+      </section>
+
+      <section class="detail-section">
+        <div>
+          <p class="eyebrow">Travel choices</p>
+          <h3>Compare deal options</h3>
+        </div>
+        <div class="detail-list">
+          ${destinationDeals.map((item) => `
+            <article class="detail-row${item.id === deal.id ? " selected-row" : ""}">
+              <div>
+                <strong>${escapeHtml(item.title)}</strong>
+                <p class="muted">${escapeHtml(item.route || "Route to confirm")} - ${escapeHtml(item.duration || "Duration to confirm")}</p>
+                <p class="muted">${escapeHtml(item.travelWindow || "Flexible dates")} - ${escapeHtml(item.petNote || (item.dogFriendly ? "Small dog possible; confirm rules." : "Check dog rules."))}</p>
+              </div>
+              <div>
+                <strong>${money(item.price)}</strong>
+                <button class="secondary-button" type="button" data-action="select-other-deal" data-deal-id="${escapeHtml(item.id)}">Use</button>
+              </div>
+            </article>
+          `).join("")}
+        </div>
+      </section>
+
+      <section class="detail-section">
+        <div>
+          <p class="eyebrow">Accommodation</p>
+          <h3>Stay options near arrival</h3>
+        </div>
+        <div class="detail-card-grid">
+          ${stays.map((stay) => `
+            <article class="mini-detail-card">
+              ${stay.image ? `<img src="${escapeHtml(stay.image)}" alt="${escapeHtml(stay.name)}" loading="lazy" />` : ""}
+              <div>
+                <h4>${escapeHtml(stay.name)}</h4>
+                <p class="muted">${escapeHtml(stay.address || stay.area || "Area to confirm")}</p>
+                <p>${escapeHtml((stay.features || []).join(", ") || "Compare room and cancellation terms before booking.")}</p>
+                <div class="meta-grid">
+                  <div><span>Night</span><strong>${money(stay.price)}</strong></div>
+                  <div><span>Dog</span><strong>${stay.dogFriendly ? "Good" : "Check"}</strong></div>
+                </div>
+                <div class="card-actions">
+                  <button class="secondary-button compact-action" type="button" data-action="select-stay" data-stay-id="${escapeHtml(stay.id)}">Use stay</button>
+                  ${stay.bookingUrl ? `<a class="link-button" href="${escapeHtml(stay.bookingUrl)}" target="_blank" rel="noreferrer">Rooms</a>` : ""}
+                </div>
+              </div>
+            </article>
+          `).join("") || `<p class="muted">No accommodation options stored yet for this destination. Use Compare stays in booking links.</p>`}
+        </div>
+      </section>
+
+      <section class="detail-section">
+        <div>
+          <p class="eyebrow">Activities</p>
+          <h3>What to do with prices</h3>
+        </div>
+        <div class="detail-card-grid">
+          ${activities.map((activity) => `
+            <article class="mini-detail-card activity-mini">
+              <div>
+                <span class="score-pill">${escapeHtml(activity.category || "Activity")}</span>
+                <h4>${escapeHtml(activity.name)}</h4>
+                <p>${escapeHtml(activity.description || "Activity idea to consider.")}</p>
+                <div class="meta-grid">
+                  <div><span>Cost</span><strong>${money(activity.price)}</strong></div>
+                  <div><span>Dog</span><strong>${activity.dogFriendly ? "Good" : "No/check"}</strong></div>
+                </div>
+                <button class="secondary-button compact-action" type="button" data-action="toggle-activity" data-activity-id="${escapeHtml(activity.id)}">Add/remove</button>
+              </div>
+            </article>
+          `).join("") || `<p class="muted">No activities stored yet for this destination. Use map and search links above.</p>`}
+        </div>
+      </section>
+    </article>
+  `;
+
+  els.modal.classList.remove("hidden");
+
+  els.modalBody.querySelectorAll("[data-action]").forEach((control) => {
+    control.addEventListener("click", () => {
+      const action = control.dataset.action;
+      if (action === "back") els.modal.classList.add("hidden");
+      if (action === "dog-on") {
+        els.dogFriendly.checked = true;
+        chooseDeal(deal.id);
+        openDestinationDetail(deal.id);
+      }
+      if (action === "dog-off") {
+        els.dogFriendly.checked = false;
+        chooseDeal(deal.id);
+        openDestinationDetail(deal.id);
+      }
+      if (action === "select-detail") chooseDeal(deal.id, { closeModal: true, scroll: true });
+      if (action === "generate-detail") {
+        chooseDeal(deal.id, { closeModal: true });
+        buildItinerary();
+      }
+      if (action === "select-other-deal") {
+        chooseDeal(control.dataset.dealId);
+        openDestinationDetail(control.dataset.dealId);
+      }
+      if (action === "select-stay") {
+        state.selectedAccommodationId = control.dataset.stayId;
+        renderAll();
+        openDestinationDetail(deal.id);
+      }
+      if (action === "toggle-activity") {
+        const id = control.dataset.activityId;
+        if (state.selectedActivityIds.has(id)) state.selectedActivityIds.delete(id);
+        else state.selectedActivityIds.add(id);
+        renderAll();
+        openDestinationDetail(deal.id);
+      }
+    });
   });
 }
 
