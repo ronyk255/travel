@@ -83,7 +83,31 @@ def pet_note(provider, mode):
 
 
 def curated_deals():
+    recommended_dates = {
+        "gothenburg": ("2026-09-12", "2026-09-14"),
+        "berlin": ("2026-10-10", "2026-10-13"),
+        "prague": ("2026-10-17", "2026-10-20"),
+        "krakow": ("2026-09-19", "2026-09-22"),
+        "amsterdam": ("2026-11-07", "2026-11-10"),
+        "budapest": ("2026-10-24", "2026-10-28"),
+        "vienna": ("2026-11-14", "2026-11-17"),
+        "lisbon": ("2027-02-07", "2027-02-12"),
+        "porto": ("2027-03-07", "2027-03-11"),
+        "barcelona": ("2026-10-31", "2026-11-04"),
+        "rome": ("2027-01-17", "2027-01-21"),
+        "nice": ("2027-03-20", "2027-03-24"),
+        "paris": ("2027-01-24", "2027-01-27"),
+        "warsaw": ("2026-09-26", "2026-09-29"),
+        "gdansk": ("2026-09-12", "2026-09-15"),
+        "riga": ("2026-10-03", "2026-10-06"),
+        "tallinn": ("2027-02-21", "2027-02-25"),
+        "hamburg": ("2026-09-05", "2026-09-08"),
+        "ystad": ("2026-07-11", "2026-07-11"),
+        "skanor-falsterbo": ("2026-07-18", "2026-07-18"),
+    }
+
     def deal(id_, title, mode, route, destination, duration, price, window, description, provider="Skyscanner", dog=False, booking=None):
+        recommended_date, recommended_return = recommended_dates.get(destination, ("2026-10-10", "2026-10-13"))
         return {
             "id": id_,
             "title": title,
@@ -94,6 +118,11 @@ def curated_deals():
             "duration": duration,
             "price": price,
             "travelWindow": window,
+            "recommendedDate": recommended_date,
+            "recommendedReturnDate": recommended_return,
+            "validFrom": recommended_date,
+            "validTo": recommended_return,
+            "fareStatus": "target",
             "description": description,
             "expires": "Rolling next 12 months",
             "bookingUrl": booking or f"https://www.skyscanner.com/transport/flights/cph/{slug(destination)}/",

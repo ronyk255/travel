@@ -37,6 +37,7 @@ const els = {
   lastUpdated: document.getElementById("lastUpdated"),
   bestValue: document.getElementById("bestValue"),
   dogCount: document.getElementById("dogCount"),
+  upcomingDeals: document.getElementById("upcomingDeals"),
   deals: document.getElementById("deals"),
   dealBoard: document.getElementById("dealBoard"),
   accommodations: document.getElementById("accommodations"),
@@ -150,6 +151,15 @@ function compactFlightDate(value) {
   return String(value || "").replaceAll("-", "").slice(2);
 }
 
+function effectiveDealDates(deal) {
+  const departure = els.travelDate.value || deal.recommendedDate || deal.validFrom || todayIso();
+  const fallbackReturn = addDays(departure, Math.max(1, Number(els.tripLength.value || 3) - 1));
+  return {
+    departure,
+    returnDate: deal.recommendedReturnDate || deal.validTo || fallbackReturn,
+  };
+}
+
 function routeParts(deal, destination) {
   const route = String(deal.route || "");
   const pieces = route.split("->").map((item) => item.trim()).filter(Boolean);
@@ -162,8 +172,7 @@ function routeParts(deal, destination) {
 function transportBookingLinks(deal, destination = {}) {
   const destinationId = String(deal.destination || "").toLowerCase();
   const destinationName = destination.name || deal.destination || "";
-  const travelDate = els.travelDate.value || todayIso();
-  const returnDate = addDays(travelDate, Math.max(1, Number(els.tripLength.value || 3) - 1));
+  const { departure: travelDate, returnDate } = effectiveDealDates(deal);
   const travelers = String(Math.max(1, Number(els.numTravelers.value || 2)));
   const { from, to } = routeParts(deal, destination);
   const isTrain = /train|bus/i.test(`${deal.mode || ""} ${deal.provider || ""}`);
@@ -203,6 +212,16 @@ function transportBookingLinks(deal, destination = {}) {
           journeySearchType: "return",
         }),
       },
+      {
+        label: "Omio",
+        url: urlWithParams("https://www.omio.com/search-frontend/results", {
+          departure_fk: from,
+          arrival_fk: to,
+          departure_date: travelDate,
+          return_date: returnDate,
+          passengers: travelers,
+        }),
+      },
     ];
   }
 
@@ -223,6 +242,24 @@ function transportBookingLinks(deal, destination = {}) {
         "search.departureDate": travelDate,
         "search.returnDate": returnDate,
         "search.rooms[0].adults": travelers,
+      }),
+    },
+    {
+      label: "Kayak",
+      url: `https://www.kayak.com/flights/CPH-${destCode}/${travelDate}/${returnDate}/${travelers}adults?sort=bestflight_a`,
+    },
+    {
+      label: "Momondo",
+      url: `https://www.momondo.com/flight-search/CPH-${destCode}/${travelDate}/${returnDate}/${travelers}adults?sort=bestflight_a`,
+    },
+    {
+      label: "Kiwi",
+      url: urlWithParams("https://www.kiwi.com/en/search/results/copenhagen-denmark/" + encodeURIComponent(destinationName.toLowerCase().replaceAll(" ", "-")), {
+        dateFrom: travelDate,
+        dateTo: travelDate,
+        returnFrom: returnDate,
+        returnTo: returnDate,
+        adults: travelers,
       }),
     },
     {
@@ -332,6 +369,8 @@ function dealCard(deal, compact = false) {
   const score = scoreDeal(deal);
   const dogText = deal.dogFriendly ? "Small dog possible" : "Check pet rules";
   const bookingLinks = transportBookingLinks(deal, destination);
+  const fareLabel = deal.fareStatus === "verified" ? "Verified fare" : "Target fare";
+  const dealDates = effectiveDealDates(deal);
   return `
     <article class="deal-card${selected}" data-deal-id="${escapeHtml(deal.id)}">
       ${cardImage(deal.image || destination?.image, deal.title, [deal.mode || "Deal", dogText])}
@@ -341,18 +380,19 @@ function dealCard(deal, compact = false) {
           <p class="muted">${escapeHtml(deal.route || "Route to confirm")} - ${escapeHtml(deal.duration || "Duration to confirm")}</p>
         </div>
         <div class="meta-grid">
-          <div><span>From</span><strong>${money(deal.price)}</strong></div>
+          <div><span>${fareLabel}</span><strong>${money(deal.price)}</strong></div>
           <div><span>Score</span><strong>${score}/100</strong></div>
         </div>
         <p>${escapeHtml(deal.description || "Provider-linked deal. Confirm live fare before booking.")}</p>
         ${deal.travelWindow ? `<p class="muted"><strong>Best window:</strong> ${escapeHtml(deal.travelWindow)}</p>` : ""}
+        <p class="muted"><strong>Fare search date:</strong> ${escapeHtml(formatDate(dealDates.departure))} to ${escapeHtml(formatDate(dealDates.returnDate))}</p>
         <p class="muted"><strong>Price source:</strong> ${escapeHtml(deal.priceConfidence || "Lead price; verify before booking")} - ${escapeHtml(compactDateTime(deal.lastChecked))}</p>
         ${deal.petNote ? `<p class="muted"><strong>Dog note:</strong> ${escapeHtml(deal.petNote)}</p>` : ""}
         ${compact ? "" : `<p class="muted">Book by: ${escapeHtml(deal.expires || "Flexible")}</p>`}
         <div class="card-actions">
           <button class="secondary-button compact-action" type="button" data-action="details">Details</button>
           <button class="primary-button compact-action" type="button" data-action="select-deal">Select</button>
-          ${bookingLinks.slice(0, compact ? 3 : 4).map((link) => `<a class="link-button" href="${escapeHtml(link.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(link.label)}</a>`).join("")}
+          ${bookingLinks.slice(0, compact ? 4 : 6).map((link) => `<a class="link-button" href="${escapeHtml(link.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(link.label)}</a>`).join("")}
           <a class="link-button" href="https://www.google.com/maps/search/${encodeURIComponent(destination?.name || deal.destination || deal.title)}" target="_blank" rel="noreferrer">Map</a>
         </div>
       </div>
@@ -1038,7 +1078,7 @@ function openDestinationDetail(dealId) {
               <div>
                 <strong>${money(item.price)}</strong>
                 <button class="secondary-button" type="button" data-action="select-other-deal" data-deal-id="${escapeHtml(item.id)}">Use</button>
-                <a class="link-button" href="${escapeHtml(itemLinks[0]?.url || item.bookingUrl || "#")}" target="_blank" rel="noopener noreferrer">Check fare</a>
+                ${itemLinks.slice(0, 4).map((link) => `<a class="link-button" href="${escapeHtml(link.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(link.label)}</a>`).join("")}
               </div>
             </article>
           `;
@@ -1266,6 +1306,41 @@ function updateStats() {
   els.lastUpdated.textContent = `Loaded ${new Date().toLocaleString("en-GB")}`;
 }
 
+function renderUpcomingDealRadar() {
+  const upcoming = state.deals
+    .filter((deal) => !LOCAL_SKANE_DESTINATIONS.has(String(deal.destination)))
+    .map((deal) => ({ deal, dates: effectiveDealDates(deal), destination: destinationFor(deal) || {} }))
+    .sort((a, b) => new Date(`${a.dates.departure}T12:00:00`) - new Date(`${b.dates.departure}T12:00:00`))
+    .slice(0, 6);
+
+  els.upcomingDeals.innerHTML = `
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">Upcoming deal radar</p>
+        <h2>Future fare windows to watch</h2>
+      </div>
+    </div>
+    <div class="radar-grid">
+      ${upcoming.map(({ deal, dates, destination }) => {
+        const links = transportBookingLinks(deal, destination);
+        return `
+          <article class="radar-card">
+            <div>
+              <strong>${escapeHtml(destination.name || deal.destination)}</strong>
+              <p class="muted">${escapeHtml(formatDate(dates.departure))} to ${escapeHtml(formatDate(dates.returnDate))}</p>
+              <p>${escapeHtml(deal.travelWindow || "Future deal window")}</p>
+            </div>
+            <div class="radar-actions">
+              <span>${money(deal.price)}</span>
+              ${links.slice(0, 3).map((link) => `<a class="decision-link" href="${escapeHtml(link.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(link.label)}</a>`).join("")}
+            </div>
+          </article>
+        `;
+      }).join("")}
+    </div>
+  `;
+}
+
 function renderAll() {
   renderDeals();
   renderDealBoard();
@@ -1274,6 +1349,7 @@ function renderAll() {
   renderGems();
   renderDiary();
   updateStats();
+  renderUpcomingDealRadar();
   refreshPlannerInsights();
 }
 
@@ -1319,7 +1395,6 @@ function bindEvents() {
 
 async function init() {
   bindEvents();
-  els.travelDate.value = todayIso();
   els.priceValue.textContent = money(els.maxPrice.value);
   els.ratingValue.textContent = els.minRating.value;
 

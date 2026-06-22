@@ -228,6 +228,47 @@ main {
   background: var(--surface);
 }
 
+.deal-radar {
+  margin-bottom: 24px;
+  padding: 18px;
+  border: 1px solid rgba(15, 118, 110, 0.28);
+  border-radius: 8px;
+  background: #f0fdfa;
+  box-shadow: var(--soft-shadow);
+}
+
+.radar-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 12px;
+}
+
+.radar-card {
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid rgba(15, 118, 110, 0.22);
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.radar-card p {
+  margin: 7px 0 0;
+}
+
+.radar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.radar-actions span {
+  margin-right: 4px;
+  color: var(--brand-dark);
+  font-weight: 950;
+}
+
 .status-label {
   display: block;
   margin-bottom: 6px;
