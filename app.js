@@ -70,6 +70,62 @@ function moneySek(value) {
   return `SEK ${Number(value).toFixed(0)}`;
 }
 
+function urlWithParams(base, params) {
+  const url = new URL(base);
+  Object.entries(params).forEach(([key, value]) => {
+    if (value !== undefined && value !== null && value !== "") url.searchParams.set(key, value);
+  });
+  return url.toString();
+}
+
+function accommodationBookingLinks(stay) {
+  const destination = state.destinations.find((item) => item.id === String(stay.destination || "").toLowerCase()) || {};
+  const city = destination.name || stay.destination || "";
+  const checkin = els.travelDate.value || todayIso();
+  const checkout = addDays(checkin, Math.max(1, Number(els.tripLength.value || 3) - 1));
+  const adults = String(Math.max(1, Number(els.numTravelers.value || 2)));
+  const dogFilter = els.dogFriendly.checked || stay.dogFriendly ? "hotelfacility=4" : "";
+  const staySearch = [stay.name, stay.address, city].filter(Boolean).join(", ");
+  const citySearch = [city, destination.country].filter(Boolean).join(", ");
+
+  return [
+    {
+      label: "Booking.com",
+      url: urlWithParams("https://www.booking.com/searchresults.html", {
+        ss: staySearch || citySearch,
+        checkin,
+        checkout,
+        group_adults: adults,
+        no_rooms: "1",
+        selected_currency: "EUR",
+        nflt: dogFilter,
+      }),
+    },
+    {
+      label: "Lastminute",
+      url: urlWithParams("https://www.lastminute.com/search", {
+        "search.destination": citySearch || staySearch,
+        "search.departureDate": checkin,
+        "search.returnDate": checkout,
+        "search.rooms[0].adults": adults,
+      }),
+    },
+    {
+      label: "Google Hotels",
+      url: urlWithParams("https://www.google.com/travel/hotels", {
+        q: staySearch || citySearch,
+        checkin,
+        checkout,
+        adults,
+      }),
+    },
+    {
+      label: "Map",
+      url: `https://www.google.com/maps/search/${encodeURIComponent(staySearch || citySearch)}`,
+    },
+  ];
+}
+
 function compactDateTime(value) {
   if (!value) return "Latest committed data";
   const date = new Date(value);
@@ -266,7 +322,9 @@ function renderAccommodations() {
   }
 
   els.accommodations.innerHTML = stays.length
-    ? stays.map((stay) => `
+    ? stays.map((stay) => {
+      const bookingLinks = accommodationBookingLinks(stay);
+      return `
       <article class="option-card${state.selectedAccommodationId === stay.id ? " selected" : ""}" data-stay-id="${escapeHtml(stay.id)}">
         ${cardImage(stay.image, stay.name, [`${stay.rating}/5`, stay.dogFriendly ? "Dog-friendly" : "No dog note"])}
         <div class="card-body">
@@ -280,13 +338,13 @@ function renderAccommodations() {
             <div><span>Rating</span><strong>${escapeHtml(stay.rating)}</strong></div>
           </div>
           <div class="card-actions">
-            ${stay.bookingUrl ? `<a class="link-button" href="${escapeHtml(stay.bookingUrl)}" target="_blank" rel="noreferrer">Check rooms</a>` : ""}
-            ${(stay.sourceLinks || []).slice(0, 3).map((link) => `<a class="link-button" href="${escapeHtml(link.url)}" target="_blank" rel="noreferrer">${escapeHtml(link.label)}</a>`).join("")}
+            ${bookingLinks.map((link) => `<a class="link-button" href="${escapeHtml(link.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(link.label)}</a>`).join("")}
             ${stay.petPolicyUrl ? `<a class="link-button" href="${escapeHtml(stay.petPolicyUrl)}" target="_blank" rel="noreferrer">Pet policy</a>` : ""}
           </div>
         </div>
       </article>
-    `).join("")
+    `;
+    }).join("")
     : `<p class="muted">No stays match these filters. Raise the budget or turn off dog-only mode.</p>`;
 
   els.accommodations.querySelectorAll(".option-card").forEach((card) => {
@@ -886,7 +944,9 @@ function openDestinationDetail(dealId) {
           <h3>Stay options near arrival</h3>
         </div>
         <div class="detail-card-grid">
-          ${stays.map((stay) => `
+          ${stays.map((stay) => {
+            const bookingLinks = accommodationBookingLinks(stay);
+            return `
             <article class="mini-detail-card">
               ${stay.image ? `<img src="${escapeHtml(stay.image)}" alt="${escapeHtml(stay.name)}" loading="lazy" />` : ""}
               <div>
@@ -899,11 +959,12 @@ function openDestinationDetail(dealId) {
                 </div>
                 <div class="card-actions">
                   <button class="secondary-button compact-action" type="button" data-action="select-stay" data-stay-id="${escapeHtml(stay.id)}">Use stay</button>
-                  ${stay.bookingUrl ? `<a class="link-button" href="${escapeHtml(stay.bookingUrl)}" target="_blank" rel="noreferrer">Rooms</a>` : ""}
+                  ${bookingLinks.slice(0, 3).map((link) => `<a class="link-button" href="${escapeHtml(link.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(link.label)}</a>`).join("")}
                 </div>
               </div>
             </article>
-          `).join("") || `<p class="muted">No accommodation options stored yet for this destination. Use Compare stays in booking links.</p>`}
+          `;
+          }).join("") || `<p class="muted">No accommodation options stored yet for this destination. Use Compare stays in booking links.</p>`}
         </div>
       </section>
 
