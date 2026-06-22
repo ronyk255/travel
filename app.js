@@ -1,569 +1,622 @@
-// Refresh Button: Clear cache and reload
-document.getElementById("refreshButton").addEventListener("click", () => {
-  // Clear browser cache for data files
-  localStorage.removeItem("cacheVersion");
-  
-  // Clear application data (but keep saved trips)
-  const savedTrips = localStorage.getItem("savedTrips");
-  localStorage.clear();
-  if (savedTrips) {
-    localStorage.setItem("savedTrips", savedTrips);
-  }
-  
-  // Hard refresh with cache busting
-  const timestamp = new Date().getTime();
-  window.location.href = window.location.href.split("#")[0] + `?_cache=${timestamp}`;
-});
+const state = {
+  deals: [],
+  destinations: [],
+  accommodations: [],
+  activities: [],
+  gems: [],
+  selectedDealId: null,
+  selectedAccommodationId: null,
+  selectedActivityIds: new Set(),
+  currentItinerary: null,
+};
 
-// State
-let globalDeals = [];
-let globalGems = [];
-let globalDestinations = [];
-let globalAccommodations = [];
-let globalActivities = [];
+const els = {
+  refreshButton: document.getElementById("refreshButton"),
+  lastUpdated: document.getElementById("lastUpdated"),
+  bestValue: document.getElementById("bestValue"),
+  dogCount: document.getElementById("dogCount"),
+  deals: document.getElementById("deals"),
+  dealBoard: document.getElementById("dealBoard"),
+  accommodations: document.getElementById("accommodations"),
+  activities: document.getElementById("activities"),
+  hiddenGems: document.getElementById("hiddenGems"),
+  savedTrips: document.getElementById("savedTrips"),
+  itinerary: document.getElementById("itinerary"),
+  dealSort: document.getElementById("dealSort"),
+  dealSearch: document.getElementById("dealSearch"),
+  origin: document.getElementById("origin"),
+  travelDate: document.getElementById("travelDate"),
+  tripLength: document.getElementById("tripLength"),
+  numTravelers: document.getElementById("numTravelers"),
+  maxPrice: document.getElementById("maxPrice"),
+  priceValue: document.getElementById("priceValue"),
+  minRating: document.getElementById("minRating"),
+  ratingValue: document.getElementById("ratingValue"),
+  dogFriendly: document.getElementById("dogFriendly"),
+  hiddenGemMode: document.getElementById("hiddenGemMode"),
+  buildItinerary: document.getElementById("buildItinerary"),
+  exportDiary: document.getElementById("exportDiary"),
+  modal: document.getElementById("tripModal"),
+  modalBody: document.getElementById("tripModalBody"),
+};
 
-let selectedDealId = null;
-let selectedAccommodationIds = new Set();
-let selectedActivityIds = new Set();
-
-// Utility Functions
-async function loadData(filename) {
-  try {
-    // Add cache busting parameter
-    const timestamp = new Date().getTime();
-    const response = await fetch(`${filename}?_cache=${timestamp}`);
-    return await response.json();
-  } catch (e) {
-    console.error(`Failed to load ${filename}:`, e);
-    return [];
-  }
+function escapeHtml(value = "") {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
 }
 
-function calculateDistance(lat1, lng1, lat2, lng2) {
-  const R = 6371; // Earth's radius in km
-  const dLat = ((lat2 - lat1) * Math.PI) / 180;
-  const dLng = ((lng2 - lng1) * Math.PI) / 180;
-  const a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos((lat1 * Math.PI) / 180) *
-      Math.cos((lat2 * Math.PI) / 180) *
-      Math.sin(dLng / 2) *
-      Math.sin(dLng / 2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return R * c;
+function money(value) {
+  if (Number.isNaN(Number(value))) return "Check provider";
+  return `EUR ${Number(value).toFixed(0)}`;
 }
 
-function formatPrice(value) {
-  return typeof value === "number" ? `€${value.toFixed(0)}` : value;
+function todayIso() {
+  return new Date().toISOString().slice(0, 10);
 }
 
-function formatDate(dateStr) {
-  if (!dateStr) return "Flexible";
-  const date = new Date(dateStr);
-  return date.toLocaleDateString("en-GB", {
+function formatDate(value) {
+  if (!value) return "Flexible dates";
+  return new Intl.DateTimeFormat("en-GB", {
     weekday: "short",
-    month: "short",
     day: "numeric",
-  });
+    month: "short",
+    year: "numeric",
+  }).format(new Date(`${value}T12:00:00`));
 }
 
-// Tab Switching
-document.querySelectorAll(".nav-tab").forEach((tab) => {
-  tab.addEventListener("click", (e) => {
-    const tabName = e.target.dataset.tab;
-    document.querySelectorAll(".nav-tab").forEach((t) => t.classList.remove("active"));
-    document.querySelectorAll(".tab-content").forEach((c) => c.classList.remove("active"));
-    e.target.classList.add("active");
-    document.getElementById(`${tabName}-tab`).classList.add("active");
-  });
-});
+function cacheBusted(path) {
+  return `${path}?v=${Date.now()}`;
+}
 
-// Render Deals
-function renderDeals(deals) {
-  const dealsContainer = document.getElementById("deals");
-  dealsContainer.innerHTML = deals
-    .map(
-      (deal) => `
-    <article class="deal-card ${selectedDealId === deal.id ? "selected" : ""}" data-deal-id="${deal.id}">
-      ${deal.image ? `
-        <div class="card-image">
-          <img src="${deal.image}" alt="${deal.destination}" />
-          <span class="deal-tag-badge">${deal.mode}</span>
-          ${selectedDealId === deal.id ? '<span class="selected-badge">✓ Selected</span>' : ""}
+async function loadJson(path, fallback = []) {
+  try {
+    const response = await fetch(cacheBusted(path));
+    if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
+    return await response.json();
+  } catch (error) {
+    console.warn(`Could not load ${path}`, error);
+    return fallback;
+  }
+}
+
+function destinationFor(deal) {
+  const destinationId = String(deal.destination || "").toLowerCase();
+  return state.destinations.find((item) => item.id === destinationId || item.name.toLowerCase() === destinationId);
+}
+
+function scoreDeal(deal) {
+  const price = Number(deal.price || 999);
+  const dogBonus = deal.dogFriendly || /dog|pet/i.test(deal.description || "") ? 16 : 0;
+  const trainBonus = deal.mode === "Train" ? 10 : 0;
+  const sourceBonus = deal.bookingUrl ? 8 : 0;
+  const priceScore = Math.max(0, 100 - price);
+  return Math.round(priceScore + dogBonus + trainBonus + sourceBonus);
+}
+
+function durationMinutes(deal) {
+  const duration = String(deal.duration || "");
+  const hours = Number((duration.match(/(\d+)\s*h/) || [0, 0])[1]);
+  const minutes = Number((duration.match(/(\d+)\s*m/) || [0, 0])[1]);
+  return hours * 60 + minutes || 9999;
+}
+
+function sortedDeals() {
+  const sort = els.dealSort.value;
+  const dogOnly = els.dogFriendly.checked;
+  const preferHidden = els.hiddenGemMode.checked;
+  let deals = [...state.deals];
+
+  if (dogOnly) {
+    deals = deals.filter((deal) => deal.dogFriendly || /dog|pet|small dog|cabin/i.test(deal.description || ""));
+  }
+
+  if (sort === "price") deals.sort((a, b) => Number(a.price || 9999) - Number(b.price || 9999));
+  if (sort === "dog") deals.sort((a, b) => Number(Boolean(b.dogFriendly)) - Number(Boolean(a.dogFriendly)) || scoreDeal(b) - scoreDeal(a));
+  if (sort === "duration") deals.sort((a, b) => durationMinutes(a) - durationMinutes(b));
+  if (sort === "score") deals.sort((a, b) => scoreDeal(b) - scoreDeal(a));
+
+  if (preferHidden) {
+    const hiddenIds = new Set(["ystad", "skanor-falsterbo", "gothenburg"]);
+    deals.sort((a, b) => Number(hiddenIds.has(String(b.destination))) - Number(hiddenIds.has(String(a.destination))));
+  }
+
+  return deals;
+}
+
+function cardImage(src, alt, badges) {
+  return `
+    <div class="card-image">
+      <img src="${escapeHtml(src || "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80")}" alt="${escapeHtml(alt)}" loading="lazy" />
+      <div class="badge-row">${badges.map((badge) => `<span class="badge">${escapeHtml(badge)}</span>`).join("")}</div>
+    </div>
+  `;
+}
+
+function dealCard(deal, compact = false) {
+  const destination = destinationFor(deal);
+  const selected = state.selectedDealId === deal.id ? " selected" : "";
+  const score = scoreDeal(deal);
+  const dogText = deal.dogFriendly ? "Small dog possible" : "Check pet rules";
+  return `
+    <article class="deal-card${selected}" data-deal-id="${escapeHtml(deal.id)}">
+      ${cardImage(deal.image || destination?.image, deal.title, [deal.mode || "Deal", dogText])}
+      <div class="card-body">
+        <div>
+          <h3>${escapeHtml(deal.title)}</h3>
+          <p class="muted">${escapeHtml(deal.route || "Route to confirm")} - ${escapeHtml(deal.duration || "Duration to confirm")}</p>
         </div>
-      ` : ""}
-      <div class="deal-body">
-        <h3>${deal.title}</h3>
-        <p class="deal-meta">${deal.route} • ${deal.duration}</p>
-        <p>${deal.description}</p>
-        <div class="deal-footer">
-          <span class="deal-price">${formatPrice(deal.price)}</span>
-          <span class="deal-tag">${deal.expires ? `Book by ${deal.expires}` : "Flexible dates"}</span>
+        <div class="meta-grid">
+          <div><span>From</span><strong>${money(deal.price)}</strong></div>
+          <div><span>Score</span><strong>${score}/100</strong></div>
+        </div>
+        <p>${escapeHtml(deal.description || "Provider-linked deal. Confirm live fare before booking.")}</p>
+        ${compact ? "" : `<p class="muted">Book by: ${escapeHtml(deal.expires || "Flexible")}</p>`}
+        <div class="card-actions">
+          ${deal.bookingUrl ? `<a class="link-button" href="${escapeHtml(deal.bookingUrl)}" target="_blank" rel="noreferrer">Open ${escapeHtml(deal.provider || "provider")}</a>` : ""}
+          <a class="link-button" href="https://www.google.com/maps/search/${encodeURIComponent(destination?.name || deal.destination || deal.title)}" target="_blank" rel="noreferrer">Map</a>
         </div>
       </div>
     </article>
-  `
-    )
-    .join("");
+  `;
+}
 
-  document.querySelectorAll(".deal-card").forEach((card) => {
-    card.addEventListener("click", () => {
-      selectedDealId = card.dataset.dealId;
-      renderDeals(deals);
-      updateSelectedDealSummary();
-      updateAccommodations();
-      updateActivities();
+function renderDeals() {
+  const deals = sortedDeals();
+  els.deals.innerHTML = deals.map((deal) => dealCard(deal)).join("");
+  els.deals.querySelectorAll(".deal-card").forEach((card) => {
+    card.addEventListener("click", (event) => {
+      if (event.target.closest("a")) return;
+      state.selectedDealId = card.dataset.dealId;
+      state.selectedAccommodationId = null;
+      state.selectedActivityIds.clear();
+      renderAll();
     });
   });
 }
 
-function updateSelectedDealSummary() {
-  const deal = globalDeals.find((d) => d.id === selectedDealId);
-  const summary = document.getElementById("selectedDeal");
-  if (deal) {
-    summary.classList.remove("hidden");
-    summary.innerHTML = `✓ Deal selected: <strong>${deal.title}</strong> to ${deal.destination} for ${formatPrice(deal.price)}`;
-  } else {
-    summary.classList.add("hidden");
-  }
+function renderDealBoard() {
+  const query = (els.dealSearch.value || "").toLowerCase();
+  const deals = state.deals.filter((deal) => JSON.stringify(deal).toLowerCase().includes(query));
+  els.dealBoard.innerHTML = deals.map((deal) => dealCard(deal, true)).join("");
 }
 
-// Render Accommodations
-function renderAccommodations(accommodations) {
-  const container = document.getElementById("accommodations");
-  container.innerHTML = accommodations
-    .map(
-      (acc) => `
-    <article class="accommodation-card ${selectedAccommodationIds.has(acc.id) ? "selected" : ""}" data-acc-id="${acc.id}">
-      ${selectedAccommodationIds.has(acc.id) ? '<span class="selected-badge">✓</span>' : ""}
-      <div class="accommodation-body">
-        <h3>${acc.name}</h3>
-        <p class="rating-tag">⭐ ${acc.rating}/5 ${acc.dogFriendly ? "🐶 Dog-friendly" : ""}</p>
-        <p style="font-size: 0.95rem;">${acc.address}</p>
-        <p style="font-size: 0.9rem; color: #6b7280;">${acc.features.join(", ")}</p>
-        <div class="accommodation-footer">
-          <span class="accommodation-price">${formatPrice(acc.price)}/night</span>
-        </div>
-      </div>
-    </article>
-  `
-    )
-    .join("");
+function selectedDeal() {
+  const visible = sortedDeals();
+  return visible.find((deal) => deal.id === state.selectedDealId) || visible[0] || state.deals[0];
+}
 
-  document.querySelectorAll(".accommodation-card").forEach((card) => {
-    card.addEventListener("click", () => {
-      const accId = card.dataset.accId;
-      if (selectedAccommodationIds.has(accId)) {
-        selectedAccommodationIds.delete(accId);
-      } else {
-        selectedAccommodationIds.add(accId);
-      }
-      updateAccommodations();
+function renderAccommodations() {
+  const deal = selectedDeal();
+  if (!deal) {
+    els.accommodations.innerHTML = `<p class="muted">Choose a deal first.</p>`;
+    return;
+  }
+
+  const maxPrice = Number(els.maxPrice.value);
+  const minRating = Number(els.minRating.value);
+  const dogOnly = els.dogFriendly.checked;
+  const destinationId = String(deal.destination || "").toLowerCase();
+  const stays = state.accommodations
+    .filter((stay) => String(stay.destination).toLowerCase() === destinationId)
+    .filter((stay) => Number(stay.price) <= maxPrice && Number(stay.rating) >= minRating)
+    .filter((stay) => !dogOnly || stay.dogFriendly)
+    .sort((a, b) => Number(b.rating) - Number(a.rating) || Number(a.price) - Number(b.price));
+
+  if (!state.selectedAccommodationId && stays[0]) state.selectedAccommodationId = stays[0].id;
+
+  els.accommodations.innerHTML = stays.length
+    ? stays.map((stay) => `
+      <article class="option-card${state.selectedAccommodationId === stay.id ? " selected" : ""}" data-stay-id="${escapeHtml(stay.id)}">
+        ${cardImage(stay.image, stay.name, [`${stay.rating}/5`, stay.dogFriendly ? "Dog-friendly" : "No dog note"])}
+        <div class="card-body">
+          <h3>${escapeHtml(stay.name)}</h3>
+          <p class="muted">${escapeHtml(stay.address || "Area to confirm")}</p>
+          <p>${escapeHtml((stay.features || []).join(", "))}</p>
+          <div class="meta-grid">
+            <div><span>Night</span><strong>${money(stay.price)}</strong></div>
+            <div><span>Rating</span><strong>${escapeHtml(stay.rating)}</strong></div>
+          </div>
+          ${stay.bookingUrl ? `<a class="link-button" href="${escapeHtml(stay.bookingUrl)}" target="_blank" rel="noreferrer">Check rooms</a>` : ""}
+        </div>
+      </article>
+    `).join("")
+    : `<p class="muted">No stays match these filters. Raise the budget or turn off dog-only mode.</p>`;
+
+  els.accommodations.querySelectorAll(".option-card").forEach((card) => {
+    card.addEventListener("click", (event) => {
+      if (event.target.closest("a")) return;
+      state.selectedAccommodationId = card.dataset.stayId;
+      renderAccommodations();
     });
   });
 }
 
-function updateAccommodations() {
-  const deal = globalDeals.find((d) => d.id === selectedDealId);
+function renderActivities() {
+  const deal = selectedDeal();
   if (!deal) {
-    renderAccommodations([]);
+    els.activities.innerHTML = `<p class="muted">Choose a deal first.</p>`;
     return;
   }
 
-  const minRating = parseFloat(document.getElementById("minRating").value);
-  const maxPrice = parseFloat(document.getElementById("maxPrice").value);
-  const dogOnly = document.getElementById("dogFriendly").checked;
+  const destinationId = String(deal.destination || "").toLowerCase();
+  const dogOnly = els.dogFriendly.checked;
+  const activities = state.activities
+    .filter((activity) => String(activity.destination).toLowerCase() === destinationId)
+    .filter((activity) => !dogOnly || activity.dogFriendly)
+    .sort((a, b) => Number(b.rating) - Number(a.rating));
 
-  let filtered = globalAccommodations.filter(
-    (acc) =>
-      acc.destination === deal.id &&
-      acc.rating >= minRating &&
-      acc.price <= maxPrice &&
-      (!dogOnly || acc.dogFriendly)
-  );
+  if (state.selectedActivityIds.size === 0) {
+    activities.slice(0, 4).forEach((activity) => state.selectedActivityIds.add(activity.id));
+  }
 
-  renderAccommodations(filtered);
-}
-
-// Render Activities
-function renderActivities(activities) {
-  const container = document.getElementById("activities");
-  container.innerHTML = activities
-    .map(
-      (act) => `
-    <article class="activity-card ${selectedActivityIds.has(act.id) ? "selected" : ""}" data-activity-id="${act.id}">
-      ${selectedActivityIds.has(act.id) ? '<span class="selected-badge">✓</span>' : ""}
-      <div class="activity-body">
-        <h3>${act.name}</h3>
-        <p class="rating-tag">⭐ ${act.rating}/5 • ${act.duration}</p>
-        <p style="font-size: 0.95rem;">${act.description}</p>
-        <div class="activity-footer">
-          <span>${act.category}</span>
-          <span class="deal-price">${formatPrice(act.price)}</span>
-          ${act.dogFriendly ? "<span>🐶</span>" : ""}
+  els.activities.innerHTML = activities.length
+    ? activities.map((activity) => `
+      <article class="option-card${state.selectedActivityIds.has(activity.id) ? " selected" : ""}" data-activity-id="${escapeHtml(activity.id)}">
+        <div class="card-body">
+          <span class="score-pill">${escapeHtml(activity.category || "Activity")}</span>
+          <h3>${escapeHtml(activity.name)}</h3>
+          <p class="muted">${escapeHtml(activity.duration || "Flexible")} - ${escapeHtml(activity.rating || "New")}/5</p>
+          <p>${escapeHtml(activity.description)}</p>
+          <div class="meta-grid">
+            <div><span>Cost</span><strong>${money(activity.price)}</strong></div>
+            <div><span>Dog</span><strong>${activity.dogFriendly ? "Yes" : "Check"}</strong></div>
+          </div>
         </div>
-      </div>
-    </article>
-  `
-    )
-    .join("");
+      </article>
+    `).join("")
+    : `<p class="muted">No activities match the current dog filter for this destination.</p>`;
 
-  document.querySelectorAll(".activity-card").forEach((card) => {
+  els.activities.querySelectorAll(".option-card").forEach((card) => {
     card.addEventListener("click", () => {
-      const actId = card.dataset.activityId;
-      if (selectedActivityIds.has(actId)) {
-        selectedActivityIds.delete(actId);
-      } else {
-        selectedActivityIds.add(actId);
-      }
-      updateActivities();
+      const id = card.dataset.activityId;
+      if (state.selectedActivityIds.has(id)) state.selectedActivityIds.delete(id);
+      else state.selectedActivityIds.add(id);
+      renderActivities();
     });
   });
 }
 
-function updateActivities() {
-  const deal = globalDeals.find((d) => d.id === selectedDealId);
-  if (!deal) {
-    renderActivities([]);
-    return;
-  }
-
-  const filtered = globalActivities.filter((act) => act.destination === deal.id);
-  renderActivities(filtered);
+function renderGems() {
+  els.hiddenGems.innerHTML = state.gems.map((gem) => `
+    <article class="gem-card">
+      ${cardImage(gem.image, gem.name, [gem.region || "Skane", gem.type || "Hidden gem"])}
+      <div class="card-body">
+        <h3>${escapeHtml(gem.name)}</h3>
+        <p>${escapeHtml(gem.description)}</p>
+        <p class="muted"><strong>Best for:</strong> ${escapeHtml(gem.bestFor || "day trip")}</p>
+        <p class="muted"><strong>Tip:</strong> ${escapeHtml(gem.tip || "Check transit before you go.")}</p>
+        <a class="link-button" href="https://www.google.com/maps/search/${encodeURIComponent(gem.name + " " + (gem.region || ""))}" target="_blank" rel="noreferrer">Open map</a>
+      </div>
+    </article>
+  `).join("");
 }
 
-// Filter Listeners
-document.getElementById("minRating").addEventListener("change", (e) => {
-  document.getElementById("ratingValue").textContent = e.target.value;
-  updateAccommodations();
-});
+function buildDays({ deal, destination, stay, activities, length, travelers, travelDate }) {
+  const days = [];
+  days.push({
+    title: "Travel and arrival",
+    body: `${deal.mode || "Travel"} from ${deal.route || els.origin.value} taking ${deal.duration || "time to confirm"}. Check in near ${stay?.address || destination?.name || deal.destination}.`,
+    cost: Number(deal.price || 0) * travelers,
+    links: [{ label: `Book ${deal.mode || "travel"}`, url: deal.bookingUrl }],
+  });
 
-document.getElementById("maxPrice").addEventListener("change", (e) => {
-  document.getElementById("priceValue").textContent = e.target.value;
-  updateAccommodations();
-});
+  const pool = activities.length ? activities : [{
+    name: `Self-guided walk in ${destination?.name || deal.destination}`,
+    duration: "2 hours",
+    price: 0,
+    category: "Explore",
+    description: "Use the map link, local transit, and saved destination notes to keep the day flexible.",
+  }];
 
-document.getElementById("dogFriendly").addEventListener("change", () => {
-  updateAccommodations();
-});
-
-// Build Itinerary
-document.getElementById("buildItinerary").addEventListener("click", async () => {
-  const deal = globalDeals.find((d) => d.id === selectedDealId);
-  if (!deal) {
-    alert("Please select a deal first.");
-    return;
+  for (let index = 2; index <= length; index += 1) {
+    const morning = pool[(index - 2) % pool.length];
+    const afternoon = pool[(index - 1) % pool.length] || morning;
+    const isLast = index === length;
+    days.push({
+      title: isLast ? "Last look and return" : `Explore ${destination?.name || deal.destination}`,
+      body: `${morning.name} in the morning (${morning.duration}). ${afternoon && afternoon.id !== morning.id ? `${afternoon.name} later in the day.` : "Leave space for a slow lunch and neighborhood wandering."}`,
+      cost: (Number(morning.price || 0) + (afternoon && afternoon.id !== morning.id ? Number(afternoon.price || 0) : 0)) * travelers,
+      links: [{ label: "Map day area", url: `https://www.google.com/maps/search/${encodeURIComponent(destination?.name || deal.destination)}` }],
+    });
   }
 
-  const origin = document.getElementById("origin").value;
-  const date = document.getElementById("travelDate").value;
-  const length = Number(document.getElementById("tripLength").value);
-  const style = document.getElementById("travelStyle").value;
-  const numTravelers = Number(document.getElementById("numTravelers").value);
-  const destination = globalDestinations.find((d) => d.id === deal.destination);
+  return days.map((day, index) => ({ ...day, date: travelDate ? formatDate(addDays(travelDate, index)) : `Day ${index + 1}` }));
+}
 
-  const selectedAccs = Array.from(selectedAccommodationIds)
-    .map((id) => globalAccommodations.find((a) => a.id === id))
+function addDays(dateString, days) {
+  const date = new Date(`${dateString}T12:00:00`);
+  date.setDate(date.getDate() + days);
+  return date.toISOString().slice(0, 10);
+}
+
+function buildItinerary() {
+  const deal = selectedDeal();
+  if (!deal) {
+    alert("Choose a deal first.");
+    return;
+  }
+  state.selectedDealId = deal.id;
+
+  const destination = destinationFor(deal);
+  const stay = state.accommodations.find((item) => item.id === state.selectedAccommodationId);
+  const activities = [...state.selectedActivityIds]
+    .map((id) => state.activities.find((activity) => activity.id === id))
     .filter(Boolean);
+  const travelers = Number(els.numTravelers.value || 2);
+  const length = Number(els.tripLength.value || 3);
+  const nights = Math.max(0, length - 1);
+  const travelDate = els.travelDate.value;
+  const travelCost = Number(deal.price || 0) * travelers;
+  const stayCost = stay ? Number(stay.price || 0) * nights : 0;
+  const days = buildDays({ deal, destination, stay, activities, length, travelers, travelDate });
+  const activityCost = days.reduce((sum, day, index) => sum + (index === 0 ? 0 : day.cost), 0);
+  const total = travelCost + stayCost + activityCost;
+  const perPerson = total / travelers;
 
-  const selectedActs = Array.from(selectedActivityIds)
-    .map((id) => globalActivities.find((a) => a.id === id))
-    .filter(Boolean);
-
-  const itineraryContainer = document.getElementById("itinerary");
-
-  let html = `
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-      <h2>Your Detailed Itinerary</h2>
-      <div style="display: flex; gap: 0.5rem;">
-        <button onclick="approveItinerary()" class="success-button" style="margin: 0;">✓ Approve Trip</button>
-        <button onclick="document.getElementById('itinerary').innerHTML = ''" class="secondary-button" style="margin: 0;">✕ Reject</button>
-      </div>
-    </div>
-  `;
-
-  // Trip Summary
-  html += `
-    <div class="itinerary-card">
-      <h3>📋 Trip Summary</h3>
-      <div class="cost-breakdown">
-        <div class="cost-breakdown-row">
-          <span><strong>Destination:</strong></span>
-          <span>${destination?.name || deal.destination}</span>
-        </div>
-        <div class="cost-breakdown-row">
-          <span><strong>Origin:</strong></span>
-          <span>${origin}</span>
-        </div>
-        <div class="cost-breakdown-row">
-          <span><strong>Date:</strong></span>
-          <span>${formatDate(date)}</span>
-        </div>
-        <div class="cost-breakdown-row">
-          <span><strong>Duration:</strong></span>
-          <span>${length} days</span>
-        </div>
-        <div class="cost-breakdown-row">
-          <span><strong>Number of Travelers:</strong></span>
-          <span>${numTravelers} ${numTravelers === 1 ? 'person' : 'people'}</span>
-        </div>
-        <div class="cost-breakdown-row">
-          <span><strong>Travel Style:</strong></span>
-          <span>${style}</span>
-        </div>
-      </div>
-    </div>
-  `;
-
-  // Day 1: Travel + Accommodation
-  const accCost = selectedAccs.length > 0 ? selectedAccs[0].price : deal.price * 0.4;
-  const totalAccCost = accCost * length * numTravelers;
-  const totalFlightCost = deal.price * numTravelers;
-
-  html += `
-    <div class="itinerary-card">
-      <h3>✈️ Day 1: Travel & Arrival</h3>
-      ${destination?.image ? `<img src="${destination.image}" alt="${destination.name}" class="itinerary-image" />` : ''}
-      <p><strong>${deal.mode}:</strong> ${deal.route} (${deal.duration})</p>
-      <p>${deal.description}</p>
-      <div class="cost-breakdown">
-        <div class="cost-breakdown-row">
-          <span>Transport (${numTravelers} travelers):</span>
-          <span><strong>${formatPrice(totalFlightCost)}</strong></span>
-        </div>
-      </div>
-  `;
-
-  if (deal.bookingUrl) {
-    html += `
-      <a href="${deal.bookingUrl}" target="_blank" class="booking-link">
-        Book ${deal.mode}
-        <span class="booking-provider">${deal.provider || 'Booking'}</span>
-      </a>
-    `;
-  }
-
-  if (selectedAccs.length > 0) {
-    const acc = selectedAccs[0];
-    html += `
-      <h4 style="margin-top: 1rem; margin-bottom: 0.5rem;">🏨 Accommodation</h4>
-      ${acc.image ? `<img src="${acc.image}" alt="${acc.name}" class="itinerary-image" />` : ''}
-      <p><strong>${acc.name}</strong></p>
-      <p style="font-size: 0.9rem; color: #6b7280;">${acc.address}</p>
-      <p><strong>Rating:</strong> ⭐ ${acc.rating}/5 ${acc.dogFriendly ? '🐶 Dog-friendly' : ''}</p>
-      <p><strong>Features:</strong> ${acc.features.join(", ")}</p>
-      <div class="cost-breakdown">
-        <div class="cost-breakdown-row">
-          <span>Accommodation (${length} nights × ${numTravelers} people):</span>
-          <span><strong>${formatPrice(totalAccCost)}</strong></span>
-        </div>
-      </div>
-      ${acc.bookingUrl ? `<a href="${acc.bookingUrl}" target="_blank" class="booking-link">Book Accommodation</a>` : ''}
-    `;
-  }
-
-  html += `</div>`;
-
-  // Days 2 to N: Activities
-  let totalActivityCost = 0;
-  for (let day = 2; day <= length; day++) {
-    const dayActivities = selectedActs.slice((day - 2) % selectedActs.length, (day - 1) % selectedActs.length || selectedActs.length);
-
-    html += `<div class="itinerary-card">
-      <h3>🎯 Day ${day}: Explore & Activities</h3>
-    `;
-
-    if (dayActivities.length > 0) {
-      dayActivities.forEach((act) => {
-        const actTotalCost = act.price * numTravelers;
-        totalActivityCost += actTotalCost;
-        html += `
-        <p><strong>${act.name}</strong> (${act.duration}) - ${act.category}</p>
-        <p style="font-size: 0.9rem; color: #6b7280;">${act.description}</p>
-        <p>⭐ ${act.rating}/5 ${act.dogFriendly ? '🐶' : ''} | Cost: <strong>${formatPrice(actTotalCost)}</strong> (${numTravelers} people)</p>
-      `;
-      });
-    } else {
-      html += `<p>Free day to explore ${destination?.name || deal.destination} on your own!</p>`;
-    }
-
-    if (day < length && selectedAccs.length > 0) {
-      html += `<p><strong>Accommodation:</strong> ${selectedAccs[0]?.name || "Local stay"} - ${formatPrice(accCost * numTravelers)}/night</p>`;
-    }
-
-    html += `</div>`;
-  }
-
-  // Cost Summary
-  const totalCost = totalFlightCost + totalAccCost + totalActivityCost;
-
-  html += `
-    <div class="itinerary-card" style="background: #f0fdf4; border-left-color: var(--success);">
-      <h3>💰 Cost Summary (${numTravelers} ${numTravelers === 1 ? 'person' : 'people'})</h3>
-      <div class="cost-breakdown">
-        <div class="cost-breakdown-row">
-          <span><strong>Transport:</strong></span>
-          <span>${formatPrice(totalFlightCost)}</span>
-        </div>
-        <div class="cost-breakdown-row">
-          <span><strong>Accommodation (${length} nights):</strong></span>
-          <span>${formatPrice(totalAccCost)}</span>
-        </div>
-        <div class="cost-breakdown-row">
-          <span><strong>Activities:</strong></span>
-          <span>${formatPrice(totalActivityCost)}</span>
-        </div>
-        <div class="cost-breakdown-row cost-total">
-          <span><strong>Total Estimated Cost:</strong></span>
-          <span>${formatPrice(totalCost)}</span>
-        </div>
-        <div class="cost-breakdown-row" style="margin-top: 0.5rem; border-top: 1px solid rgba(0,0,0,0.1); padding-top: 0.5rem;">
-          <span><strong>Per Person:</strong></span>
-          <span style="color: var(--success);">${formatPrice(totalCost / numTravelers)}</span>
-        </div>
-      </div>
-    </div>
-  `;
-
-  itineraryContainer.innerHTML = html;
-
-  // Store current itinerary for approval
-  window.currentItinerary = {
-    destination: destination?.name || deal.destination,
-    date: formatDate(date),
-    length: `${length} days`,
-    deal: deal.title,
-    numTravelers: numTravelers,
-    totalCost: totalCost,
-    accommodations: Array.from(selectedAccommodationIds)
-      .map((id) => globalAccommodations.find((a) => a.id === id)?.name)
-      .filter(Boolean),
-    activities: Array.from(selectedActivityIds)
-      .map((id) => globalActivities.find((a) => a.id === id)?.name)
-      .filter(Boolean),
-  };
-
-  // Scroll to itinerary
-  itineraryContainer.scrollIntoView({ behavior: "smooth" });
-});
-
-// Print Itinerary
-document.getElementById("printItinerary").addEventListener("click", () => {
-  window.print();
-});
-
-// Save Trip to Diary (now triggers approval workflow)
-document.getElementById("saveTrip").addEventListener("click", () => {
-  window.approveItinerary();
-});
-
-// Approve Itinerary (new workflow)
-window.approveItinerary = function () {
-  if (!window.currentItinerary) {
-    alert("Please generate an itinerary first.");
-    return;
-  }
-
-  const trip = {
+  const itinerary = {
     id: Date.now(),
-    ...window.currentItinerary,
+    status: "planned",
+    destination: destination?.name || deal.destination,
+    country: destination?.country || "",
+    title: `${destination?.name || deal.destination} ${length}-day plan`,
+    createdAt: new Date().toISOString(),
+    travelDate,
+    length,
+    nights,
+    travelers,
+    deal,
+    stay,
+    activities,
+    days,
+    costs: { travelCost, stayCost, activityCost, total, perPerson },
+    dogNote: els.dogFriendly.checked
+      ? "Small dog mode is on. Confirm airline cabin weight/carrier limits and hotel pet fees before booking."
+      : "Dog filter is off for this plan.",
   };
 
-  let approvedTrips = JSON.parse(localStorage.getItem("approvedTrips") || "[]");
-  approvedTrips.push(trip);
-  localStorage.setItem("approvedTrips", JSON.stringify(approvedTrips));
+  state.currentItinerary = itinerary;
+  renderItinerary(itinerary);
+  els.itinerary.scrollIntoView({ behavior: "smooth", block: "start" });
+}
 
-  alert(`✓ Trip approved and added to your Travel Plans!`);
-  document.getElementById("itinerary").innerHTML = "";
-  window.currentItinerary = null;
-  renderApprovedTrips();
-};
+function renderItinerary(plan) {
+  const destination = destinationFor(plan.deal) || {};
+  els.itinerary.classList.add("has-content");
+  els.itinerary.innerHTML = `
+    <div class="itinerary-hero">
+      <div>
+        <p class="eyebrow">Generated plan</p>
+        <h2>${escapeHtml(plan.title)}</h2>
+        <p class="muted">${escapeHtml(formatDate(plan.travelDate))} - ${plan.length} days - ${plan.travelers} people</p>
+        <p>${escapeHtml(destination.description || "A provider-linked itinerary built from selected deals, stays, and activities.")}</p>
+        <p class="muted">${escapeHtml(plan.dogNote)}</p>
+        <div class="trip-actions">
+          <button class="secondary-button" type="button" data-action="print">Print</button>
+          <button class="primary-button" type="button" data-action="save">Approve and save</button>
+          <button class="danger-button" type="button" data-action="reject">Delete draft</button>
+        </div>
+      </div>
+      <div>
+        <img class="itinerary-photo" src="${escapeHtml(destination.image || plan.deal.image || "")}" alt="${escapeHtml(plan.destination)}" />
+        <div class="cost-grid">
+          <div><span>Travel</span><strong>${money(plan.costs.travelCost)}</strong></div>
+          <div><span>Stay</span><strong>${money(plan.costs.stayCost)}</strong></div>
+          <div><span>Activities</span><strong>${money(plan.costs.activityCost)}</strong></div>
+          <div class="total-line"><span>Total</span>${money(plan.costs.total)} / ${money(plan.costs.perPerson)} pp</div>
+        </div>
+      </div>
+    </div>
+    <div class="day-list">
+      ${plan.days.map((day, index) => `
+        <article class="day-card">
+          <p class="eyebrow">${escapeHtml(day.date)}</p>
+          <h3>Day ${index + 1}: ${escapeHtml(day.title)}</h3>
+          <p>${escapeHtml(day.body)}</p>
+          <p class="muted">Estimated day cost for ${plan.travelers}: ${money(day.cost)}</p>
+          <div class="card-actions">
+            ${(day.links || []).filter((link) => link.url).map((link) => `<a class="link-button" href="${escapeHtml(link.url)}" target="_blank" rel="noreferrer">${escapeHtml(link.label)}</a>`).join("")}
+          </div>
+        </article>
+      `).join("")}
+    </div>
+  `;
 
-// Render Approved Trips (Travel Plans)
-function renderApprovedTrips() {
-  const trips = JSON.parse(localStorage.getItem("approvedTrips") || "[]");
-  const container = document.getElementById("savedTrips");
+  els.itinerary.querySelector('[data-action="print"]').addEventListener("click", () => window.print());
+  els.itinerary.querySelector('[data-action="save"]').addEventListener("click", saveCurrentItinerary);
+  els.itinerary.querySelector('[data-action="reject"]').addEventListener("click", () => {
+    state.currentItinerary = null;
+    els.itinerary.classList.remove("has-content");
+    els.itinerary.innerHTML = "";
+  });
+}
 
-  if (trips.length === 0) {
-    container.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: #6b7280;">No approved trips yet. Generate and approve an itinerary to add your first travel plan!</p>`;
+function savedTrips() {
+  return JSON.parse(localStorage.getItem("travelDiary") || "[]");
+}
+
+function writeSavedTrips(trips) {
+  localStorage.setItem("travelDiary", JSON.stringify(trips));
+}
+
+function saveCurrentItinerary() {
+  if (!state.currentItinerary) {
+    alert("Build an itinerary first.");
+    return;
+  }
+  const trips = savedTrips();
+  trips.unshift(state.currentItinerary);
+  writeSavedTrips(trips);
+  renderDiary();
+  alert("Trip saved to Travel Diary.");
+}
+
+function renderDiary() {
+  const trips = savedTrips();
+  if (!trips.length) {
+    els.savedTrips.innerHTML = `<p class="muted">No saved trips yet. Build an itinerary, approve it, and it will appear here.</p>`;
     return;
   }
 
-  container.innerHTML = trips
-    .map(
-      (trip) => `
-    <div class="trip-card">
-      <button class="trip-delete" onclick="deleteApprovedTrip(${trip.id})">Delete</button>
-      <h3>🌍 ${trip.destination}</h3>
-      <p class="trip-date">${trip.date} • ${trip.length}</p>
-      <p><strong>${trip.deal}</strong></p>
-      <p style="font-size: 0.9rem; color: #2563eb;"><strong>👥 ${trip.numTravelers} travelers | 💰 Total: €${trip.totalCost.toFixed(0)} (€${(trip.totalCost / trip.numTravelers).toFixed(0)}/person)</strong></p>
-      <ul class="trip-highlights">
-        ${trip.accommodations.map((acc) => `<li>🏨 ${acc}</li>`).join("")}
-        ${trip.activities.map((act) => `<li>🎯 ${act}</li>`).join("")}
-      </ul>
-    </div>
-  `
-    )
-    .join("");
+  els.savedTrips.innerHTML = trips.map((trip) => `
+    <article class="trip-card" data-trip-id="${trip.id}">
+      <span class="status-pill ${trip.status === "done" ? "done" : "pending"}">${trip.status === "done" ? "Done" : "Planned"}</span>
+      <h3>${escapeHtml(trip.title || trip.destination)}</h3>
+      <p class="muted">${escapeHtml(formatDate(trip.travelDate))} - ${trip.length} days - ${trip.travelers} people</p>
+      <p class="price">${money(trip.costs?.total || 0)} total</p>
+      <p>${escapeHtml(trip.deal?.title || "Saved itinerary")}</p>
+      <div class="trip-actions">
+        <button class="secondary-button" type="button" data-action="open">Open</button>
+        <button class="secondary-button" type="button" data-action="done">${trip.status === "done" ? "Undo done" : "Mark done"}</button>
+        <button class="danger-button" type="button" data-action="delete">Delete</button>
+      </div>
+    </article>
+  `).join("");
+
+  els.savedTrips.querySelectorAll(".trip-card").forEach((card) => {
+    card.addEventListener("click", (event) => {
+      const action = event.target.dataset.action || "open";
+      const id = Number(card.dataset.tripId);
+      if (action === "open") openTrip(id);
+      if (action === "done") toggleDone(id);
+      if (action === "delete") deleteTrip(id);
+    });
+  });
 }
 
-// Delete Approved Trip
-window.deleteApprovedTrip = function (tripId) {
-  if (confirm("Delete this trip from your Travel Plans?")) {
-    let trips = JSON.parse(localStorage.getItem("approvedTrips") || "[]");
-    trips = trips.filter((t) => t.id !== tripId);
-    localStorage.setItem("approvedTrips", JSON.stringify(trips));
-    renderApprovedTrips();
-  }
-};
-
-// Render Saved Trips (Legacy)
-function renderSavedTrips() {
-  const trips = JSON.parse(localStorage.getItem("savedTrips") || "[]");
-  const container = document.getElementById("savedTrips");
-
-  if (trips.length === 0) {
-    container.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: #6b7280;">No saved trips yet. Plan and save your first adventure!</p>`;
-    return;
-  }
-
-  container.innerHTML = trips
-    .map(
-      (trip) => `
-    <div class="trip-card">
-      <button class="trip-delete" onclick="deleteTrip(${trip.id})">Delete</button>
-      <h3>🌍 ${trip.destination}</h3>
-      <p class="trip-date">${trip.date} • ${trip.length}</p>
-      <p><strong>${trip.deal}</strong></p>
-      <ul class="trip-highlights">
-        ${trip.accommodations.map((acc) => `<li>🏨 ${acc}</li>`).join("")}
-        ${trip.activities.map((act) => `<li>🎯 ${act}</li>`).join("")}
-      </ul>
+function openTrip(id) {
+  const trip = savedTrips().find((item) => item.id === id);
+  if (!trip) return;
+  els.modalBody.innerHTML = `<div id="modalItinerary"></div>`;
+  els.modal.classList.remove("hidden");
+  const previous = els.itinerary;
+  const modalTarget = document.getElementById("modalItinerary");
+  modalTarget.innerHTML = `
+    <h2>${escapeHtml(trip.title || trip.destination)}</h2>
+    <p class="muted">${escapeHtml(trip.status === "done" ? `Completed ${formatDate(trip.completedAt)}` : "Planned trip")}</p>
+    <div class="cost-grid">
+      <div><span>Total</span><strong>${money(trip.costs?.total || 0)}</strong></div>
+      <div><span>Per person</span><strong>${money(trip.costs?.perPerson || 0)}</strong></div>
     </div>
-  `
-    )
-    .join("");
+    <div class="day-list">
+      ${(trip.days || []).map((day, index) => `
+        <article class="day-card">
+          <p class="eyebrow">${escapeHtml(day.date)}</p>
+          <h3>Day ${index + 1}: ${escapeHtml(day.title)}</h3>
+          <p>${escapeHtml(day.body)}</p>
+        </article>
+      `).join("")}
+    </div>
+  `;
 }
 
-// Delete Trip
-window.deleteTrip = function (tripId) {
-  if (confirm("Delete this trip from your diary?")) {
-    let trips = JSON.parse(localStorage.getItem("savedTrips") || "[]");
-    trips = trips.filter((t) => t.id !== tripId);
-    localStorage.setItem("savedTrips", JSON.stringify(trips));
-    renderSavedTrips();
-  }
-};
+function toggleDone(id) {
+  const trips = savedTrips().map((trip) => {
+    if (trip.id !== id) return trip;
+    const done = trip.status !== "done";
+    return { ...trip, status: done ? "done" : "planned", completedAt: done ? todayIso() : null };
+  });
+  writeSavedTrips(trips);
+  renderDiary();
+}
 
-// Initialize
-(async function init() {
-  globalDeals = await loadData("data/deals.json");
-  globalGems = await loadData("data/hidden_gems.json");
-  globalDestinations = await loadData("data/destinations.json");
-  globalAccommodations = await loadData("data/accommodations_full.json");
-  globalActivities = await loadData("data/activities_full.json");
+function deleteTrip(id) {
+  if (!confirm("Delete this trip from the diary?")) return;
+  writeSavedTrips(savedTrips().filter((trip) => trip.id !== id));
+  renderDiary();
+}
 
-  renderDeals(globalDeals);
-  renderApprovedTrips();
-})();
+function exportDiary() {
+  const payload = JSON.stringify(savedTrips(), null, 2);
+  const blob = new Blob([payload], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `lincy-rony-travel-diary-${todayIso()}.json`;
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
+function updateStats() {
+  const best = [...state.deals].sort((a, b) => Number(a.price || 9999) - Number(b.price || 9999))[0];
+  const dogCount = state.deals.filter((deal) => deal.dogFriendly || /dog|pet/i.test(deal.description || "")).length;
+  els.bestValue.textContent = best ? `${best.title} from ${money(best.price)}` : "No deals loaded";
+  els.dogCount.textContent = `${dogCount} current deal options`;
+  els.lastUpdated.textContent = `Loaded ${new Date().toLocaleString("en-GB")}`;
+}
+
+function renderAll() {
+  renderDeals();
+  renderDealBoard();
+  renderAccommodations();
+  renderActivities();
+  renderGems();
+  renderDiary();
+  updateStats();
+}
+
+function bindEvents() {
+  document.querySelectorAll(".nav-tab").forEach((tab) => {
+    tab.addEventListener("click", () => {
+      document.querySelectorAll(".nav-tab").forEach((item) => item.classList.remove("active"));
+      document.querySelectorAll(".tab-content").forEach((item) => item.classList.remove("active"));
+      tab.classList.add("active");
+      document.getElementById(`${tab.dataset.tab}-tab`).classList.add("active");
+    });
+  });
+
+  els.refreshButton.addEventListener("click", () => {
+    const url = new URL(window.location.href);
+    url.searchParams.set("refresh", Date.now());
+    window.location.href = url.toString();
+  });
+
+  [els.dealSort, els.dogFriendly, els.hiddenGemMode].forEach((el) => el.addEventListener("change", renderAll));
+  els.dealSearch.addEventListener("input", renderDealBoard);
+  els.maxPrice.addEventListener("input", () => {
+    els.priceValue.textContent = money(els.maxPrice.value);
+    renderAccommodations();
+  });
+  els.minRating.addEventListener("input", () => {
+    els.ratingValue.textContent = els.minRating.value;
+    renderAccommodations();
+  });
+  els.buildItinerary.addEventListener("click", buildItinerary);
+  els.exportDiary.addEventListener("click", exportDiary);
+  document.querySelector(".modal-close").addEventListener("click", () => els.modal.classList.add("hidden"));
+  els.modal.addEventListener("click", (event) => {
+    if (event.target === els.modal) els.modal.classList.add("hidden");
+  });
+}
+
+async function init() {
+  bindEvents();
+  els.travelDate.value = todayIso();
+  els.priceValue.textContent = money(els.maxPrice.value);
+  els.ratingValue.textContent = els.minRating.value;
+
+  const [deals, destinations, accommodations, activities, gems] = await Promise.all([
+    loadJson("data/deals.json"),
+    loadJson("data/destinations.json"),
+    loadJson("data/accommodations_full.json"),
+    loadJson("data/activities_full.json"),
+    loadJson("data/hidden_gems.json"),
+  ]);
+
+  state.deals = deals.map((deal, index) => ({
+    id: deal.id || `${String(deal.mode || "deal").toLowerCase()}-${index}`,
+    ...deal,
+    destination: String(deal.destination || "").toLowerCase().replaceAll(" ", "-"),
+  }));
+  state.destinations = destinations;
+  state.accommodations = accommodations;
+  state.activities = activities;
+  state.gems = gems;
+  state.selectedDealId = sortedDeals()[0]?.id || null;
+  renderAll();
+}
+
+init();

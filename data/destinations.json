@@ -5,9 +5,9 @@
     "country": "Germany",
     "lat": 52.52,
     "lng": 13.405,
-    "image": "https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?auto=format&fit=crop&w=800&q=80",
-    "description": "Capital city with vibrant street art, museums, nightlife, and historic sites.",
-    "highlights": ["Street Art Tours", "Museums", "Nightlife", "Brandenburg Gate", "East Side Gallery"],
+    "image": "https://images.unsplash.com/photo-1560969184-10fe8719e047?auto=format&fit=crop&w=900&q=80",
+    "description": "Street art, museums, markets, lakes, and neighborhoods that work well for a budget culture weekend.",
+    "highlights": ["East Side Gallery", "Museum Island", "Tempelhofer Feld", "Kreuzberg food stops"],
     "dogFriendly": true
   },
   {
@@ -16,8 +16,9 @@
     "country": "Sweden",
     "lat": 57.7089,
     "lng": 11.9746,
-    "description": "Sweden's coastal city with archipelago islands, food culture, and beautiful waterfront.",
-    "highlights": ["Archipelago Islands", "Haga District", "Fish Market", "Delsjön Lake", "Liseberg Park"],
+    "image": "https://images.unsplash.com/photo-1535628805416-f3a0b3627d23?auto=format&fit=crop&w=900&q=80",
+    "description": "A coastal city with trams, archipelago islands, Haga cafes, markets, and forest lakes close to town.",
+    "highlights": ["Haga", "Southern Archipelago", "Delsjon", "Feskekorka"],
     "dogFriendly": true
   },
   {
@@ -26,8 +27,9 @@
     "country": "Poland",
     "lat": 50.0647,
     "lng": 19.945,
-    "description": "Historic medieval city with colorful market square, castles, and rich culture.",
-    "highlights": ["Main Market Square", "Wawel Castle", "Old Town", "Kazimierz District", "Salt Mines"],
+    "image": "https://images.unsplash.com/photo-1541849546-216549ae216d?auto=format&fit=crop&w=900&q=80",
+    "description": "Low-cost food, old town streets, castle walks, Kazimierz cafes, and day trips to historic sites.",
+    "highlights": ["Main Market Square", "Wawel Castle", "Kazimierz", "Planty Park"],
     "dogFriendly": false
   },
   {
@@ -36,8 +38,31 @@
     "country": "Czech Republic",
     "lat": 50.0755,
     "lng": 14.4378,
-    "description": "Fairy-tale city with Charles Bridge, Prague Castle, and bohemian charm.",
-    "highlights": ["Charles Bridge", "Prague Castle", "Old Town Square", "Jewish Quarter", "Beer Halls"],
+    "image": "https://images.unsplash.com/photo-1519677100203-a0e668c92439?auto=format&fit=crop&w=900&q=80",
+    "description": "A romantic, walkable city with castle views, river islands, beer halls, gardens, and quiet early mornings.",
+    "highlights": ["Charles Bridge", "Prague Castle", "Letna Park", "Vinohrady"],
+    "dogFriendly": true
+  },
+  {
+    "id": "ystad",
+    "name": "Ystad",
+    "country": "Sweden",
+    "lat": 55.4295,
+    "lng": 13.82,
+    "image": "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=900&q=80",
+    "description": "A compact Skane day trip with timbered streets, quiet cafes, dunes, and Sandskogen forest by the coast.",
+    "highlights": ["Ystad old town", "Sandskogen", "Beach paths", "Ales Stenar extension"],
+    "dogFriendly": true
+  },
+  {
+    "id": "skanor-falsterbo",
+    "name": "Skanor-Falsterbo",
+    "country": "Sweden",
+    "lat": 55.383,
+    "lng": 12.85,
+    "image": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80",
+    "description": "Soft beaches, colorful bath huts, birdwatching, and a calmer village feel on the southwestern coast.",
+    "highlights": ["Falsterbo beach", "Skanor harbor", "Bird station", "Coastal trail"],
     "dogFriendly": true
   }
 ]

@@ -1,29 +1,47 @@
 [
   {
-    "name": "Skanör-Falsterbo Coast",
-    "region": "Skåne",
+    "name": "Skanor-Falsterbo Coast",
+    "region": "Skane",
     "type": "Seaside village",
-    "image": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80",
-    "description": "Quiet beaches, birdwatching and charming cafes along Sweden's southern tip.",
-    "bestFor": "day trip, summer relaxation",
-    "tip": "Take the Öresundståg from Lund and explore the coastal trail."
+    "image": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80",
+    "description": "Quiet beaches, colorful bath huts, birdwatching, and a calm village feeling at Sweden's southwestern edge.",
+    "bestFor": "summer day trip, beach walk, dog-friendly slow travel",
+    "tip": "Travel Lund to Malmo and continue by bus. Pack layers because the coast changes mood quickly."
   },
   {
     "name": "Ystad Sandskog",
-    "region": "Skåne",
+    "region": "Skane",
     "type": "Forest and dunes",
-    "image": "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=800&q=80",
-    "description": "Hidden dunes close to the coast with walkable forest trails and picnic spots.",
-    "bestFor": "nature, dog-friendly hikes",
-    "tip": "Bring a picnic and plan a sunset walk by the sea."
+    "image": "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=900&q=80",
+    "description": "Forest trails and dunes close to the sea, easy to combine with Ystad's old-town streets.",
+    "bestFor": "nature, picnic, dog-friendly walking",
+    "tip": "Start with the forest loop, then return to town for coffee instead of rushing onward."
   },
   {
-    "name": "Cesky Krumlov",
-    "region": "Czech Republic",
-    "type": "Historic town",
-    "image": "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=800&q=80",
-    "description": "Medieval river town with boutique hotels, castle views and quiet winding streets.",
-    "bestFor": "culture, weekend escape",
-    "tip": "Book a local guesthouse and explore the castle gardens early in the morning."
+    "name": "Hovs Hallar",
+    "region": "Bjare Peninsula",
+    "type": "Rocky coastal landscape",
+    "image": "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80",
+    "description": "Dramatic cliffs, sea views, and unusual geology on the northwest coast of Skane.",
+    "bestFor": "photography, hiking, picnic views",
+    "tip": "Best with a car or carefully planned bus connection; wear proper shoes."
+  },
+  {
+    "name": "Krapperup and Molle",
+    "region": "Kullabygden",
+    "type": "Manor garden and village",
+    "image": "https://images.unsplash.com/photo-1519331379826-f10be5486c6f?auto=format&fit=crop&w=900&q=80",
+    "description": "Gardens, coastal village atmosphere, and an easy add-on to Kullaberg without making the day too intense.",
+    "bestFor": "slow day trip, garden walk, coastal lunch",
+    "tip": "Pair with one short viewpoint rather than trying to see the whole peninsula at once."
+  },
+  {
+    "name": "Bosjokloster Castle Park",
+    "region": "Central Skane",
+    "type": "Castle park",
+    "image": "https://images.unsplash.com/photo-1518005020951-eccb494ad742?auto=format&fit=crop&w=900&q=80",
+    "description": "A less obvious castle and lakeside stop with parkland, photo corners, and a quiet countryside feel.",
+    "bestFor": "short outing, calm walk, countryside photos",
+    "tip": "Check opening conditions before relying on indoor access; the grounds are the main draw."
   }
 ]

@@ -8,131 +8,173 @@
 </head>
 <body>
   <header class="hero">
+    <div class="hero-media" aria-hidden="true"></div>
     <div class="hero-content">
-      <div style="display: flex; justify-content: space-between; align-items: center; gap: 1rem;">
-        <div>
-          <h1>✈️ Lincy & Rony Travel Diaries</h1>
-          <p>Smart, interactive travel planning for Europe with flights, trains, dog-friendly stays, and hidden gems.</p>
-          <p>Build your perfect itinerary and save your adventures.</p>
-        </div>
-        <button id="refreshButton" class="refresh-button" title="Clear cache and refresh to latest">🔄</button>
+      <p class="eyebrow">From Lund and Copenhagen Airport</p>
+      <h1>Lincy & Rony Travel Diaries</h1>
+      <p class="hero-copy">A personal travel cockpit for cheap Europe escapes, train-friendly weekends, dog-aware flights, Skane day trips, and printable itineraries with real booking links.</p>
+      <div class="hero-actions">
+        <button id="refreshButton" class="icon-button" title="Reload latest committed deal data" aria-label="Reload latest committed deal data">Refresh</button>
+        <a class="ghost-link" href="https://github.com/ronyk255/travel/actions" target="_blank" rel="noreferrer">Automation status</a>
       </div>
     </div>
   </header>
 
-  <nav class="nav-tabs">
-    <button class="nav-tab active" data-tab="planner">Trip Planner</button>
+  <nav class="nav-tabs" aria-label="Main sections">
+    <button class="nav-tab active" data-tab="planner">Planner</button>
+    <button class="nav-tab" data-tab="deals">Deal Board</button>
+    <button class="nav-tab" data-tab="gems">Skane Gems</button>
     <button class="nav-tab" data-tab="diary">Travel Diary</button>
   </nav>
 
   <main>
-    <!-- Trip Planner Tab -->
-    <section id="planner-tab" class="tab-content active">
-      <!-- Step 1: Select Deal -->
-      <section class="section card">
-        <h2>Step 1: Choose Your Deal</h2>
-        <p>Click to select a flight, train, or accommodation deal.</p>
-        <div id="deals" class="grid deals-grid"></div>
-        <div id="selectedDeal" class="selected-summary hidden"></div>
-      </section>
+    <section class="status-strip" aria-live="polite">
+      <div>
+        <span class="status-label">Deal data</span>
+        <strong id="lastUpdated">Loading...</strong>
+      </div>
+      <div>
+        <span class="status-label">Best value</span>
+        <strong id="bestValue">Calculating...</strong>
+      </div>
+      <div>
+        <span class="status-label">Dog-aware options</span>
+        <strong id="dogCount">Calculating...</strong>
+      </div>
+    </section>
 
-      <!-- Step 2: Customize Trip -->
-      <section class="section card">
-        <h2>Step 2: Customize Your Trip</h2>
-        <div class="form-grid">
+    <section id="planner-tab" class="tab-content active">
+      <section class="planner-shell">
+        <aside class="planner-panel">
+          <h2>Trip Brief</h2>
           <label>
-            Travel from
+            Starting point
             <select id="origin">
               <option value="Lund">Lund</option>
               <option value="Copenhagen Airport">Copenhagen Airport</option>
             </select>
           </label>
           <label>
-            Travel date
+            Earliest date
             <input id="travelDate" type="date" />
           </label>
           <label>
             Trip length
             <select id="tripLength">
+              <option value="1">1 day</option>
               <option value="2">2 days</option>
-              <option value="3">3 days</option>
+              <option value="3" selected>3 days</option>
               <option value="5">5 days</option>
-              <option value="7" selected>7 days</option>
+              <option value="7">7 days</option>
             </select>
           </label>
           <label>
-            Number of travelers
-            <select id="numTravelers">
-              <option value="1">1 person</option>
-              <option value="2" selected>2 people (you & wife)</option>
-              <option value="3">3 people</option>
-              <option value="4">4 people</option>
-              <option value="5">5+ people</option>
-            </select>
+            People
+            <input id="numTravelers" type="number" min="1" max="8" value="2" />
           </label>
           <label>
-            Budget style
-            <select id="travelStyle">
-              <option value="budget">Budget (€ under €50/night)</option>
-              <option value="balanced" selected>Balanced (€€ €50-100/night)</option>
-              <option value="comfort">Comfort (€€€ €100+/night)</option>
-            </select>
+            Budget per night
+            <input id="maxPrice" type="range" min="35" max="220" step="5" value="120" />
+            <span class="range-value">Up to <strong id="priceValue">EUR 120</strong></span>
           </label>
           <label>
-            <input type="checkbox" id="dogFriendly" /> Dog-friendly only
+            Minimum stay rating
+            <input id="minRating" type="range" min="3" max="5" step="0.1" value="4.2" />
+            <span class="range-value"><strong id="ratingValue">4.2</strong> stars</span>
           </label>
+          <label class="check-row">
+            <input type="checkbox" id="dogFriendly" checked />
+            Small dog travelling
+          </label>
+          <label class="check-row">
+            <input type="checkbox" id="hiddenGemMode" />
+            Prefer quieter/hidden places
+          </label>
+          <button id="buildItinerary" class="primary-button">Build Smart Itinerary</button>
+        </aside>
+
+        <section class="planner-main">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Step 1</p>
+              <h2>Choose A Deal</h2>
+            </div>
+            <select id="dealSort" aria-label="Sort deals">
+              <option value="score">Best score</option>
+              <option value="price">Lowest price</option>
+              <option value="dog">Dog confidence</option>
+              <option value="duration">Fastest travel</option>
+            </select>
+          </div>
+          <div id="deals" class="deal-grid"></div>
+
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Step 2</p>
+              <h2>Pick Stays Near Arrival</h2>
+            </div>
+          </div>
+          <div id="accommodations" class="option-grid"></div>
+
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Step 3</p>
+              <h2>Choose Activities</h2>
+            </div>
+          </div>
+          <div id="activities" class="option-grid"></div>
+        </section>
+      </section>
+
+      <section id="itinerary" class="itinerary"></section>
+    </section>
+
+    <section id="deals-tab" class="tab-content">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Live after each data commit</p>
+          <h2>Deal Board</h2>
         </div>
-      </section>
-
-      <!-- Step 3: Select Accommodations -->
-      <section class="section card">
-        <h2>Step 3: Select Accommodations</h2>
-        <div class="filter-bar">
-          <label>
-            Min Rating:
-            <input type="range" id="minRating" min="0" max="5" step="0.1" value="4" />
-            <span id="ratingValue">4</span>★
-          </label>
-          <label>
-            Max Price:
-            <input type="range" id="maxPrice" min="30" max="150" step="5" value="100" />
-            €<span id="priceValue">100</span>
-          </label>
-        </div>
-        <div id="accommodations" class="grid accommodations-grid"></div>
-      </section>
-
-      <!-- Step 4: Select Activities -->
-      <section class="section card">
-        <h2>Step 4: Choose Activities & Highlights</h2>
-        <div id="activities" class="grid activities-grid"></div>
-      </section>
-
-      <!-- Generate Button -->
-      <section class="section card">
-        <button id="buildItinerary" class="primary-button">Generate Detailed Itinerary</button>
-        <button id="printItinerary" class="secondary-button">Print Itinerary</button>
-        <button id="saveTrip" class="success-button">Add Approved Trip to Plans</button>
-      </section>
-
-      <!-- Itinerary Output -->
-      <section class="section card">
-        <div id="itinerary" class="itinerary"></div>
+        <input id="dealSearch" type="search" placeholder="Search Berlin, train, dog..." />
+      </div>
+      <div id="dealBoard" class="deal-grid"></div>
+      <section class="source-note">
+        <h3>How freshness works</h3>
+        <p>GitHub Actions refreshes the JSON on a schedule and when manually triggered. The page then loads the latest committed files with cache busting. Final fares can change, so every travel and stay card keeps a direct booking/search link.</p>
       </section>
     </section>
 
-    <!-- Travel Diary Tab -->
+    <section id="gems-tab" class="tab-content">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Beyond the usual list</p>
+          <h2>Skane Hidden Gems</h2>
+        </div>
+      </div>
+      <div id="hiddenGems" class="gem-grid"></div>
+    </section>
+
     <section id="diary-tab" class="tab-content">
-      <section class="section card">
-        <h2>Your Travel Diary</h2>
-        <p>All your saved adventures in one place.</p>
-        <div id="savedTrips" class="saved-trips-grid"></div>
-      </section>
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Plans and memories</p>
+          <h2>Travel Diary</h2>
+        </div>
+        <button id="exportDiary" class="secondary-button">Export Diary</button>
+      </div>
+      <div id="savedTrips" class="saved-trips-grid"></div>
     </section>
   </main>
 
+  <div id="tripModal" class="modal hidden" role="dialog" aria-modal="true" aria-label="Trip details">
+    <div class="modal-content">
+      <button class="modal-close" type="button" aria-label="Close trip details">Close</button>
+      <div id="tripModalBody"></div>
+    </div>
+  </div>
+
   <footer>
-    <p>Built for Lincy & Rony. Your travel memories, perfectly planned.</p>
+    Built for Lincy and Rony. Prices are planning estimates; always confirm with the linked provider before booking.
   </footer>
 
   <script src="app.js"></script>
