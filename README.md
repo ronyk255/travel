@@ -1,13 +1,17 @@
 # Lincy & Rony Travel Diaries
 
-A GitHub Pages travel planner for trips from Lund and Copenhagen Airport. The site combines committed deal data, destination notes, dog-aware filters, accommodation choices, activity planning, printable itineraries, and a local browser diary for planned and completed trips.
+A GitHub Pages travel planner for trips from Lund and Copenhagen Airport. The site combines committed deal data, future fare windows, destination notes, dog-aware filters, accommodation choices, activity planning, portrait printable itineraries, and a local browser diary for planned and completed trips.
 
 ## What the site does
 
 - Shows flight, train, accommodation, and Skane day-trip deal cards with provider links.
+- Highlights upcoming Europe fare windows in the main deal radar.
+- Separates target fare windows from verified live fares so estimates are not mistaken for guaranteed prices.
+- Opens flight and train searches across multiple booking/comparison sites, including Skyscanner, Google Flights, Lastminute, Kayak, Momondo, Kiwi, SJ, DB, Trainline, and Omio where relevant.
 - Scores and sorts trips by price, route convenience, dog friendliness, and source quality.
 - Builds a detailed itinerary for a selected date, number of people, stay, and activities.
 - Estimates total cost and cost per person for two travelers by default.
+- Prints generated itineraries in A4 portrait layout.
 - Saves approved itineraries in the browser diary.
 - Lets saved trips be reopened, marked as done, deleted, or exported.
 - Includes a refresh button that reloads the latest committed JSON data from GitHub Pages.
@@ -22,7 +26,14 @@ The workflow in `.github/workflows/update-deals.yml` runs:
 - manually through GitHub Actions
 - after pushes to `main`
 
-The current script includes curated fallback deals and optional flight API support through `SKYSCANNER_RAPIDAPI_KEY`. Final fares can change quickly, so cards always link to providers such as SJ, Skanetrafiken, Skyscanner, and Booking.com for confirmation.
+The current script includes curated fallback deals with future recommended dates and optional flight API support through `SKYSCANNER_RAPIDAPI_KEY`. Final fares can change quickly, so cards always link to multiple provider searches for confirmation.
+
+Deal labels mean:
+
+- `Target fare`: a useful future planning price and travel window. Check the linked providers before booking.
+- `Verified fare`: a fare returned by a live data source. This requires API-backed refresh data.
+
+When GitHub Actions runs successfully, the site loads the latest committed `data/deals.json`. Without live API credentials, new committed data will still refresh the curated target windows, but truly new verified fares require a connected fare source.
 
 ## Setup
 
@@ -38,7 +49,7 @@ The current script includes curated fallback deals and optional flight API suppo
 ## Files
 
 - `index.html` - app shell and page sections.
-- `styles.css` - dashboard styling and print layout.
+- `styles.css` - dashboard styling and A4 portrait print layout.
 - `app.js` - planner logic, scoring, itinerary generation, diary storage.
 - `data/deals.json` - travel deal cards.
 - `data/destinations.json` - destination summaries and images.

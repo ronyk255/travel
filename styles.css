@@ -987,18 +987,31 @@ footer {
 }
 
 @media print {
+  @page {
+    size: A4 portrait;
+    margin: 14mm 12mm;
+  }
+
+  * {
+    box-shadow: none !important;
+  }
+
   body {
+    color: #111827;
     background: #ffffff;
+    font-size: 10.5pt;
   }
 
   .hero,
   .nav-tabs,
   .status-strip,
+  .deal-radar,
   .planner-shell,
   .section-heading,
   footer,
   .trip-actions,
-  .card-actions {
+  .card-actions,
+  .modal {
     display: none !important;
   }
 
@@ -1007,14 +1020,90 @@ footer {
     padding: 0;
   }
 
-  .tab-content,
-  .itinerary,
-  .itinerary.has-content {
+  .tab-content {
+    display: none !important;
+  }
+
+  .tab-content.active {
     display: block !important;
   }
 
   .itinerary {
+    display: none !important;
     border: 0;
+    padding: 0;
     box-shadow: none;
+  }
+
+  .itinerary.has-content {
+    display: block !important;
+  }
+
+  .itinerary-hero,
+  .booking-brief,
+  .cost-grid,
+  .checklist {
+    grid-template-columns: 1fr !important;
+  }
+
+  .itinerary-hero {
+    gap: 10mm;
+    margin-bottom: 8mm;
+  }
+
+  .itinerary-photo {
+    max-height: 54mm;
+    min-height: 0;
+    border-radius: 4px;
+  }
+
+  .booking-brief div,
+  .day-card,
+  .cost-grid div {
+    border-color: #d1d5db;
+    background: #ffffff;
+  }
+
+  .day-card,
+  .booking-brief,
+  .cost-grid,
+  .source-grid {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .day-card {
+    margin-bottom: 5mm;
+    padding: 9mm 7mm;
+  }
+
+  .source-grid {
+    display: block;
+  }
+
+  .decision-link {
+    display: block;
+    min-height: 0;
+    margin: 0 0 3mm;
+    padding: 0;
+    border: 0;
+    color: #111827;
+    background: transparent;
+    font-size: 9pt;
+    overflow-wrap: anywhere;
+  }
+
+  .decision-link::after {
+    content: " - " attr(href);
+    color: #4b5563;
+    font-weight: 500;
+  }
+
+  h2 {
+    font-size: 20pt;
+  }
+
+  h3 {
+    font-size: 12pt;
   }
 }
