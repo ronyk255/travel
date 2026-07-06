@@ -20,7 +20,7 @@
     "provider": "Skanetrafiken",
     "dogFriendly": true,
     "image": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80",
-    "lastChecked": "2026-07-05T10:05:34.139746+00:00",
+    "lastChecked": "2026-07-06T11:58:34.005963+00:00",
     "priceConfidence": "Indicative lead price; final fare must be confirmed with provider",
     "sourceLinks": [
       {
@@ -68,7 +68,7 @@
     "provider": "Skanetrafiken",
     "dogFriendly": true,
     "image": "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=900&q=80",
-    "lastChecked": "2026-07-05T10:05:34.139737+00:00",
+    "lastChecked": "2026-07-06T11:58:34.005954+00:00",
     "priceConfidence": "Indicative lead price; final fare must be confirmed with provider",
     "sourceLinks": [
       {
@@ -116,7 +116,7 @@
     "provider": "SJ",
     "dogFriendly": true,
     "image": "https://images.unsplash.com/photo-1535628805416-f3a0b3627d23?auto=format&fit=crop&w=900&q=80",
-    "lastChecked": "2026-07-05T10:05:34.139566+00:00",
+    "lastChecked": "2026-07-06T11:58:34.005777+00:00",
     "priceConfidence": "Indicative lead price; final fare must be confirmed with provider",
     "sourceLinks": [
       {
@@ -164,7 +164,7 @@
     "provider": "Skyscanner",
     "dogFriendly": false,
     "image": "https://images.unsplash.com/photo-1519540635785-7d367d74c8f2?auto=format&fit=crop&w=900&q=80",
-    "lastChecked": "2026-07-05T10:05:34.139708+00:00",
+    "lastChecked": "2026-07-06T11:58:34.005924+00:00",
     "priceConfidence": "Indicative lead price; final fare must be confirmed with provider",
     "sourceLinks": [
       {
@@ -208,7 +208,7 @@
     "provider": "Skyscanner",
     "dogFriendly": false,
     "image": "https://images.unsplash.com/photo-1519197924294-4ba991a11128?auto=format&fit=crop&w=900&q=80",
-    "lastChecked": "2026-07-05T10:05:34.139702+00:00",
+    "lastChecked": "2026-07-06T11:58:34.005918+00:00",
     "priceConfidence": "Indicative lead price; final fare must be confirmed with provider",
     "sourceLinks": [
       {
@@ -252,7 +252,7 @@
     "provider": "Skyscanner",
     "dogFriendly": true,
     "image": "https://images.unsplash.com/photo-1560969184-10fe8719e047?auto=format&fit=crop&w=900&q=80",
-    "lastChecked": "2026-07-05T10:05:34.139590+00:00",
+    "lastChecked": "2026-07-06T11:58:34.005803+00:00",
     "priceConfidence": "Indicative lead price; final fare must be confirmed with provider",
     "sourceLinks": [
       {
@@ -296,7 +296,7 @@
     "provider": "Skyscanner",
     "dogFriendly": true,
     "image": "https://images.unsplash.com/photo-1519677100203-a0e668c92439?auto=format&fit=crop&w=900&q=80",
-    "lastChecked": "2026-07-05T10:05:34.139609+00:00",
+    "lastChecked": "2026-07-06T11:58:34.005823+00:00",
     "priceConfidence": "Indicative lead price; final fare must be confirmed with provider",
     "sourceLinks": [
       {
@@ -340,7 +340,7 @@
     "provider": "Skyscanner",
     "dogFriendly": false,
     "image": "https://images.unsplash.com/photo-1569505827657-3f6b4212e9c9?auto=format&fit=crop&w=900&q=80",
-    "lastChecked": "2026-07-05T10:05:34.139717+00:00",
+    "lastChecked": "2026-07-06T11:58:34.005933+00:00",
     "priceConfidence": "Indicative lead price; final fare must be confirmed with provider",
     "sourceLinks": [
       {
@@ -384,7 +384,7 @@
     "provider": "Skyscanner",
     "dogFriendly": false,
     "image": "https://images.unsplash.com/photo-1541849546-216549ae216d?auto=format&fit=crop&w=900&q=80",
-    "lastChecked": "2026-07-05T10:05:34.139616+00:00",
+    "lastChecked": "2026-07-06T11:58:34.005830+00:00",
     "priceConfidence": "Indicative lead price; final fare must be confirmed with provider",
     "sourceLinks": [
       {
@@ -428,7 +428,7 @@
     "provider": "DB/SJ",
     "dogFriendly": true,
     "image": "https://images.unsplash.com/photo-1516483638261-f4dbaf036963?auto=format&fit=crop&w=900&q=80",
-    "lastChecked": "2026-07-05T10:05:34.139728+00:00",
+    "lastChecked": "2026-07-06T11:58:34.005947+00:00",
     "priceConfidence": "Indicative lead price; final fare must be confirmed with provider",
     "sourceLinks": [
       {
@@ -476,7 +476,7 @@
     "provider": "Skyscanner",
     "dogFriendly": false,
     "image": "https://images.unsplash.com/photo-1549877452-9c387954fbc2?auto=format&fit=crop&w=900&q=80",
-    "lastChecked": "2026-07-05T10:05:34.139631+00:00",
+    "lastChecked": "2026-07-06T11:58:34.005846+00:00",
     "priceConfidence": "Indicative lead price; final fare must be confirmed with provider",
     "sourceLinks": [
       {
@@ -520,7 +520,7 @@
     "provider": "Skyscanner",
     "dogFriendly": false,
     "image": "https://images.unsplash.com/photo-1607681000065-428fb4d0d97e?auto=format&fit=crop&w=900&q=80",
-    "lastChecked": "2026-07-05T10:05:34.139723+00:00",
+    "lastChecked": "2026-07-06T11:58:34.005941+00:00",
     "priceConfidence": "Indicative lead price; final fare must be confirmed with provider",
     "sourceLinks": [
       {
@@ -564,7 +564,7 @@
     "provider": "Skyscanner",
     "dogFriendly": true,
     "image": "https://images.unsplash.com/photo-1516550893923-42d28e5677af?auto=format&fit=crop&w=900&q=80",
-    "lastChecked": "2026-07-05T10:05:34.139644+00:00",
+    "lastChecked": "2026-07-06T11:58:34.005859+00:00",
     "priceConfidence": "Indicative lead price; final fare must be confirmed with provider",
     "sourceLinks": [
       {
@@ -608,7 +608,7 @@
     "provider": "Skyscanner",
     "dogFriendly": true,
     "image": "https://images.unsplash.com/photo-1512470876302-972faa2aa9a4?auto=format&fit=crop&w=900&q=80",
-    "lastChecked": "2026-07-05T10:05:34.139623+00:00",
+    "lastChecked": "2026-07-06T11:58:34.005838+00:00",
     "priceConfidence": "Indicative lead price; final fare must be confirmed with provider",
     "sourceLinks": [
       {
@@ -652,7 +652,7 @@
     "provider": "Skyscanner",
     "dogFriendly": true,
     "image": "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=900&q=80",
-    "lastChecked": "2026-07-05T10:05:34.139694+00:00",
+    "lastChecked": "2026-07-06T11:58:34.005906+00:00",
     "priceConfidence": "Indicative lead price; final fare must be confirmed with provider",
     "sourceLinks": [
       {
@@ -696,7 +696,7 @@
     "provider": "Skyscanner",
     "dogFriendly": true,
     "image": "https://images.unsplash.com/photo-1533614767277-8785f8a4ee6b?auto=format&fit=crop&w=900&q=80",
-    "lastChecked": "2026-07-05T10:05:34.139688+00:00",
+    "lastChecked": "2026-07-06T11:58:34.005900+00:00",
     "priceConfidence": "Indicative lead price; final fare must be confirmed with provider",
     "sourceLinks": [
       {
@@ -740,7 +740,7 @@
     "provider": "Skyscanner",
     "dogFriendly": false,
     "image": "https://images.unsplash.com/photo-1539037116277-4db20889f2d4?auto=format&fit=crop&w=900&q=80",
-    "lastChecked": "2026-07-05T10:05:34.139675+00:00",
+    "lastChecked": "2026-07-06T11:58:34.005885+00:00",
     "priceConfidence": "Indicative lead price; final fare must be confirmed with provider",
     "sourceLinks": [
       {
@@ -784,7 +784,7 @@
     "provider": "Skyscanner",
     "dogFriendly": false,
     "image": "https://images.unsplash.com/photo-1552832230-c0197dd311b5?auto=format&fit=crop&w=900&q=80",
-    "lastChecked": "2026-07-05T10:05:34.139682+00:00",
+    "lastChecked": "2026-07-06T11:58:34.005893+00:00",
     "priceConfidence": "Indicative lead price; final fare must be confirmed with provider",
     "sourceLinks": [
       {
@@ -828,7 +828,7 @@
     "provider": "SJ",
     "dogFriendly": true,
     "image": "https://images.unsplash.com/photo-1560969184-10fe8719e047?auto=format&fit=crop&w=900&q=80",
-    "lastChecked": "2026-07-05T10:05:34.139600+00:00",
+    "lastChecked": "2026-07-06T11:58:34.005814+00:00",
     "priceConfidence": "Indicative lead price; final fare must be confirmed with provider",
     "sourceLinks": [
       {
@@ -876,7 +876,7 @@
     "provider": "Skyscanner",
     "dogFriendly": true,
     "image": "https://images.unsplash.com/photo-1555881400-74d7acaacd8b?auto=format&fit=crop&w=900&q=80",
-    "lastChecked": "2026-07-05T10:05:34.139668+00:00",
+    "lastChecked": "2026-07-06T11:58:34.005878+00:00",
     "priceConfidence": "Indicative lead price; final fare must be confirmed with provider",
     "sourceLinks": [
       {
@@ -920,7 +920,7 @@
     "provider": "Skyscanner",
     "dogFriendly": true,
     "image": "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?auto=format&fit=crop&w=900&q=80",
-    "lastChecked": "2026-07-05T10:05:34.139660+00:00",
+    "lastChecked": "2026-07-06T11:58:34.005870+00:00",
     "priceConfidence": "Indicative lead price; final fare must be confirmed with provider",
     "sourceLinks": [
       {
